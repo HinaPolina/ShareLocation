@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1055929112324",
+    "firebase_url": "https://sharelocation-ec1df.firebaseio.com",
+    "project_id": "sharelocation-ec1df",
+    "storage_bucket": "sharelocation-ec1df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055929112324:android:0ad8065240d0a427",
+        "android_client_info": {
+          "package_name": "hinapolina.com.sharelocation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055929112324-2vu53ek6s0lq14tebfdcn0jqbl9mqb9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3ZMBwRNrCOfX-Y9Wk9M00ca5bLwaNev8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
