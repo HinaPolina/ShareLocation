@@ -2,4 +2,5 @@
     <string name="app_name">ShareLocation</string>
     <string name="facebook_app_id">936475039834902</string>
     <string name="fb_login_protocol_scheme">fb936475039834902</string>
+    <string name="server_client_id">1055929112324-2vu53ek6s0lq14tebfdcn0jqbl9mqb9r.apps.googleusercontent.com</string>
 </resources>
