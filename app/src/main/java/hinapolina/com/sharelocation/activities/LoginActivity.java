@@ -12,6 +12,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -29,8 +30,13 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
 
+import java.util.Arrays;
+
+import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.model.User;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
 
@@ -40,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private SignInButton signInButton;
+    private DatabaseReference mDatabase;
 
 
     @Override
@@ -60,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = Application.getmDatabase();
         loginButton = (LoginButton) findViewById(R.id.login_button);
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         googleSignIn();
@@ -81,13 +89,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void facebookSingIn() {
-        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.setReadPermissions(Arrays.asList(
+                "public_profile", "email", "user_birthday", "user_friends"));
+
         callbackManager = CallbackManager.Factory.create();
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 System.err.println( loginResult);
+               // Profile profile = Profile.getCurrentProfile();
+                getUser(null);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -102,6 +114,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
+    }
+
+    private void getUser(Profile profile) {
+        User user = new User("ololo", null, "", 0, 0, 0 );
+        mDatabase.child("users").child("123").setValue(user);
     }
 
     private void handleFacebookAccessToken(AccessToken accessToken) {
