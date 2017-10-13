@@ -1,5 +1,6 @@
 package hinapolina.com.sharelocation.model;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
@@ -7,6 +8,9 @@ import com.google.firebase.database.IgnoreExtraProperties;
  */
 @IgnoreExtraProperties
 public class User {
+
+    @Exclude
+    public String id;
     public String name;
     public String email;
     public String imageURI;
@@ -17,15 +21,13 @@ public class User {
     public User() {
     }
 
-    public User(String name, String email, String imageURI, int battery, double lng, double lat) {
-        this.name = name;
-        this.email = email;
-        this.imageURI = imageURI;
-        this.battery = battery;
-        this.lng = lng;
-        this.lat = lat;
+    public String getId() {
+        return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getName() {
         return name;
     }
