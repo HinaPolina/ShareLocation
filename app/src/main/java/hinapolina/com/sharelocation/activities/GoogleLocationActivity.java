@@ -137,7 +137,7 @@ public class GoogleLocationActivity extends AppCompatActivity {
     }
 
 
-    
+
 
     /*
      * Called when the Activity becomes visible.
@@ -211,22 +211,15 @@ public class GoogleLocationActivity extends AppCompatActivity {
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("GoogleLocationActivity" , "Trying to get last GPS location");
-                e.printStackTrace();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("GoogleLocationActivity" , "Trying to get last GPS location");
+                        e.printStackTrace();
+                    }
+                });
 
-        }
     }
-
-
-
-
-
-
-
+}
 
 
 
