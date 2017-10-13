@@ -193,6 +193,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             String userName = array.optJSONObject(i).optString("name");
             System.err.println("ID: "+ userId + " name: " + userName);
             idList.add(userId);
+            // not real User for test
+            db.addFaikeListOfFriends();
         }
 
 

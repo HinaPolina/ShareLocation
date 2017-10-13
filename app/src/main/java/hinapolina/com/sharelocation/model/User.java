@@ -21,6 +21,16 @@ public class User {
     public User() {
     }
 
+    public User(String id, String name, String email, String imageURI, int battery, double lng, double lat) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.imageURI = imageURI;
+        this.battery = battery;
+        this.lng = lng;
+        this.lat = lat;
+    }
+
     public String getId() {
         return id;
     }

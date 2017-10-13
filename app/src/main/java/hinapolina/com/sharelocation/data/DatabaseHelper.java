@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -77,6 +78,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
         return getUser(cursor);
+    }
+
+    public void addFaikeListOfFriends(){
+        List<User> users = new ArrayList<>();
+
+        User user1 = new User("1", "Max", "ololo", "https://openclipart.org/image/2400px/svg_to_png/239997/TJ-Openclipart-8-character-Hi-4-2-16-png-.png", 25, 37.7331299, -122.507348);
+
+        User user2 = new User("2", "Jon", "ololo", "https://openclipart.org/image/2400px/svg_to_png/239997/TJ-Openclipart-8-character-Hi-4-2-16-png-.png", 67, 37.7339614, -122.5278508);
+        User user3 = new User("3", "Dug", "ololo", "https://openclipart.org/image/2400px/svg_to_png/239997/TJ-Openclipart-8-character-Hi-4-2-16-png-.png", 100, 37.7689793, -122.4660527);
+        User user4 = new User("4", "Jo", "ololo", "https://openclipart.org/image/2400px/svg_to_png/239997/TJ-Openclipart-8-character-Hi-4-2-16-png-.png", 5, 37.7689793, -122.4660527);
+        addUser(user1);
+        addUser(user2);
+        addUser(user3);
+        addUser(user4);
+
+
     }
 
     private User getUser(Cursor cursor){
