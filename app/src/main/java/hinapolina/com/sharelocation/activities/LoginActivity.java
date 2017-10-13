@@ -100,6 +100,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         googleSignIn();
         facebookSingIn();
+        navigateGoogleMap();
     }
 
     private void googleSignIn() {
@@ -145,7 +146,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     for (int i = 0; i < array.length(); i++) {
                                         String userId = array.optJSONObject(i).optString("id");
                                         String userName = array.optJSONObject(i).optString("name");
-                                        System.err.println("ID: "+ userId + " name: " + userName);
+                                        System.err.println("ID: " + userId + " name: " + userName);
                                     }
                                     saveUserInDB(id, user);
                                 } catch (JSONException e) {
@@ -182,27 +183,26 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void saveUserInDB(String id, User user) {
-            if (location != null) {
+        if (location != null) {
             user.setLat(location.getLatitude());
             user.setLng(location.getLongitude());
         }
-        int battery = (int)Utils.getBatteryLevel(this);
+        int battery = (int) Utils.getBatteryLevel(this);
         user.setBattery(battery);
         mDatabase.child("users").child(id).setValue(user);
     }
 
 
-
     private void getCurrentLocation() {
         FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-       checkLocationPermission();
+        checkLocationPermission();
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            System.err.println("Location " + location.getLatitude() + " " +location.getLongitude());
+                            System.err.println("Location " + location.getLatitude() + " " + location.getLongitude());
                             setLocation(location);
                         }
                     }
@@ -267,7 +267,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             == PackageManager.PERMISSION_GRANTED) {
 
                         //Request location updates:
-                     // location =  getCurrentLocation();
+                        // location =  getCurrentLocation();
                     }
 
                 } else {
@@ -310,7 +310,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-
     private void handleSignInwithGoogleResult(GoogleSignInResult result) {
         Log.d("log", "handleSignInwithGoogleResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -345,7 +344,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            System.err.println("signInWithCredential:failure"+task.getException());
+                            System.err.println("signInWithCredential:failure" + task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
@@ -382,4 +381,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         }
     }
+
+
+    private void navigateGoogleMap(){
+        Intent navigateUserToGoogleMap = new Intent(LoginActivity.this, GoogleLocationActivity.class);
+        startActivity(navigateUserToGoogleMap);
+    }
 }
+
