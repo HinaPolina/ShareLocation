@@ -87,13 +87,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        if(currentUser!=null){
+            navigateGoogleMap();
+        }
         db = new DatabaseHelper(this);
-    }
-
-    //todo go to map activity
-    private void updateUI(FirebaseUser currentUser) {
-
     }
 
     @Override
@@ -107,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         googleSignIn();
         facebookSingIn();
-        navigateGoogleMap();
+
     }
 
     private void googleSignIn() {
@@ -231,6 +228,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         user.setBattery(battery);
         user.setId(id);
         mDatabase.child("users").child(id).setValue(user);
+        navigateGoogleMap();
     }
 
 
@@ -337,7 +335,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             // Sign in success, update UI with the signed-in user's information
                             System.err.println("signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+
 
 
                         } else {
@@ -345,7 +343,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             System.err.println("signInWithCredential:failure" + task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+
                         }
                     }
                 });
@@ -364,7 +362,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user.setEmail(acct.getEmail());
             user.setName(acct.getDisplayName());
             // save user in DB
-            saveUserInDB(acct.getId(), user);
+            saveUserToServer(acct.getId(), user);
             // authentication with firebase
             firebaseAuthWithGoogle(acct);
         } else {
@@ -384,13 +382,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             // Sign in success, update UI with the signed-in user's information
                             System.err.println("signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             System.err.println("signInWithCredential:failure"+task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+
                         }
 
                         // ...
