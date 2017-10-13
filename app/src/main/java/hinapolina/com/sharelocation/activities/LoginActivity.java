@@ -43,6 +43,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -130,7 +131,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 Log.v("LoginActivity", response.toString());
-
+                                Log.v("Friends list response", response.toString());
                                 // Application code
                                 try {
                                     String email = object.getString("email");
@@ -140,18 +141,30 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     user.setName(name);
                                     user.setImageURI("https://graph.facebook.com/" + id + "/picture?type=large");
                                     user.setEmail(email);
+                                    JSONArray array = object.optJSONArray("friends");
+                                    for (int i = 0; i < array.length(); i++) {
+                                        String userId = array.optJSONObject(i).optString("id");
+                                        String userName = array.optJSONObject(i).optString("name");
+                                        System.err.println("ID: "+ userId + " name: " + userName);
+                                    }
                                     saveUserInDB(id, user);
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
                         });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email");
+                parameters.putString("fields", "id,name,email,friends ");
                 request.setParameters(parameters);
                 request.executeAsync();
-
+                System.err.println("Starting load fiends:");
+                GraphRequest.newMyFriendsRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONArrayCallback() {
+                            @Override
+                            public void onCompleted(JSONArray array, GraphResponse response) {
+                            }
+                        }).executeAsync();
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
