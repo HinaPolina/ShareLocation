@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         googleSignIn();
         facebookSingIn();
+        navigateGoogleMap();
     }
 
     private void googleSignIn() {
@@ -187,6 +188,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
+
     private void saveFriendsToBD(JSONArray array) {
         final HashSet<String> idList = new HashSet<>();
         for (int i = 0; i < array.length(); i++) {
@@ -195,6 +197,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             System.err.println("ID: "+ userId + " name: " + userName);
             idList.add(userId);
         }
+
 
 
         mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -361,7 +364,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user.setEmail(acct.getEmail());
             user.setName(acct.getDisplayName());
             // save user in DB
-            saveUserToServer(acct.getId(), user);
+            saveUserInDB(acct.getId(), user);
             // authentication with firebase
             firebaseAuthWithGoogle(acct);
         } else {
@@ -420,5 +423,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 break;
 
         }
+    }
+
+
+    private void navigateGoogleMap(){
+        Intent navigateUserToGoogleMap = new Intent(LoginActivity.this, GoogleLocationActivity.class);
+        startActivity(navigateUserToGoogleMap);
     }
 }
