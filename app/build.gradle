@@ -1,3 +1,4 @@
+
 apply plugin: 'com.android.application'
 
 android {
@@ -24,8 +25,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-      compile 'com.android.support:appcompat-v7:26.1.0'
-      compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     compile 'com.facebook.android:facebook-login:[4,5)'
     compile 'com.google.firebase:firebase-crash:11.4.2'
     compile 'com.google.firebase:firebase-auth:11.4.2'
@@ -33,11 +34,8 @@ dependencies {
     compile 'com.google.firebase:firebase-database:11.4.2'
     compile 'com.google.android.gms:play-services-maps:11.4.2'
     compile 'com.google.android.gms:play-services-location:11.4.2'
-    compile 'com.google.android.gms:play-services:11.4.2'
-    compile 'com.google.maps.android:android-maps-utils:0.5+'
     compile 'com.github.hotchemi:permissionsdispatcher:2.4.0'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'
-

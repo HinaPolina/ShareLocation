@@ -41,17 +41,22 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.Utils;
+import hinapolina.com.sharelocation.data.DatabaseHelper;
 import hinapolina.com.sharelocation.model.User;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -64,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private SignInButton signInButton;
     private DatabaseReference mDatabase;
     private final static int MY_PERMISSIONS_REQUEST_LOCATION = 121;
+    DatabaseHelper db;
 
     public Location getLocation() {
         return location;
@@ -79,13 +85,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onStart() {
         super.onStart();
+
+        db = new DatabaseHelper(this);
+
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
-
-    //todo go to map activity
-    private void updateUI(FirebaseUser currentUser) {
+        if(true || currentUser!=null){
+            //TODO - Remove this line once we have friends functionality working
+            db.addFaikeListOfFriends();
+            navigateGoogleMap();
+        }
 
     }
 
@@ -100,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         googleSignIn();
         facebookSingIn();
-        navigateGoogleMap();
+
     }
 
     private void googleSignIn() {
@@ -124,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                System.err.println(loginResult);
+                Log.d("FB Login Result", loginResult.toString());
 
                 GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(),
@@ -142,13 +151,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     user.setName(name);
                                     user.setImageURI("https://graph.facebook.com/" + id + "/picture?type=large");
                                     user.setEmail(email);
-                                    JSONArray array = object.optJSONArray("friends");
-                                    for (int i = 0; i < array.length(); i++) {
-                                        String userId = array.optJSONObject(i).optString("id");
-                                        String userName = array.optJSONObject(i).optString("name");
-                                        System.err.println("ID: " + userId + " name: " + userName);
-                                    }
-                                    saveUserInDB(id, user);
+                                    JSONObject object_friends = object.optJSONObject("friends");
+                                    JSONArray array = object_friends.getJSONArray("data");
+                                    // saved your friends from facebook to local DB
+                                    saveFriendsToBD(array);
+                                    // Save current user to Firebase
+                                    saveUserToServer(id, user);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -171,38 +179,77 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             @Override
             public void onCancel() {
-                // App code
+                Log.d("", "Cancelled Facebook login");
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
+                Log.d("", "Error logging in via facebook");
             }
         });
 
     }
 
-    private void saveUserInDB(String id, User user) {
-        if (location != null) {
+
+    private void saveFriendsToBD(JSONArray array) {
+        final HashSet<String> idList = new HashSet<>();
+        for (int i = 0; i < array.length(); i++) {
+            String userId = array.optJSONObject(i).optString("id");
+            String userName = array.optJSONObject(i).optString("name");
+            System.err.println("ID: "+ userId + " name: " + userName);
+            idList.add(userId);
+            // not real User for test
+            db.addFaikeListOfFriends();
+        }
+
+
+
+        mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    String userId = user.getKey();
+
+                    if (idList.contains(userId)){
+                        User res = user.getValue(User.class);
+                        db.addUser(res);
+                        System.err.println("Add user " + res.getName() + " into DB" );
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.err.println("The read failed: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void saveUserToServer(String id, User user) {
+            if (location != null) {
             user.setLat(location.getLatitude());
             user.setLng(location.getLongitude());
         }
-        int battery = (int) Utils.getBatteryLevel(this);
+        int battery = (int)Utils.getBatteryLevel(this);
         user.setBattery(battery);
+        user.setId(id);
         mDatabase.child("users").child(id).setValue(user);
+        navigateGoogleMap();
     }
+
 
 
     private void getCurrentLocation() {
         FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        checkLocationPermission();
+       checkLocationPermission();
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            System.err.println("Location " + location.getLatitude() + " " + location.getLongitude());
+                            System.err.println("Location " + location.getLatitude() + " " +location.getLongitude());
                             setLocation(location);
                         }
                     }
@@ -267,7 +314,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             == PackageManager.PERMISSION_GRANTED) {
 
                         //Request location updates:
-                        // location =  getCurrentLocation();
+                     // location =  getCurrentLocation();
                     }
 
                 } else {
@@ -295,7 +342,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             // Sign in success, update UI with the signed-in user's information
                             System.err.println("signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+
 
 
                         } else {
@@ -303,11 +350,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             System.err.println("signInWithCredential:failure" + task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+
                         }
                     }
                 });
     }
+
 
 
     private void handleSignInwithGoogleResult(GoogleSignInResult result) {
@@ -321,7 +369,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             user.setEmail(acct.getEmail());
             user.setName(acct.getDisplayName());
             // save user in DB
-            saveUserInDB(acct.getId(), user);
+            saveUserToServer(acct.getId(), user);
             // authentication with firebase
             firebaseAuthWithGoogle(acct);
         } else {
@@ -341,13 +389,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             // Sign in success, update UI with the signed-in user's information
                             System.err.println("signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+
                         } else {
                             // If sign in fails, display a message to the user.
-                            System.err.println("signInWithCredential:failure" + task.getException());
+                            System.err.println("signInWithCredential:failure"+task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+
                         }
 
                         // ...
@@ -388,4 +436,3 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         startActivity(navigateUserToGoogleMap);
     }
 }
-
