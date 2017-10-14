@@ -11,6 +11,9 @@ import android.os.BatteryManager;
 
 public class Utils {
 
+    public static final String USER_ID =  "user_id";
+    public static final String USER_NAME = "user_name";
+
     public static float getBatteryLevel(Context context) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = context.registerReceiver(null, ifilter);
@@ -21,6 +24,7 @@ public class Utils {
         System.err.println("battery leval" +level);
         return ((float)level / (float)scale) * 100.0f;
     }
+
 
 
 }

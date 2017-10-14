@@ -1,8 +1,10 @@
 package hinapolina.com.sharelocation.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -192,17 +194,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void saveFriendsToBD(JSONArray array) {
-        final HashSet<String> idList = new HashSet<>();
+        final HashSet<String> friendsIdList = new HashSet<>();
         for (int i = 0; i < array.length(); i++) {
             String userId = array.optJSONObject(i).optString("id");
             String userName = array.optJSONObject(i).optString("name");
             System.err.println("ID: "+ userId + " name: " + userName);
-            idList.add(userId);
+            friendsIdList.add(userId);
             // not real User for test
             db.addFaikeListOfFriends();
         }
-
-
 
         mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 for (DataSnapshot user: dataSnapshot.getChildren()) {
                     String userId = user.getKey();
 
-                    if (idList.contains(userId)){
+                    if (friendsIdList.contains(userId)){
                         User res = user.getValue(User.class);
                         db.addUser(res);
                         System.err.println("Add user " + res.getName() + " into DB" );
@@ -235,7 +235,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         user.setBattery(battery);
         user.setId(id);
         mDatabase.child("users").child(id).setValue(user);
+        SharedPreferences sharedPref =getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Utils.USER_ID, user.getId());
+        editor.putString(Utils.USER_NAME, user.getName());
+        editor.commit();
+
         navigateGoogleMap();
+
     }
 
 

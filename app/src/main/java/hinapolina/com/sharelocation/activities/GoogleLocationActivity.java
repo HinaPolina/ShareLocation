@@ -1,12 +1,10 @@
 package hinapolina.com.sharelocation.activities;
 
 import android.Manifest;
-import android.app.SearchManager;
-import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,17 +31,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.Utils;
 import hinapolina.com.sharelocation.data.DatabaseHelper;
 import hinapolina.com.sharelocation.model.User;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
+
+import static android.R.attr.id;
+import static android.R.attr.name;
 
 
 /**
@@ -78,11 +80,13 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
 
     private final static String KEY_LOCATION = "location";
     private final static String TAG = GoogleLocationActivity.class.getSimpleName();
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_map);
+        mDatabase = Application.getmDatabase();
 
         if (TextUtils.isEmpty(getResources().getString(R.string.google_maps_api_key))) {
             throw new IllegalStateException("You forgot to supply a Google Maps API key");
@@ -174,6 +178,8 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
+        // send new location to server
+        sendLocationToServer(location);
 
         if (mMarkers != null) {
             //Remove existing markers
@@ -202,6 +208,12 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
         //move map camera
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 8));
 
+    }
+     // send new Location to the server
+    private void sendLocationToServer(Location location) {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mDatabase.child("users").child(sharedPref.getString(Utils.USER_ID, "")).child("lat").setValue(location.getLatitude());
+        mDatabase.child("users").child(sharedPref.getString(Utils.USER_ID, "")).child("lng").setValue(location.getLongitude());
     }
 
 
