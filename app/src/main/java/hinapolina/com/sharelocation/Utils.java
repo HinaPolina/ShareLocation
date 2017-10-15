@@ -13,6 +13,9 @@ public class Utils {
 
     public static final String USER_ID =  "user_id";
     public static final String USER_NAME = "user_name";
+    public static final String MY_PREFS_NAME = "pref" ;
+    public static final String EMAIL = "email" ;
+    public static final String IMAGE = "image";
 
     public static float getBatteryLevel(Context context) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);

@@ -43,11 +43,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +58,7 @@ import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.Utils;
 import hinapolina.com.sharelocation.data.DatabaseHelper;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -72,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private DatabaseReference mDatabase;
     private final static int MY_PERMISSIONS_REQUEST_LOCATION = 121;
     DatabaseHelper db;
+    FirebaseHelper firebaseHelper;
 
     public Location getLocation() {
         return location;
@@ -88,13 +88,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onStart() {
         super.onStart();
 
-        db = new DatabaseHelper(this);
+
+        firebaseHelper = new FirebaseHelper(null);
 
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(true || currentUser!=null){
-            //TODO - Remove this line once we have friends functionality working
-            db.addFaikeListOfFriends();
+        if(currentUser!=null){
+
             navigateGoogleMap();
         }
 
@@ -156,7 +156,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     JSONObject object_friends = object.optJSONObject("friends");
                                     JSONArray array = object_friends.getJSONArray("data");
                                     // saved your friends from facebook to local DB
-                                    saveFriendsToBD(array);
+                                    saveFriendsToBD(array, id);
                                     // Save current user to Firebase
                                     saveUserToServer(id, user);
                                 } catch (JSONException e) {
@@ -193,38 +193,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-    private void saveFriendsToBD(JSONArray array) {
+    private void saveFriendsToBD(JSONArray array, String currentUserId) {
         final HashSet<String> friendsIdList = new HashSet<>();
         for (int i = 0; i < array.length(); i++) {
             String userId = array.optJSONObject(i).optString("id");
             String userName = array.optJSONObject(i).optString("name");
             System.err.println("ID: "+ userId + " name: " + userName);
             friendsIdList.add(userId);
-            // not real User for test
-            db.addFaikeListOfFriends();
         }
-
-        mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot user: dataSnapshot.getChildren()) {
-                    String userId = user.getKey();
-
-                    if (friendsIdList.contains(userId)){
-                        User res = user.getValue(User.class);
-                        db.addUser(res);
-                        System.err.println("Add user " + res.getName() + " into DB" );
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.err.println("The read failed: " + databaseError.getMessage());
-            }
-        });
+      String friendsId =   StringUtils.join(friendsIdList, ";");
+        mDatabase.child("friends").child(currentUserId).setValue(friendsId);
     }
+
 
     private void saveUserToServer(String id, User user) {
             if (location != null) {
@@ -235,11 +215,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         user.setBattery(battery);
         user.setId(id);
         mDatabase.child("users").child(id).setValue(user);
-        SharedPreferences sharedPref =getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(Utils.USER_ID, user.getId());
+        editor.putString(Utils.USER_ID, id);
         editor.putString(Utils.USER_NAME, user.getName());
-        editor.commit();
+        editor.putString(Utils.EMAIL, user.getEmail());
+        editor.putString(Utils.IMAGE, user.getImageURI());
+        editor.apply();
 
         navigateGoogleMap();
 
