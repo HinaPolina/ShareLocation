@@ -3,6 +3,7 @@ package hinapolina.com.sharelocation.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -33,15 +34,22 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.Utils;
 import hinapolina.com.sharelocation.data.DatabaseHelper;
+import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -51,7 +59,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class GoogleLocationFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener  {
+        LocationListener ,UserUpdateListener {
 
     private SupportMapFragment mSupportMapFragment;
     private GoogleMap mGoogleMap;
@@ -59,11 +67,15 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     private Location mCurrentLocation;
     public User mUser;
     private Context mContext;
+    String currentUserId;
 
     GoogleApiClient mGoogleApiClient;
     List<Marker> mMarkers;
 
     DatabaseHelper locationDBHelper;
+    FirebaseHelper fbHelper;
+    SharedPreferences sharedPref;
+    private DatabaseReference mDatabase;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private final static String KEY_LOCATION = "location";
@@ -78,6 +90,10 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         mContext = container.getContext();
+        mDatabase = Application.getmDatabase();
+        sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        currentUserId = sharedPref.getString(Utils.USER_ID, "") ;
+        fbHelper = new FirebaseHelper(this);
 
         if (TextUtils.isEmpty(getResources().getString(R.string.google_maps_api_key))) {
             throw new IllegalStateException("You forgot to supply a Google Maps API key");
@@ -97,6 +113,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
         mMarkers = new ArrayList<Marker>();
         getPermissionToReadUserContacts();
+
 
         return view;
     }
@@ -196,10 +213,13 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         //Add current user location marker on map
         mMarkers.add(addMarker(location.getLatitude(), location.getLongitude()));
 
+        //Display friends locations as markers on map
+        fbHelper.getUsersFromFirebaseByID(currentUserId);
 
         //move map camera
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 8));
 
+        sendLocationToServer(location);
     }
 
 
@@ -307,8 +327,26 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
+    // send new Location to the server
+    private void sendLocationToServer(Location location){
+        sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        mDatabase.child("users").child(sharedPref.getString(Utils.USER_ID, "")).child("lat").setValue(location.getLatitude());
+        mDatabase.child("users").child(sharedPref.getString(Utils.USER_ID, "")).child("lng").setValue(location.getLongitude());
+        User user = new User();
+        user.setName(sharedPref.getString(Utils.USER_NAME, ""));
+        user.setEmail(sharedPref.getString(Utils.EMAIL, ""));
+        user.setImageURI(sharedPref.getString(Utils.IMAGE, ""));
+        user.setLat(location.getLatitude());
+        user.setLng(location.getLongitude());
+        user.setBattery((int) Utils.getBatteryLevel(mContext));
+        mDatabase.child("users").child(currentUserId).setValue(user);
+    }
 
 
+    @Override
+    public void updateUserMarker(User user) {
+        addMarker(user.getLat(), user.getLng());
+    }
 }
 
 
