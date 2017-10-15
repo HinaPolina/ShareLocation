@@ -71,7 +71,7 @@
         <uses-library android:required="true" android:name="com.google.android.maps" />
 
         <activity
-            android:name="hinapolina.com.sharelocation.activities.GoogleLocationActivity"/>
+            android:name="hinapolina.com.sharelocation.activities.HomeActivity"/>
 
     </application>
 

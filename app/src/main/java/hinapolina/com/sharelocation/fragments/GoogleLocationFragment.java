@@ -1,24 +1,27 @@
-package hinapolina.com.sharelocation.activities;
+package hinapolina.com.sharelocation.fragments;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -30,19 +33,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.Utils;
 import hinapolina.com.sharelocation.data.DatabaseHelper;
-import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
-import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -51,49 +48,36 @@ import permissions.dispatcher.RuntimePermissions;
  * Created by hinaikhan on 10/12/17.
  */
 @RuntimePermissions
-public class GoogleLocationActivity extends AppCompatActivity implements OnMapReadyCallback,
+public class GoogleLocationFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener ,
-        UserUpdateListener{
+        LocationListener  {
 
     private SupportMapFragment mSupportMapFragment;
     private GoogleMap mGoogleMap;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     public User mUser;
-    String currentUserId;
+    private Context mContext;
 
     GoogleApiClient mGoogleApiClient;
     List<Marker> mMarkers;
+
     DatabaseHelper locationDBHelper;
-    private FirebaseAuth mAuth;
-
-    //use for user's Last Known Location
-    private FusedLocationProviderClient mFusedLocationClient;
-
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
-    private long UPDATE_INTERVAL = 10 * 1000; //10sec
-    private long FASTEST_INTERVAL = 2000; //2sec
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
-
     private final static String KEY_LOCATION = "location";
-    private final static String TAG = GoogleLocationActivity.class.getSimpleName();
-    private DatabaseReference mDatabase;
-    FirebaseHelper fbHelper;
-    SharedPreferences sharedPref;
+    private final static String TAG = GoogleLocationFragment.class.getSimpleName();
 
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_map);
-        mDatabase = Application.getmDatabase();
-        sharedPref = getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-        currentUserId = sharedPref.getString(Utils.USER_ID, "");
-        fbHelper = new FirebaseHelper(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        mContext = container.getContext();
 
         if (TextUtils.isEmpty(getResources().getString(R.string.google_maps_api_key))) {
             throw new IllegalStateException("You forgot to supply a Google Maps API key");
@@ -105,15 +89,18 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
 
-        mSupportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mSupportMapFragment.getMapAsync(this);
 
         mUser = new User();
-        locationDBHelper = new DatabaseHelper(this);
+        locationDBHelper = new DatabaseHelper(mContext);
 
         mMarkers = new ArrayList<Marker>();
         getPermissionToReadUserContacts();
+
+        return view;
     }
+
 
 
     @Override
@@ -121,10 +108,9 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this,
+            if (ContextCompat.checkSelfPermission(mContext,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 //Location Permission already granted
@@ -153,7 +139,7 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
     }
 
     protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -167,7 +153,7 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -186,8 +172,6 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
-        // send new location to server
-        sendLocationToServer(location);
 
         if (mMarkers != null) {
             //Remove existing markers
@@ -202,49 +186,42 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
         double latitiude = 0;
         double longitude = 0;
 
+        //Display friends locations as markers on map
+        for (User user : locationDBHelper.allUsers()) {
+            mMarkers.add(addMarker(user.getLat(), user.getLng()));
+            //latitiude = user.getLat();
+            //longitude = user.getLng();
+        }
+
         //Add current user location marker on map
         mMarkers.add(addMarker(location.getLatitude(), location.getLongitude()));
 
-        //Display friends locations as markers on map
 
-        fbHelper.getUsersFromFirebaseByID(currentUserId);
         //move map camera
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 8));
 
     }
-     // send new Location to the server
-    private void sendLocationToServer(Location location) {
-        User user = new User();
-        user.setName(sharedPref.getString(Utils.USER_NAME, ""));
-        user.setEmail(sharedPref.getString(Utils.EMAIL, ""));
-        user.setImageURI(sharedPref.getString(Utils.IMAGE, ""));
-        user.setLat(location.getLatitude());
-        user.setLng(location.getLongitude());
-        user.setBattery((int) Utils.getBatteryLevel(this));
-        mDatabase.child("users").child(currentUserId).setValue(user);
-    }
-
 
 
     private void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(this)
+                new AlertDialog.Builder(mContext)
                         .setTitle("Location Permission Needed")
                         .setMessage("This app needs the Location permission, please accept to use location functionality")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(GoogleLocationActivity.this,
+                                ActivityCompat.requestPermissions(getActivity(),
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                         MY_PERMISSIONS_REQUEST_LOCATION);
                             }
@@ -255,7 +232,7 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
 
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
@@ -274,18 +251,18 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
 
 
     public void getPermissionToReadUserContacts() {
-        if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
             } else {
 
                 // No explanation needed, we can request the permission.
 
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
 
@@ -293,33 +270,7 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
         }
     }
 
-//            @Override
-//            public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-//
-//                switch (requestCode) {
-//                    case MY_PERMISSIONS_REQUEST_LOCATION: {
-//                        // If request is cancelled, the result arrays are empty.
-//                        if (grantResults.length > 0
-//                                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//
-//                            // permission was granted, yay! Do the
-//                            // contacts-related task you need to do.
-//
-//                        } else {
-//
-//                            // permission denied, boo! Disable the
-//                            // functionality that depends on this permission.
-//                        }
-//                        return;
-//                    }
-//
-//                    // other 'case' lines to check for other
-//                    // permissions this app might request
-//                }
-//            }
-
-
-                @Override
+    @Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
 
 
@@ -331,7 +282,7 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
 
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this,
+                    if (ContextCompat.checkSelfPermission(mContext,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
@@ -345,7 +296,8 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "permission denied", Toast.LENGTH_LONG).show();
+
                 }
                 return;
             }
@@ -355,10 +307,8 @@ public class GoogleLocationActivity extends AppCompatActivity implements OnMapRe
         }
     }
 
-    @Override
-    public void updateUserMarker(User user) {
-        addMarker(user.getLat(), user.getLng());
-    }
+
+
 }
 
 

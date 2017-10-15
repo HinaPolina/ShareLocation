@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_sharing_location"
+            android:icon="@drawable/share_icon"
+            android:title="@string/location_sharing"/>
+
+        <item
+            android:id="@+id/nav_battery"
+            android:icon="@drawable/share_icon"
+            android:title="@string/battery"/>
+
+
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/share_icon"
+            android:title="@string/log_out"/>
+
+    </group>
+
+</menu>

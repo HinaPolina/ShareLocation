@@ -63,6 +63,8 @@ import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final int RC_SIGN_IN = 111;
+    private static final int RC_FB_SIGN_IN = 64206;
+
     private LoginButton loginButton;
     CallbackManager callbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -94,8 +96,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
-
-            navigateGoogleMap();
+            gotoHome();
         }
 
     }
@@ -223,7 +224,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         editor.putString(Utils.IMAGE, user.getImageURI());
         editor.apply();
 
-        navigateGoogleMap();
+        gotoHome();
 
     }
 
@@ -400,10 +401,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInwithGoogleResult(result);
+        } else if (requestCode == RC_FB_SIGN_IN) {
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        } else {
+            throw new Error("Unsupported Login Type. Request Code - " + requestCode);
         }
     }
 
@@ -420,8 +424,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-    private void navigateGoogleMap(){
-        Intent navigateUserToGoogleMap = new Intent(LoginActivity.this, GoogleLocationActivity.class);
-        startActivity(navigateUserToGoogleMap);
+    private void gotoHome(){
+        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
     }
 }
