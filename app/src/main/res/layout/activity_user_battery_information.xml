@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/relative_users_info"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin"
         android:layout_marginTop="@dimen/activity_horizontal_margin">
 
         <ImageView
@@ -14,7 +15,6 @@
             android:layout_width="@dimen/profile_img_size"
             android:layout_height="@dimen/profile_img_size"
             android:layout_marginLeft="@dimen/margin"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:src="@android:color/black" />
 
         <TextView
