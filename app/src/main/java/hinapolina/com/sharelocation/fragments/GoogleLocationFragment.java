@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,13 +39,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.squareup.picasso.Transformation;
 
 import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
@@ -72,8 +72,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     String currentUserId;
 
     GoogleApiClient mGoogleApiClient;
-    List<Marker> mMarkers;
-    private FirebaseAuth mAuth;
+    Marker myUser;
 
     FirebaseHelper fbHelper;
     SharedPreferences sharedPref;
@@ -112,10 +111,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
         mUser = new User();
 
-        mMarkers = new ArrayList<Marker>();
         getPermissionToReadUserContacts();
-
-
         return view;
     }
 
@@ -148,6 +144,8 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 8));
             }
         });
+        //Display friends locations as markers on map
+        fbHelper.getUsersFromFirebaseByID(currentUserId);
     }
 
     @Override
@@ -194,26 +192,9 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
-
-        if (mMarkers != null) {
-            //Remove existing markers
-            for (Marker marker : mMarkers) {
-                marker.remove();
-            }
-
-            //Reset markers list
-            mMarkers.clear();
-        }
-
-        double latitiude = 0;
-        double longitude = 0;
-
+        if (myUser != null)
+            myUser.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
         //Add current user location marker on map
-        mMarkers.add(addMarker(location.getLatitude(), location.getLongitude()));
-
-        //Display friends locations as markers on map
-        fbHelper.getUsersFromFirebaseByID(currentUserId);
-
         sendLocationToServer(location);
     }
 
@@ -254,14 +235,38 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
-    private Marker addMarker(double latitude, double longitude) {
-        Log.d(TAG, "Latitude: " + latitude + ", longitude: " + longitude);
-        LatLng latLng = new LatLng(latitude, longitude);
-        MarkerOptions markerOptions = new MarkerOptions();
+    private Marker addMarker(final User user) {
+        Log.d(TAG, "Latitude: " + user.getLat()+ ", longitude: " + user.getLng());
+        LatLng latLng = new LatLng(user.getLat(), user.getLng());
+        final MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        return mGoogleMap.addMarker(markerOptions);
+        markerOptions.title(user.getName());
+        markerOptions.snippet("Battery level: " + user.getBattery());
+        final Marker marker = mGoogleMap.addMarker(markerOptions);
+        System.err.println("URL: " + user.getImageURI());
+        Picasso.with(getContext())
+                .load(user.getImageURI().replaceAll("large", "small"))
+                .centerCrop()
+                .resize(80, 80)
+                .transform(new RoundTransformation())
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        System.err.println("BITMAP: "+ bitmap);
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                        System.err.println("BITMAP Failed");
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
+        return marker;
     }
 
 
@@ -325,8 +330,6 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     // send new Location to the server
     private void sendLocationToServer(Location location){
         sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-        mDatabase.child("users").child(sharedPref.getString(Utils.USER_ID, "")).child("lat").setValue(location.getLatitude());
-        mDatabase.child("users").child(sharedPref.getString(Utils.USER_ID, "")).child("lng").setValue(location.getLongitude());
         User user = new User();
         user.setName(sharedPref.getString(Utils.USER_NAME, ""));
         user.setEmail(sharedPref.getString(Utils.EMAIL, ""));
@@ -337,32 +340,47 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         mDatabase.child("users").child(currentUserId).setValue(user);
     }
 
-    public static Bitmap getProfilePicture(String image){
-        Bitmap bitmap = null;
-        Bitmap newBitmap = null;
-        try {
-        URL imageURL = new URL(image);
-            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-            float ratio = Math.min(
-                    (float) 80 / bitmap.getWidth(),
-                    (float) 80 / bitmap.getHeight());
-            int width = Math.round((float) ratio * bitmap.getWidth());
-            int height = Math.round((float) ratio * bitmap.getHeight());
-
-            newBitmap = Bitmap.createScaledBitmap(bitmap, width,
-                    height, false);
-
-
-        return newBitmap;
-    }
-
     @Override
     public void updateUserMarker(User user) {
-        addMarker(user.getLat(), user.getLng());
+        Marker marker = addMarker(user);
+        if (TextUtils.equals(user.getId(), currentUserId)) {
+            myUser = marker;
+        }
+    }
+
+    static private class RoundTransformation implements Transformation {
+        @Override
+        public Bitmap transform(Bitmap source) {
+            int size = Math.min(source.getWidth(), source.getHeight());
+
+            int x = (source.getWidth() - size) / 2;
+            int y = (source.getHeight() - size) / 2;
+
+            Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+            if (squaredBitmap != source) {
+                source.recycle();
+            }
+
+            Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
+
+            Canvas canvas = new Canvas(bitmap);
+            Paint paint = new Paint();
+            BitmapShader shader = new BitmapShader(squaredBitmap,
+                    BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
+            paint.setShader(shader);
+            paint.setAntiAlias(true);
+
+            float r = size / 2f;
+            canvas.drawCircle(r, r, r, paint);
+
+            squaredBitmap.recycle();
+            return bitmap;
+        }
+
+        @Override
+        public String key() {
+            return "circle";
+        }
     }
 }
 

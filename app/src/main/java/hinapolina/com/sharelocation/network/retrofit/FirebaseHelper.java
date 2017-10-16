@@ -39,12 +39,12 @@ public class FirebaseHelper {
                     if (userId.equals(currentUserId)){
                         String res = friends.getValue(String.class);
                         String [] arr = res.split(";");
-                        friendsIdList.clear();
                         friendsIdList.addAll(Arrays.asList(arr));
                         System.err.println("Friends of  user " + res + " into DB" );
                     }
 
                 }
+                friendsIdList.add(currentUserId);
 
                 mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
