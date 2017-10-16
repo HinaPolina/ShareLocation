@@ -16,8 +16,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,9 +45,14 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.Utils;
+import hinapolina.com.sharelocation.activities.LoginActivity;
+import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
@@ -67,22 +73,28 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     private GoogleMap mGoogleMap;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
-    public User mUser;
+
     private Context mContext;
     String currentUserId;
-
     GoogleApiClient mGoogleApiClient;
     Marker myUser;
 
     FirebaseHelper fbHelper;
     SharedPreferences sharedPref;
     private DatabaseReference mDatabase;
+    User user = new User();
+    private List<User> mUsers = new ArrayList<>();
+    private LoginActivity loginActivity;
+
+    private UsersRecyclerViewAdapter mUsersRecyclerView =
+            new UsersRecyclerViewAdapter(mContext, mUsers);
+
+    private LinearLayoutManager layoutManager = new LinearLayoutManager(mContext,  LinearLayoutManager.VERTICAL, false);
+    private RecyclerView mRecyclerView;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private final static String KEY_LOCATION = "location";
     private final static String TAG = GoogleLocationFragment.class.getSimpleName();
-
-    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,6 +107,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         currentUserId = sharedPref.getString(Utils.USER_ID, "") ;
         fbHelper = new FirebaseHelper(this);
+        loginActivity = new LoginActivity();
 
         if (TextUtils.isEmpty(getResources().getString(R.string.google_maps_api_key))) {
             throw new IllegalStateException("You forgot to supply a Google Maps API key");
@@ -109,10 +122,21 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mSupportMapFragment.getMapAsync(this);
 
-        mUser = new User();
-
         getPermissionToReadUserContacts();
+
+        mRecyclerView = (RecyclerView)  view.findViewById(R.id.profile_details_recycler) ;
+        initRecyclerView();
+
         return view;
+    }
+
+    private void initRecyclerView() {
+        Log.d(TAG, "initiating recycler");
+
+        mUsersRecyclerView.setFragmentManager(getFragmentManager());
+        layoutManager.scrollToPosition(0);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mUsersRecyclerView);
     }
 
 
@@ -330,7 +354,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     // send new Location to the server
     private void sendLocationToServer(Location location){
         sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-        User user = new User();
+
         user.setName(sharedPref.getString(Utils.USER_NAME, ""));
         user.setEmail(sharedPref.getString(Utils.EMAIL, ""));
         user.setImageURI(sharedPref.getString(Utils.IMAGE, ""));
@@ -381,6 +405,11 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         public String key() {
             return "circle";
         }
+    }
+
+    public void addUserToAdapter(User user) {
+        mUsersRecyclerView.addUser(user);
+        mUsersRecyclerView.notifyDataSetChanged();
     }
 }
 

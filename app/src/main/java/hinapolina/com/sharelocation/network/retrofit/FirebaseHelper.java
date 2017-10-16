@@ -1,5 +1,7 @@
 package hinapolina.com.sharelocation.network.retrofit;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,6 +19,8 @@ import hinapolina.com.sharelocation.model.User;
  */
 
 public class FirebaseHelper {
+    private static final String TAG = FirebaseHelper.class.getSimpleName();
+
     private  DatabaseReference mDatabase;
     UserUpdateListener listener;
 
@@ -54,8 +58,11 @@ public class FirebaseHelper {
 
                             if (friendsIdList.contains(userId)){
                                 User res = user.getValue(User.class);
-                               listener.updateUserMarker(res);
-                                System.err.println("Add user " + res.getName() + " into DB" );
+                                Log.d(TAG, "Adding user " + res.getName() + " to map");
+                                listener.updateUserMarker(res);
+
+                                Log.d(TAG, "Adding user " + res.getName() + " to adapter");
+                                listener.addUserToAdapter(res);
                             }
                         }
 

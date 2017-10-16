@@ -26,6 +26,8 @@
             android:padding="8dp"
             android:text="User name"
             android:textStyle="bold" />
+
+
     </LinearLayout>
 
   </LinearLayout>

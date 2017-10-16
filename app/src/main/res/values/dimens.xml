@@ -6,6 +6,21 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin_left_26">26dp</dimen>
     <dimen name="profile_img_size">70dp</dimen>
+    <dimen name="user_image_size">40dp</dimen>
+    <dimen name="margin">8dp</dimen>
+    <dimen name="margin_left_36">36dp</dimen>
+    <dimen name="margin_left_32">32dp</dimen>
+
+    <dimen name="text_size_8">8sp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+
+
+
 
 </resources>

@@ -236,17 +236,13 @@ public class HomeActivity extends AppCompatActivity
 
     private void setUserProfileData() {
 
-//        preferences = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-//         User mUser = new User();
-//        tvUserName.setText(mUser.getName());
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
             tvUserName.setText(currentUser.getDisplayName());
             Picasso.with(this).load(currentUser.getPhotoUrl()).into(imgUserProfile);
         }
 
-    }
+            }
 
 
     }

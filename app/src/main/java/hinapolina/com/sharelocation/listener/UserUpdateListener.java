@@ -8,4 +8,5 @@ import hinapolina.com.sharelocation.model.User;
 
 public interface UserUpdateListener {
     void updateUserMarker(User user);
+    void addUserToAdapter(User user);
 }

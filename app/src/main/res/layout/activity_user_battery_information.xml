@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/relative_users_info"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/users_img"
+            android:layout_width="@dimen/profile_img_size"
+            android:layout_height="@dimen/profile_img_size"
+            android:layout_marginLeft="@dimen/margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:src="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_users_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin"
+            android:layout_marginTop="@dimen/margin_left_36"
+            android:layout_toRightOf="@id/users_img"
+            android:text="User's Name"
+            android:textSize="@dimen/text_size_12" />
+
+        <ImageView
+        android:id="@+id/img_battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_left_32"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_toRightOf="@id/tv_users_name"
+        android:src="@drawable/icon_battery" />
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_battery_percentage"
+        android:textSize="@dimen/text_size_12"
+        android:layout_marginLeft="@dimen/margin"
+        android:text="Percentage"
+        android:layout_toRightOf="@id/img_battery"
+        android:layout_marginTop="@dimen/margin_left_36"
+        />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black" />
+
+</LinearLayout>
