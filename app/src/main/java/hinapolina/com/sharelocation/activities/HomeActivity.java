@@ -4,9 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,17 +16,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.ui.DataHolder;
-
-import static com.facebook.internal.CallbackManagerImpl.RequestCodeOffset.Login;
 
 /**
  * Created by hinaikhan on 10/14/17.
@@ -178,6 +176,7 @@ public class HomeActivity extends AppCompatActivity
                                     public void onClick(DialogInterface dialog, int which) {
                                         DataHolder.getInstance().clear();
                                         FirebaseAuth.getInstance().signOut();
+                                        LoginManager.getInstance().logOut();
                                         Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         HomeActivity.this.startActivity(intent);
