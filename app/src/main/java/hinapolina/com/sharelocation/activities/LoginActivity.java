@@ -56,7 +56,6 @@ import java.util.HashSet;
 import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.Utils;
-import hinapolina.com.sharelocation.data.DatabaseHelper;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 
@@ -72,7 +71,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private SignInButton signInButton;
     private DatabaseReference mDatabase;
     private final static int MY_PERMISSIONS_REQUEST_LOCATION = 121;
-    DatabaseHelper db;
     FirebaseHelper firebaseHelper;
 
     public Location getLocation() {

@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -34,22 +35,22 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.Utils;
-import hinapolina.com.sharelocation.data.DatabaseHelper;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -71,8 +72,8 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
     GoogleApiClient mGoogleApiClient;
     List<Marker> mMarkers;
+    private FirebaseAuth mAuth;
 
-    DatabaseHelper locationDBHelper;
     FirebaseHelper fbHelper;
     SharedPreferences sharedPref;
     private DatabaseReference mDatabase;
@@ -109,7 +110,6 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         mSupportMapFragment.getMapAsync(this);
 
         mUser = new User();
-        locationDBHelper = new DatabaseHelper(mContext);
 
         mMarkers = new ArrayList<Marker>();
         getPermissionToReadUserContacts();
@@ -202,13 +202,6 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
         double latitiude = 0;
         double longitude = 0;
-
-        //Display friends locations as markers on map
-        for (User user : locationDBHelper.allUsers()) {
-            mMarkers.add(addMarker(user.getLat(), user.getLng()));
-            //latitiude = user.getLat();
-            //longitude = user.getLng();
-        }
 
         //Add current user location marker on map
         mMarkers.add(addMarker(location.getLatitude(), location.getLongitude()));
@@ -342,6 +335,28 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         mDatabase.child("users").child(currentUserId).setValue(user);
     }
 
+    public static Bitmap getProfilePicture(String image){
+        Bitmap bitmap = null;
+        Bitmap newBitmap = null;
+        try {
+        URL imageURL = new URL(image);
+            bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+            float ratio = Math.min(
+                    (float) 80 / bitmap.getWidth(),
+                    (float) 80 / bitmap.getHeight());
+            int width = Math.round((float) ratio * bitmap.getWidth());
+            int height = Math.round((float) ratio * bitmap.getHeight());
+
+            newBitmap = Bitmap.createScaledBitmap(bitmap, width,
+                    height, false);
+
+
+        return newBitmap;
+    }
 
     @Override
     public void updateUserMarker(User user) {
