@@ -6,11 +6,10 @@
 
 The following **required** functionality is completed:
 
-* []	User can **sign in to app** using Facebook login
-* []	User can **create Profile**
+* [X]	User can **sign in to app** using Facebook login
 * []	User can **add new Friends**
 * []	User can **get push notification when new friend request sent**
-* []	User can **locate the friends on map**
+* [X]	User can **locate the friends on map**
 * []	User can **send a message to friends**
 * []	User can **navigate to friends location**
 
@@ -19,7 +18,7 @@ The following **optional** functionality
 * []	User can **share interesting places near**
 * []	User can **start video chat with friends**
 * []	User can **get push notification when friends are near by**
-* []	User can **see level of battary of friends**
+* [X]	User can **see level of battary of friends**
 * []	User can **order Uber from app**
 * []	User can **see timetable of BART/CalTrain**
 
@@ -34,9 +33,10 @@ https://www.fluidui.com/editor/live/preview/cF84ZmFmMGE5NWM0NzQyZjkxMmVmOTQzMjc3
 
 Here's a walkthrough of implemented user stories:
 
-<img src='#' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
++![alt text](https://github.com/HinaPolina/ShareLocation/blob/master/demo_sprint1.gif)
+
+GIF created with [Android Studio]
 
 ## Notes
 
