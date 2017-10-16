@@ -7,11 +7,25 @@
 The following **required** functionality is completed:
 
 * [X]	User can **sign in to app** using Facebook login
+        * [X]	User can  log in with facebook button 
+        * [X]	User can  log out app 
+
+
 * []	User can **add new Friends**
+         * [X]	User can  get list of friends from Facebook
+         * [X]	User can  search for a friends by name
+         * [X]	User can  see a list of his friends 
+         
+
 * []	User can **get push notification when new friend request sent**
 * [X]	User can **locate the friends on map**
+         * [X]	User can  see friends on a map with (image, name, level of batter)
+          * []	User can  see a movements of friends on map
 * []	User can **send a message to friends**
-* []	User can **navigate to friends location**
+         * []	User can  start char with friends
+          * []	User can  get push notification once his friend send him a message
+* []	User can **navigate to friends location** 
+         * []	User can start road to friends location
 
 The following **optional** functionality
 
