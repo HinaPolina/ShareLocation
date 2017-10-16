@@ -1,7 +1,9 @@
 package hinapolina.com.sharelocation.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,13 +18,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.Utils;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
+import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.DataHolder;
 
 /**
@@ -43,15 +52,22 @@ public class HomeActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
 
+    private FirebaseAuth mAuth;
+
+    //user's profile
+    private ImageView imgUserProfile;
+    private TextView tvUserName;
+    public User mUser;
+    public SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        setSupportActionBar(toolbar);
         initUI();
-
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Share Location");
+        mAuth = FirebaseAuth.getInstance();
         Bundle bundle = getIntent().getExtras();
         if(bundle == null){
             bundle = new Bundle();
@@ -68,12 +84,18 @@ public class HomeActivity extends AppCompatActivity
         setUpNav();
 
         loadHomeFragment();
+        setUserProfileData();
     }
 
     private void initUI(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View headerLayout = navigationView.getHeaderView(0);
+        tvUserName =(TextView) headerLayout.findViewById(R.id.tv_profile_details_name);
+        imgUserProfile = (ImageView) headerLayout.findViewById(R.id.img_profile_details);
+
     }
 
     @Override
@@ -211,5 +233,21 @@ public class HomeActivity extends AppCompatActivity
         super.onConfigurationChanged(newConfig);
         toggle.onConfigurationChanged(newConfig);
     }
-}
+
+    private void setUserProfileData() {
+
+//        preferences = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+//         User mUser = new User();
+//        tvUserName.setText(mUser.getName());
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser!=null){
+            tvUserName.setText(currentUser.getDisplayName());
+            Picasso.with(this).load(currentUser.getPhotoUrl()).into(imgUserProfile);
+        }
+
+    }
+
+
+    }
 
