@@ -7,8 +7,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import hinapolina.com.sharelocation.Application;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
@@ -29,6 +31,34 @@ public class FirebaseHelper {
         listener = context;
     }
 
+    public void findUserByName(final String name){
+        mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            List<User> users = new ArrayList<User>();
+            List<User> usersDefoult = new ArrayList<User>();
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userDB: dataSnapshot.getChildren()) {
+                    for(long i=0; i<dataSnapshot.getChildrenCount(); i++){
+                        User user = userDB.getValue(User.class);
+                        usersDefoult.add(user);
+                        if (name.equals(user.getName())){
+                          users.add(user);
+                        }
+                    }
+
+
+
+                }
+               listener.addUserToAdapter(users.size()>0? users: usersDefoult);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.err.println("The read failed: " + databaseError.getMessage());
+            }
+        });
+    }
 
     public void getUsersFromFirebaseByID(final String currentUserId) {
 
@@ -86,6 +116,8 @@ public class FirebaseHelper {
 
 
     }
+
+
 
 }
 

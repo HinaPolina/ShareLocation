@@ -354,7 +354,6 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     // send new Location to the server
     private void sendLocationToServer(Location location){
         sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-
         user.setName(sharedPref.getString(Utils.USER_NAME, ""));
         user.setEmail(sharedPref.getString(Utils.EMAIL, ""));
         user.setImageURI(sharedPref.getString(Utils.IMAGE, ""));
@@ -372,7 +371,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
-    static private class RoundTransformation implements Transformation {
+    static public class RoundTransformation implements Transformation {
         @Override
         public Bitmap transform(Bitmap source) {
             int size = Math.min(source.getWidth(), source.getHeight());
@@ -410,6 +409,13 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     public void addUserToAdapter(User user) {
         mUsersRecyclerView.addUser(user);
         mUsersRecyclerView.notifyDataSetChanged();
+    }
+
+
+
+    @Override
+    public void addUserToAdapter(List<User> users) {
+
     }
 }
 
