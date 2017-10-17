@@ -47,7 +47,6 @@ public class HomeActivity extends AppCompatActivity
 
 
     public int navItemIndex = 0;
-    public static final String TAG_BATTERY = "battery";
     private static final String CLOSE_BUTTON = "mCloseButton";
     public static final String TAG_GOOGLE_MAP = "map";
     public static String CURRENT_TAG = TAG_GOOGLE_MAP;
