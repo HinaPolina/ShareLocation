@@ -1,5 +1,7 @@
 package hinapolina.com.sharelocation.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,14 +28,20 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         firebaseHelper = new FirebaseHelper(this);
-        if(getIntent().hasExtra(Utils.USER_NAME)) firebaseHelper.findUserByName(getIntent().getStringExtra(Utils.USER_NAME));
+        SharedPreferences sharedPreferences = getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        String currentId =sharedPreferences.getString(Utils.USER_ID, "");
+        if(getIntent().hasExtra(Utils.USER_NAME)) firebaseHelper.findUserByName(getIntent().getStringExtra(Utils.USER_NAME),currentId );
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.rvUsersSearch);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SearchResultsAdapter(users, this);
+        adapter = new SearchResultsAdapter(users, this, currentId, firebaseHelper);
         recyclerView.setAdapter(adapter);
+    }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override

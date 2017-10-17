@@ -22,6 +22,17 @@ public class User {
     private BatteryStatus batteryStatus;
     private String text;
 
+    public boolean isFriend() {
+        return isFriend;
+    }
+
+    public void setFriend(boolean friend) {
+        isFriend = friend;
+    }
+
+    @Exclude
+    boolean isFriend;
+
     public User() {
     }
 
