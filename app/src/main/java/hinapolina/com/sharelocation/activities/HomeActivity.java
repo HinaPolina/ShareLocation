@@ -35,8 +35,11 @@ import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.Utils;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
+import hinapolina.com.sharelocation.messages.Messages;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.DataHolder;
+
+import static com.google.zxing.qrcode.decoder.ErrorCorrectionLevel.H;
 
 /**
  * Created by hinaikhan on 10/14/17.
@@ -167,7 +170,7 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_battery) {
+        if (id == R.id.nav_messages) {
 
         } else if (id == R.id.nav_log_out) {
 
@@ -245,6 +248,10 @@ public class HomeActivity extends AppCompatActivity
                         alertDialog.create().show();
                         break;
                     }
+                    case R.id.nav_messages:
+                        Intent intent = new Intent(HomeActivity.this, Messages.class);
+                        startActivity(intent);
+                        break;
                 }
 
                 drawer.closeDrawers();

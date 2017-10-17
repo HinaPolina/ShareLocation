@@ -8,9 +8,9 @@
             android:title="@string/location_sharing"/>
 
         <item
-            android:id="@+id/nav_battery"
+            android:id="@+id/nav_messages"
             android:icon="@drawable/share_icon"
-            android:title="@string/battery"/>
+            android:title="@string/messages"/>
 
 
         <item
