@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import hinapolina.com.sharelocation.Application;
+import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
 

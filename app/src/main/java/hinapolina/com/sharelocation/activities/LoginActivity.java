@@ -53,9 +53,9 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import hinapolina.com.sharelocation.Application;
+import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.Utils;
+import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth mAuth;
     private SignInButton signInButton;
     private DatabaseReference mDatabase;
-    private final static int MY_PERMISSIONS_REQUEST_LOCATION = 121;
+    private final static int MY_PERMISSIONS_REQUEST_LOCATION = 1001;
     FirebaseHelper firebaseHelper;
 
     public Location getLocation() {
@@ -218,8 +218,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void getCurrentLocation() {
+        checkLocationPermission();
         FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-       checkLocationPermission();
+
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
@@ -234,11 +235,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
-
     public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -291,7 +289,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             == PackageManager.PERMISSION_GRANTED) {
 
                         //Request location updates:
-                     // location =  getCurrentLocation();
+                        //locationManager.requestLocationUpdates(provider, 400, 1, this);
                     }
 
                 } else {
@@ -305,6 +303,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         }
     }
+
+
 
     // authentication with firebase
     private void handleFacebookAccessToken(AccessToken accessToken) {

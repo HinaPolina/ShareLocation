@@ -32,9 +32,10 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.Utils;
+import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
+import hinapolina.com.sharelocation.messages.Messages;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.DataHolder;
 
@@ -49,7 +50,6 @@ public class HomeActivity extends AppCompatActivity
 
 
     public int navItemIndex = 0;
-    public static final String TAG_BATTERY = "battery";
     private static final String CLOSE_BUTTON = "mCloseButton";
     public static final String TAG_GOOGLE_MAP = "map";
     public static String CURRENT_TAG = TAG_GOOGLE_MAP;
@@ -180,7 +180,7 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_battery) {
+        if (id == R.id.nav_messages) {
 
         } else if (id == R.id.nav_log_out) {
 
@@ -258,6 +258,10 @@ public class HomeActivity extends AppCompatActivity
                         alertDialog.create().show();
                         break;
                     }
+                    case R.id.nav_messages:
+                        Intent intent = new Intent(HomeActivity.this, Messages.class);
+                        startActivity(intent);
+                        break;
                 }
 
                 drawer.closeDrawers();
@@ -279,7 +283,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void setUserProfileData() {
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
             tvUserName.setText(currentUser.getDisplayName());

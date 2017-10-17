@@ -30,13 +30,19 @@
         android:required="true" />
 
     <application
-        android:name=".Application"
+        android:name=".ui.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/share_icon" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -77,7 +83,8 @@
             android:required="true" />
 
         <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.SearchResult"></activity>
+        <activity android:name=".activities.SearchResult" />
+        <activity android:name=".messages.Messages"></activity>
     </application>
 
 </manifest>

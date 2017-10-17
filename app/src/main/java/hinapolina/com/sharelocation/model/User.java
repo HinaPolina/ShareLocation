@@ -3,6 +3,8 @@ package hinapolina.com.sharelocation.model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import hinapolina.com.sharelocation.ui.BatteryStatus;
+
 /**
  * Created by polina on 10/11/17.
  */
@@ -10,13 +12,15 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class User {
 
     @Exclude
-    public String id;
-    public String name;
-    public String email;
-    public String imageURI;
-    public int battery;
-    public double lng;
-    public double lat;
+    private String id;
+    private String name;
+    private String email;
+    private String imageURI;
+    private int battery;
+    private double lng;
+    private double lat;
+    private BatteryStatus batteryStatus;
+    private String text;
 
     public boolean isFriend() {
         return isFriend;
@@ -32,7 +36,8 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String email, String imageURI, int battery, double lat, double lng) {
+    public User(String id, String name, String email, String imageURI, int battery, double lat, double lng,
+                BatteryStatus batteryStatus, String text) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -40,6 +45,8 @@ public class User {
         this.battery = battery;
         this.lng = lng;
         this.lat = lat;
+        this.batteryStatus = batteryStatus;
+        this.text = text;
     }
 
     public String getId() {
@@ -95,5 +102,36 @@ public class User {
 
     public void setLat(double lat) {
         this.lat = lat;
+    }
+
+    public BatteryStatus getBatteryStatus() {
+        return batteryStatus;
+    }
+
+    public void setBatteryStatus(BatteryStatus batteryStatus) {
+        this.batteryStatus = batteryStatus;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", imageURI='" + imageURI + '\'' +
+                ", battery=" + battery +
+                ", lng=" + lng +
+                ", lat=" + lat +
+                ", batteryStatus=" + batteryStatus +
+                ", text='" + text + '\'' +
+                '}';
     }
 }

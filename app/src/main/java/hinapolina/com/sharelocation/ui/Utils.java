@@ -1,4 +1,4 @@
-package hinapolina.com.sharelocation;
+package hinapolina.com.sharelocation.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,11 +9,13 @@ import android.os.BatteryManager;
 
 import java.io.IOException;
 
+import hinapolina.com.sharelocation.ui.BatteryStatus;
+
 /**
  * Created by polina on 10/12/17.
  */
 
-public class Utils {
+public class Utils{
 
     public static final String USER_ID =  "user_id";
     public static final String USER_NAME = "user_name";
@@ -32,6 +34,30 @@ public class Utils {
         System.err.println("battery leval" +level);
         return ((float)level / (float)scale) * 100.0f;
     }
+
+    public static BatteryStatus getBatteryStatus(Context context) {
+        BatteryStatus batteryStatus = new BatteryStatus();
+
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatusIntent = context.registerReceiver(null, ifilter);
+
+        // Are we charging / charged?
+        int status = batteryStatusIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL;
+
+        // How are we charging?
+        int chargePlug = batteryStatusIntent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+
+        batteryStatus.setCharging(isCharging);
+        batteryStatus.setAcCharge(acCharge);
+        batteryStatus.setUsbCharge(usbCharge);
+
+        return batteryStatus;
+    }
+
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
