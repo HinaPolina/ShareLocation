@@ -1,7 +1,10 @@
 package hinapolina.com.sharelocation.messages;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.constraint.solver.widgets.Snapshot;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,17 +24,29 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+import hinapolina.com.sharelocation.model.Message;
+import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.MessageAdapter;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.ui.DataHolder;
+import hinapolina.com.sharelocation.ui.Utils;
 
 public class Messages extends AppCompatActivity {
 
@@ -52,7 +67,7 @@ public class Messages extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mFirebasetorageReference;
-    private List<User> mUsers = new ArrayList<>();
+    private List<Object> mUsers = new ArrayList<>();
     private ChildEventListener mChildEventListener;
     private String mUserName;
 
@@ -88,6 +103,45 @@ public class Messages extends AppCompatActivity {
         btnSendMessage = (Button) findViewById(R.id.sendButton);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mDatabaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot != null){
+                    Message message = (Message) dataSnapshot.getValue(Message.class);
+                    mUsers.add(message);
+
+                    mMessageAdapter.setDataSource(mUsers);
+                    mMessageAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void onClickListeners(){
 
         //enable send button when there's text to send
@@ -118,42 +172,49 @@ public class Messages extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: Send messages on click
-               User user = new User();
-               etMessage.setText(user.getText());
-               mDatabaseReference.push().setValue(user);
+                Message message = new Message();
+//               User user = new User();
+//               etMessage.setText(user.getText());
+                SharedPreferences sharedPref;
+//
+                sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+                String currentUserId = sharedPref.getString(Utils.USER_ID, "") ;
+                message.setSender(currentUserId);
+                message.setMessage(etMessage.getText().toString());
+                mDatabaseReference.push().setValue(message);
 
                 //clear the input box
                 etMessage.setText(" ");
 
             }
         });
-        mChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = dataSnapshot.getValue(User.class);
-                mMessageAdapter.add(user);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
+//        mChildEventListener = new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                User user = dataSnapshot.getValue(User.class);
+//                mMessageAdapter.add(user);
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        };
 
         //ImagePickerButton shows an image picker to upload a image for a message
         imgPhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +227,7 @@ public class Messages extends AppCompatActivity {
             }
         });
 
-        mDatabaseReference.addChildEventListener(mChildEventListener);
+//        mDatabaseReference.addChildEventListener(mChildEventListener);
 
     }
 

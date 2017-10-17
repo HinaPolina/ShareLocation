@@ -55,6 +55,7 @@ import java.util.HashSet;
 
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
@@ -157,6 +158,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     // saved your friends from facebook to local DB
                                     saveFriendsToBD(array, id);
                                     // Save current user to Firebase
+                                    DataHolder.getInstance().put("userId", id);
                                     saveUserToServer(id, user);
                                 } catch (JSONException e) {
                                     e.printStackTrace();

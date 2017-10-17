@@ -13,23 +13,28 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Collection;
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
 
 /**
  * Created by hinaikhan on 10/16/17.
  */
 
-public class MessageAdapter extends ArrayAdapter<User> {
+public class MessageAdapter extends ArrayAdapter<Object> {
 
     private ImageView imgPhotoImageView;
     private TextView tvMessage;
     private TextView tvAuthorTextView;
+    private List<Object> users;
 
-    public MessageAdapter(Context context, int resource, List<User> mUsers) {
-        super(context, resource, mUsers);
+    public MessageAdapter(Context context, int resource, List<Object> mUsers) {
+        super(context, resource);
+        this.users = mUsers;
+
     }
 
     @Override
@@ -43,26 +48,36 @@ public class MessageAdapter extends ArrayAdapter<User> {
         tvMessage = (TextView) convertView.findViewById(R.id.messageTextView);
         tvAuthorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
 
-        User mUser = getItem(position);
+        Message message = (Message) this.users.get(position);
 
-        boolean isPhoto = mUser.getImageURI() != null;
-        if(isPhoto){
-            tvMessage.setVisibility(View.GONE);
-            imgPhotoImageView.setVisibility(View.VISIBLE);
-            Picasso.with(imgPhotoImageView.getContext()).load(mUser.getImageURI()).into(imgPhotoImageView);
-        }else{
-            tvMessage.setVisibility(View.VISIBLE);
-            imgPhotoImageView.setVisibility(View.GONE);
-            tvMessage.setText(mUser.getText());
+//        boolean isPhoto = mUser.getImageURI() != null;
+//        if(isPhoto){
+//            tvMessage.setVisibility(View.GONE);
+//            imgPhotoImageView.setVisibility(View.VISIBLE);
+//            Picasso.with(imgPhotoImageView.getContext()).load(mUser.getImageURI()).into(imgPhotoImageView);
+//        }else{
+//            tvMessage.setVisibility(View.VISIBLE);
+//            imgPhotoImageView.setVisibility(View.GONE);
+//            tvMessage.setText(mUser.getText());
+//
+//        }
 
-        }
-
-        tvAuthorTextView.setText(mUser.getName());
+        tvAuthorTextView.setText(message.getSender());
+        tvMessage.setText(message.getMessage());
 
 
         return convertView;
     }
 
+    @Override
+    public int getCount() {
+        return users.size();
+    }
+
+    public void setDataSource(List<Object> users){
+        this.users = users;
+
+    }
 
 
 
