@@ -18,6 +18,17 @@ public class User {
     public double lng;
     public double lat;
 
+    public boolean isFriend() {
+        return isFriend;
+    }
+
+    public void setFriend(boolean friend) {
+        isFriend = friend;
+    }
+
+    @Exclude
+    boolean isFriend;
+
     public User() {
     }
 

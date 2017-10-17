@@ -16,6 +16,7 @@ import java.util.List;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 
 /**
  * Created by polina on 10/16/17.
@@ -24,11 +25,15 @@ import hinapolina.com.sharelocation.model.User;
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>  {
     List<User> users;
     Context context;
+    String currentId;
+    FirebaseHelper firebaseHelper;
 
 
-    public SearchResultsAdapter(List<User> users, Context context) {
+    public SearchResultsAdapter(List<User> users, Context context, String id, FirebaseHelper f) {
         this.users = users;
         this.context = context;
+        currentId = id;
+        firebaseHelper = f;
     }
 
     @Override
@@ -43,6 +48,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         User user = users.get(position);
         holder.setUser(user);
+        if(user.isFriend()) {
+            holder.button.setText(R.string.remove_friend);
+        } else {
+            holder.button.setText(R.string.add_user);
+        }
         Picasso.with(context)
                 .load(user.getImageURI().replaceAll("large", "small"))
                 .centerCrop()
@@ -61,6 +71,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         TextView name;
         ImageView image;
+        Button button;
 
         public User getUser() {
             return user;
@@ -76,13 +87,19 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.userName);
             image = (ImageView)itemView.findViewById(R.id.userImage);
-            ((Button)itemView.findViewById(R.id.buttonAddUser)).setOnClickListener(this);
+            button = (Button)itemView.findViewById(R.id.buttonAddUser);
+            button.setOnClickListener(this);
+
 
         }
 
         @Override
         public void onClick(View view) {
            String id = user.getId();
+            firebaseHelper.removeAddUser(id, currentId, user.isFriend());
+            button.setText(user.isFriend()?R.string.add_user:R.string.remove_friend);
+            user.setFriend(!user.isFriend());
+
         }
     }
 }

@@ -38,6 +38,8 @@ import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.DataHolder;
 
+import static hinapolina.com.sharelocation.Utils.REQUEST_CODE;
+
 /**
  * Created by hinaikhan on 10/14/17.
  */
@@ -132,7 +134,7 @@ public class HomeActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 Intent intent = new Intent(HomeActivity.this, SearchResult.class);
                 intent.putExtra(Utils.USER_NAME, query);
-                startActivityForResult(intent, Utils.REQUEST_CODE);
+                startActivityForResult(intent, REQUEST_CODE);
                 return true;
             }
 
@@ -156,6 +158,16 @@ public class HomeActivity extends AppCompatActivity
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+           // todo update new friends list
         }
 
     }

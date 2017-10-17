@@ -155,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     JSONObject object_friends = object.optJSONObject("friends");
                                     JSONArray array = object_friends.getJSONArray("data");
                                     // saved your friends from facebook to local DB
-                                    saveFriendsToBD(array, id);
+                                    firebaseHelper.saveFriendsToBD(array, id);
                                     // Save current user to Firebase
                                     saveUserToServer(id, user);
                                 } catch (JSONException e) {
@@ -192,17 +192,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-    private void saveFriendsToBD(JSONArray array, String currentUserId) {
-        final HashSet<String> friendsIdList = new HashSet<>();
-        for (int i = 0; i < array.length(); i++) {
-            String userId = array.optJSONObject(i).optString("id");
-            String userName = array.optJSONObject(i).optString("name");
-            System.err.println("ID: "+ userId + " name: " + userName);
-            friendsIdList.add(userId);
-        }
-      String friendsId =   StringUtils.join(friendsIdList, ";");
-        mDatabase.child("friends").child(currentUserId).setValue(friendsId);
-    }
 
 
     private void saveUserToServer(String id, User user) {
