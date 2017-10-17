@@ -1,7 +1,6 @@
 package hinapolina.com.sharelocation.adapters;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,19 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import hinapolina.com.sharelocation.BatteryStatus;
+import hinapolina.com.sharelocation.ui.BatteryStatus;
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.Utils;
 import hinapolina.com.sharelocation.model.User;
-
-import static java.lang.System.load;
 
 /**
  * Created by hinaikhan on 10/16/17.

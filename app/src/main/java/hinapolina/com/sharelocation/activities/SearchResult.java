@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.Utils;
+import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.adapters.SearchResultsAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;

@@ -3,7 +3,7 @@ package hinapolina.com.sharelocation.model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import hinapolina.com.sharelocation.BatteryStatus;
+import hinapolina.com.sharelocation.ui.BatteryStatus;
 
 /**
  * Created by polina on 10/11/17.

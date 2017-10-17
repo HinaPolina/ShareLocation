@@ -1,4 +1,4 @@
-package hinapolina.com.sharelocation;
+package hinapolina.com.sharelocation.ui;
 
 
 /**

@@ -1,14 +1,11 @@
 package hinapolina.com.sharelocation.messages;
 
 import android.content.Intent;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +20,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -32,8 +28,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import hinapolina.com.sharelocation.Application;
-import hinapolina.com.sharelocation.BatteryStatus;
+import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.MessageAdapter;
 import hinapolina.com.sharelocation.model.User;
@@ -190,13 +185,12 @@ public class Messages extends AppCompatActivity {
                         // When the image has successfully uploaded, we get its download URL
                                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                                         // Set the download URL to the message box, so that the user can send it to the database
+
                                 User user = new User();
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                imgPhotoButton.setImageIcon(Icon.createWithContentUri(downloadUrl.toString()));
-                                mDatabaseReference.push().setValue(user);
+                                mDatabaseReference.push().setValue(user, downloadUrl.toString());
                             }
 
-                        }
+
                     });
                 }
         }

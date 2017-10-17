@@ -48,9 +48,9 @@ import com.squareup.picasso.Transformation;
 import java.util.ArrayList;
 import java.util.List;
 
-import hinapolina.com.sharelocation.Application;
+import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.Utils;
+import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.activities.LoginActivity;
 import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
@@ -167,6 +167,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         LocationServices.getFusedLocationProviderClient(getActivity()).getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
+                if (location != null)
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 8));
             }
         });
@@ -183,6 +184,8 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
+
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(mContext)
@@ -420,6 +423,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     public void addUserToAdapter(List<User> users) {
 
     }
+
 }
 
 

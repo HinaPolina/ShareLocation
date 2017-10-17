@@ -1,4 +1,4 @@
-package hinapolina.com.sharelocation;
+package hinapolina.com.sharelocation.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.os.BatteryManager;
 
 import java.io.IOException;
+
+import hinapolina.com.sharelocation.ui.BatteryStatus;
 
 /**
  * Created by polina on 10/12/17.
@@ -55,6 +57,7 @@ public class Utils{
 
         return batteryStatus;
     }
+
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

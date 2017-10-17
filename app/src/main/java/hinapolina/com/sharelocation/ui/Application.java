@@ -1,4 +1,4 @@
-package hinapolina.com.sharelocation;
+package hinapolina.com.sharelocation.ui;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
