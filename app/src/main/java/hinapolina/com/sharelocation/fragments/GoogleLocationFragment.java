@@ -86,6 +86,8 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     private List<User> mUsers = new ArrayList<>();
     private LoginActivity loginActivity;
 
+
+
     private UsersRecyclerViewAdapter mUsersRecyclerView =
             new UsersRecyclerViewAdapter(mContext, mUsers);
 
