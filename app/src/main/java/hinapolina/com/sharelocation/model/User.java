@@ -3,6 +3,8 @@ package hinapolina.com.sharelocation.model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import hinapolina.com.sharelocation.BatteryStatus;
+
 /**
  * Created by polina on 10/11/17.
  */
@@ -17,11 +19,13 @@ public class User {
     public int battery;
     public double lng;
     public double lat;
+    private BatteryStatus batteryStatus;
 
     public User() {
     }
 
-    public User(String id, String name, String email, String imageURI, int battery, double lat, double lng) {
+    public User(String id, String name, String email, String imageURI, int battery, double lat, double lng,
+                BatteryStatus batteryStatus) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -29,6 +33,7 @@ public class User {
         this.battery = battery;
         this.lng = lng;
         this.lat = lat;
+        this.batteryStatus = batteryStatus;
     }
 
     public String getId() {
@@ -84,5 +89,13 @@ public class User {
 
     public void setLat(double lat) {
         this.lat = lat;
+    }
+
+    public BatteryStatus getBatteryStatus() {
+        return batteryStatus;
+    }
+
+    public void setBatteryStatus(BatteryStatus batteryStatus) {
+        this.batteryStatus = batteryStatus;
     }
 }

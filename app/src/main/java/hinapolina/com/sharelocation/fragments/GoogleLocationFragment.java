@@ -361,6 +361,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         user.setLat(location.getLatitude());
         user.setLng(location.getLongitude());
         user.setBattery((int) Utils.getBatteryLevel(mContext));
+        user.setBatteryStatus(Utils.getBatteryStatus(mContext));
         mDatabase.child("users").child(currentUserId).setValue(user);
     }
 

@@ -36,6 +36,16 @@
         android:layout_toRightOf="@id/tv_users_name"
         android:src="@drawable/icon_battery" />
 
+        <ImageView
+            android:id="@+id/img_battery_charging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_left_32"
+            android:layout_marginLeft="@dimen/margin"
+            android:visibility="gone"
+            android:layout_toRightOf="@id/tv_users_name"
+            android:src="@drawable/icon_battery_charging" />
+
         <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

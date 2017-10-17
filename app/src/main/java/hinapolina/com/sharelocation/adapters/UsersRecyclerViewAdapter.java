@@ -17,7 +17,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import hinapolina.com.sharelocation.BatteryStatus;
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.Utils;
 import hinapolina.com.sharelocation.model.User;
 
 import static java.lang.System.load;
@@ -34,7 +36,6 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
     private FragmentManager fragmentManager;
 
     private FirebaseAuth mAuth;
-
 
     public UsersRecyclerViewAdapter(Context context, List<User> mUsers) {
         this.context = context;
@@ -59,20 +60,25 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
     @Override
     public void onBindViewHolder(MainViewHolder holder, int position) {
-        
+
 
         final User user = mUsers.get(position);
+        BatteryStatus batteryStatus = user.getBatteryStatus();
         MainViewHolder mainViewHolder = (MainViewHolder) holder;
         mainViewHolder.tvUsersName.setText(user.getName());
+        mainViewHolder.tvBatteryPercentage.setText(String.valueOf(user.getBattery()));
         Picasso.with(holder.itemView.getContext()).load(user.getImageURI()).into(mainViewHolder.imgUsersProfileImage);
 
-        mainViewHolder.tvBatteryPercentage.setText(String.valueOf(user.getBattery()));
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        holder.tvUsersName.setText(user.getName());
+        if(batteryStatus != null && (batteryStatus.isCharging() || (batteryStatus.isUsbCharge())
+                || batteryStatus.isAcCharge())) {
+            mainViewHolder.imgBatterIcon.setImageResource(R.drawable.icon_battery_charging);
+        }else{
+            mainViewHolder.imgBatterIcon.setImageResource(R.drawable.icon_battery);
+
+        }
 
 
     }
-
 
     @Override
     public int getItemCount() {
@@ -81,7 +87,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
     public class MainViewHolder extends RecyclerView.ViewHolder {
 
-        protected ImageView imgUsersProfileImage, imgBatterIcon;
+        protected ImageView imgUsersProfileImage, imgBatterIcon, imgBatteryCharging;
         protected TextView tvUsersName, tvBatteryPercentage;
 
         public MainViewHolder(View itemView) {
@@ -89,6 +95,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
             imgUsersProfileImage = (ImageView) itemView.findViewById(R.id.users_img);
             imgBatterIcon = (ImageView) itemView.findViewById(R.id.img_battery);
+            imgBatteryCharging = (ImageView) itemView.findViewById(R.id.img_battery_charging);
             tvUsersName = (TextView) itemView.findViewById(R.id.tv_users_name);
             tvBatteryPercentage = (TextView) itemView.findViewById(R.id.tv_battery_percentage);
 

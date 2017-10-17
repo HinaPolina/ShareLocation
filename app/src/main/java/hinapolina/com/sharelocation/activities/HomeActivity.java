@@ -235,7 +235,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void setUserProfileData() {
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
             tvUserName.setText(currentUser.getDisplayName());
