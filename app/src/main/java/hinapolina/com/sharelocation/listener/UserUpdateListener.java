@@ -1,5 +1,7 @@
 package hinapolina.com.sharelocation.listener;
 
+import java.util.List;
+
 import hinapolina.com.sharelocation.model.User;
 
 /**
@@ -9,4 +11,5 @@ import hinapolina.com.sharelocation.model.User;
 public interface UserUpdateListener {
     void updateUserMarker(User user);
     void addUserToAdapter(User user);
+    void addUserToAdapter(List<User> users);
 }

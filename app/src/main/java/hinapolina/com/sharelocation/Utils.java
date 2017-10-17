@@ -20,6 +20,7 @@ public class Utils{
     public static final String MY_PREFS_NAME = "pref" ;
     public static final String EMAIL = "email" ;
     public static final String IMAGE = "image";
+    public static final int REQUEST_CODE = 123;
 
     public static float getBatteryLevel(Context context) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);

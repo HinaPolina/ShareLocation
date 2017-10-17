@@ -1,6 +1,5 @@
 package hinapolina.com.sharelocation.activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,12 +10,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +28,8 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Field;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.Utils;
@@ -39,11 +43,12 @@ import hinapolina.com.sharelocation.ui.DataHolder;
  */
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
 
     public int navItemIndex = 0;
     public static final String TAG_BATTERY = "battery";
+    private static final String CLOSE_BUTTON = "mCloseButton";
     public static final String TAG_GOOGLE_MAP = "map";
     public static String CURRENT_TAG = TAG_GOOGLE_MAP;
 
@@ -65,7 +70,6 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initUI();
-        setSupportActionBar(toolbar);
         toolbar.setTitle("Share Location");
         mAuth = FirebaseAuth.getInstance();
         Bundle bundle = getIntent().getExtras();
@@ -89,6 +93,7 @@ public class HomeActivity extends AppCompatActivity
 
     private void initUI(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -110,25 +115,52 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        final MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setSubmitButtonEnabled(true);
+        int searchImgId = android.support.v7.appcompat.R.id.search_button;
+        searchView.requestFocusFromTouch();
+        searchView.setFocusable(true);
+        hideCloseButton(searchView);
+        ImageView v = (ImageView) searchView.findViewById(searchImgId);
+        v.setImageResource(android.R.drawable.ic_menu_search);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(HomeActivity.this, SearchResult.class);
+                intent.putExtra(Utils.USER_NAME, query);
+                startActivityForResult(intent, Utils.REQUEST_CODE);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private void hideCloseButton(SearchView mSearchView) {
+        try {
+            Field searchField = SearchView.class.getDeclaredField(CLOSE_BUTTON);
+            searchField.setAccessible(true);
+            ImageView mSearchCloseButton = (ImageView) searchField.get(mSearchView);
+            if (mSearchCloseButton != null) {
+                mSearchCloseButton.setEnabled(false);
+                mSearchCloseButton.setImageDrawable(getResources().getDrawable(android.R.color.transparent));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return super.onOptionsItemSelected(item);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -243,6 +275,5 @@ public class HomeActivity extends AppCompatActivity
 
             }
 
-
-    }
+}
 
