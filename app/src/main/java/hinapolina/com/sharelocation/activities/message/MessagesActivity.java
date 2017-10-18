@@ -1,6 +1,8 @@
-package hinapolina.com.sharelocation.messages;
+package hinapolina.com.sharelocation.activities.message;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -24,18 +25,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.MessageAdapter;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.ui.Utils;
 
-public class Messages extends AppCompatActivity {
+public class MessagesActivity extends AppCompatActivity {
 
-    private static final String TAG = Messages.class.getSimpleName();
+    private static final String TAG = MessagesActivity.class.getSimpleName();
     private static final int MESSAGE_LENGTH_LIMIT = 500;
     private static final int RC_PHOTO_PICKER =  2;
 
@@ -52,7 +53,7 @@ public class Messages extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mFirebasetorageReference;
-    private List<User> mUsers = new ArrayList<>();
+    private List<Object> mUsers = new ArrayList<>();
     private ChildEventListener mChildEventListener;
     private String mUserName;
 
@@ -88,6 +89,45 @@ public class Messages extends AppCompatActivity {
         btnSendMessage = (Button) findViewById(R.id.sendButton);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mDatabaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot != null){
+                    Message message = (Message) dataSnapshot.getValue(Message.class);
+                    mUsers.add(message);
+
+                    mMessageAdapter.setDataSource(mUsers);
+                    mMessageAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void onClickListeners(){
 
         //enable send button when there's text to send
@@ -118,42 +158,28 @@ public class Messages extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: Send messages on click
-               User user = new User();
-               etMessage.setText(user.getText());
-               mDatabaseReference.push().setValue(user);
+                Message message = new Message();
+//               User user = new User();
+//               etMessage.setText(user.getText());
+                SharedPreferences sharedPref;
+//
+                sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+                //fetching data with user name now for messaging
+                String userName = sharedPref.getString(Utils.USER_NAME, " ");
+                message.setSender(userName);
+
+                /* fetch data with User id for messaging
+//              currentUserId = sharedPref.getString(Utils.USER_ID, "") ;
+//              message.setSender(currentUserId);*/
+
+                message.setMessage(etMessage.getText().toString());
+                mDatabaseReference.push().setValue(message);
 
                 //clear the input box
                 etMessage.setText(" ");
 
             }
         });
-        mChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User user = dataSnapshot.getValue(User.class);
-                mMessageAdapter.add(user);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
 
         //ImagePickerButton shows an image picker to upload a image for a message
         imgPhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +192,6 @@ public class Messages extends AppCompatActivity {
             }
         });
 
-        mDatabaseReference.addChildEventListener(mChildEventListener);
 
     }
 

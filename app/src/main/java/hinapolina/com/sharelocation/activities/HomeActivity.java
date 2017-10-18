@@ -41,7 +41,6 @@ import hinapolina.com.sharelocation.ui.DataHolder;
 
 import static hinapolina.com.sharelocation.ui.Utils.REQUEST_CODE;
 
-
 /**
  * Created by hinaikhan on 10/14/17.
  */
@@ -260,7 +259,7 @@ public class HomeActivity extends AppCompatActivity
                         break;
                     }
                     case R.id.nav_messages:
-                        Intent intent = new Intent(HomeActivity.this, Messages.class);
+                        Intent intent = new Intent(HomeActivity.this, MessagesActivity.class);
                         startActivity(intent);
                         break;
                 }
