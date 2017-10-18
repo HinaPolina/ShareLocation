@@ -45,6 +45,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +54,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.model.User;
@@ -419,6 +421,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void gotoHome(){
+        String topic = "groupmessage";
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
+        service.execute(getResources().getString(R.string.firebase_api_key), topic, "Testing Topic Noticitation");
         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
     }
 }

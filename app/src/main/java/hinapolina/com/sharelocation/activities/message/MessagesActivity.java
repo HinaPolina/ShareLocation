@@ -1,5 +1,7 @@
 package hinapolina.com.sharelocation.activities.message;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,7 +39,7 @@ import hinapolina.com.sharelocation.ui.Utils;
 public class MessagesActivity extends AppCompatActivity {
 
     private static final String TAG = MessagesActivity.class.getSimpleName();
-    private static final int MESSAGE_LENGTH_LIMIT = 500;
+    private static final int MESSAGE_LENGTH_LIMIT = 150;
     private static final int RC_PHOTO_PICKER =  2;
 
 
@@ -218,6 +220,18 @@ public class MessagesActivity extends AppCompatActivity {
 
                     });
                 }
+        }
+
+        private void createUserNotification(){
+            int notificationImp = NotificationManager.IMPORTANCE_DEFAULT;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel("myChannelId", "My Channel", notificationImp);
+                channel.setDescription("messages");
+                // Register the channel with the notifications manager
+                NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.createNotificationChannel(channel);
+            }
+
         }
     }
 
