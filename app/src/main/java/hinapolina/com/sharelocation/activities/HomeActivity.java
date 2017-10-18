@@ -32,10 +32,10 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.activities.message.MessagesActivity;
 import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
-import hinapolina.com.sharelocation.messages.Messages;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.DataHolder;
 
