@@ -84,7 +84,7 @@
 
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.SearchResult" />
-        <activity android:name=".messages.Messages"></activity>
+        <activity android:name="hinapolina.com.sharelocation.activities.message.MessagesActivity"></activity>
 
         <service android:name="hinapolina.com.sharelocation.services.UserPushNotification">
             <intent-filter>
