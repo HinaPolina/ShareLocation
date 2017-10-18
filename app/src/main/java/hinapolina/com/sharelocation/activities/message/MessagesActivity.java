@@ -1,4 +1,4 @@
-package hinapolina.com.sharelocation.messages;
+package hinapolina.com.sharelocation.activities.message;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,9 +34,9 @@ import hinapolina.com.sharelocation.adapters.MessageAdapter;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.Utils;
 
-public class Messages extends AppCompatActivity {
+public class MessagesActivity extends AppCompatActivity {
 
-    private static final String TAG = Messages.class.getSimpleName();
+    private static final String TAG = MessagesActivity.class.getSimpleName();
     private static final int MESSAGE_LENGTH_LIMIT = 500;
     private static final int RC_PHOTO_PICKER =  2;
 

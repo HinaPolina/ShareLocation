@@ -35,7 +35,7 @@ import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
-import hinapolina.com.sharelocation.messages.Messages;
+import hinapolina.com.sharelocation.activities.message.MessagesActivity;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.DataHolder;
 
@@ -259,7 +259,7 @@ public class HomeActivity extends AppCompatActivity
                         break;
                     }
                     case R.id.nav_messages:
-                        Intent intent = new Intent(HomeActivity.this, Messages.class);
+                        Intent intent = new Intent(HomeActivity.this, MessagesActivity.class);
                         startActivity(intent);
                         break;
                 }
