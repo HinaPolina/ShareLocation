@@ -25,8 +25,8 @@ The following **required** functionality is completed:
 * []	User can **send a message to friends**
    * []	User can  start char with friends
    * []	User can  get push notification once his friend send him a message
-* []	User can **navigate to friends location** 
-   * []	User can start road to friends location
+* [X]	User can **navigate to friends location** 
+   * [X]	User can start road to friends location
 
 The following **optional** functionality
 
