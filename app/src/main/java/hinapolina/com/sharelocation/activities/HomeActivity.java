@@ -1,5 +1,6 @@
 package hinapolina.com.sharelocation.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -36,6 +43,7 @@ import hinapolina.com.sharelocation.activities.message.MessagesActivity;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.services.JobScheduler;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
 
@@ -46,13 +54,15 @@ import static hinapolina.com.sharelocation.ui.Utils.REQUEST_CODE;
  */
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
     public int navItemIndex = 0;
     private static final String CLOSE_BUTTON = "mCloseButton";
     public static final String TAG_GOOGLE_MAP = "map";
     public static String CURRENT_TAG = TAG_GOOGLE_MAP;
+    private FirebaseJobDispatcher mDispatcher;
+
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
@@ -71,11 +81,13 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        mDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+        sendDateToServer(mDispatcher);
         initUI();
         toolbar.setTitle("Share Location");
         mAuth = FirebaseAuth.getInstance();
         Bundle bundle = getIntent().getExtras();
-        if(bundle == null){
+        if (bundle == null) {
             bundle = new Bundle();
         }
 
@@ -92,6 +104,34 @@ public class HomeActivity extends AppCompatActivity
         loadHomeFragment();
         setUserProfileData();
     }
+
+    private void sendDateToServer(final FirebaseJobDispatcher mDispatcher) {
+               Bundle myExtrasBundle = new Bundle();
+                SharedPreferences sharedPref = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+                String currentUserId = sharedPref.getString(Utils.USER_ID, "") ;
+                myExtrasBundle.putString(Utils.USER_ID, currentUserId);
+                Job myJob = mDispatcher.newJobBuilder()
+                        // the JobService that will be called
+                        .setService(JobScheduler.class)
+                        // uniquely identifies the job
+                        .setTag(Utils.SEND_DATA)
+                        // one-off job
+                        .setRecurring(true)
+                        // don't persist past a device reboot
+                        .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                        // start between 0 and 60 seconds from now
+                        .setTrigger(Trigger.executionWindow(0, 60))
+                        // retry with exponential backoff
+                        .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                        // constraints that need to be satisfied for the job to run
+                        .setExtras(myExtrasBundle)
+                        .build();
+                mDispatcher.mustSchedule(myJob);
+
+            }
+
+
+
 
     private void initUI(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);

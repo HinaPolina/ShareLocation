@@ -53,11 +53,10 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.ui.DataHolder;
-import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 import hinapolina.com.sharelocation.ui.Application;
+import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -215,7 +214,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         editor.putString(Utils.IMAGE, user.getImageURI());
         editor.putString(Utils.TOKEN, user.getToken());
         editor.apply();
-
         gotoHome();
 
     }
