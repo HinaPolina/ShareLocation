@@ -29,7 +29,7 @@ public class UserPushNotification extends FirebaseMessagingService {
         // message, here is where that should be initiated.
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-        sendNotification(remoteMessage.getNotification().getBody());
+        sendNotification(remoteMessage.getData().get("my_message").toString());
 
     }
     private void sendNotification(String messageBody) {

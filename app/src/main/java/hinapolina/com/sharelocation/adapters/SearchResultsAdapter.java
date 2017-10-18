@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -30,14 +28,16 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     String currentId;
     FirebaseHelper firebaseHelper;
     String token;
+    String currentName;
 
 
-    public SearchResultsAdapter(List<User> users, Context context, String id, FirebaseHelper f, String token) {
+    public SearchResultsAdapter(List<User> users, Context context, String id, FirebaseHelper f, String token, String name) {
         this.users = users;
         this.context = context;
         currentId = id;
         firebaseHelper = f;
         this.token = token;
+        currentName = name;
     }
 
     @Override
@@ -103,10 +103,11 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             firebaseHelper.removeAddUser(id, currentId, user.isFriend());
             button.setText(user.isFriend()?R.string.add_user:R.string.remove_friend);
             user.setFriend(!user.isFriend());
-            FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(token)
-                    .setMessageId(id+currentId)
-                    .addData("my_message", "User "+user.getName()+ " add you to friends")
-                    .build());
+
+//            FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(token)
+//                    .setMessageId(id+currentId)
+//                    .addData("my_message", "User "+ currentName + " add you to friends")
+//                    .build());
 
         }
     }
