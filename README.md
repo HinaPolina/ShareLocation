@@ -21,7 +21,7 @@ The following **required** functionality is completed:
 * []	User can **get push notification when new friend request sent**
 * [X]	User can **locate the friends on map**
   * [X]	User can  see friends on a map with (image, name, level of batter)
-   * []	User can  see a movements of friends on map
+   * [X]	User can  see a movements of friends on map
 * []	User can **send a message to friends**
    * []	User can  start char with friends
    * []	User can  get push notification once his friend send him a message
