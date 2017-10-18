@@ -6,14 +6,29 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
+import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+import static android.R.attr.apiKey;
 
 /**
  * Created by polina on 10/12/17.
  */
 
 public class Utils{
+
+    private static final String TAG = Utils.class.getSimpleName();
 
     public static final String USER_ID =  "user_id";
     public static final String USER_NAME = "user_name";
@@ -81,7 +96,6 @@ public class Utils{
         }
         return false;
     }
-
 
 
 }
