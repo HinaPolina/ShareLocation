@@ -44,20 +44,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
-import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
+import hinapolina.com.sharelocation.ui.Application;
+import hinapolina.com.sharelocation.ui.Utils;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -149,8 +148,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     String id = object.getString("id");
                                     String name = object.getString("name");
                                     User user = new User();
+                                    String userToken = FirebaseInstanceId.getInstance().getToken();
+                                    user.setToken(userToken);
                                     user.setName(name);
-                                    user.setImageURI("https://graph.facebook.com/" + id + "/picture?type=large");
+                                    user.setImageURI("https://graph.facebook.com/" + id + "/picture?type=small");
                                     user.setEmail(email);
                                     JSONObject object_friends = object.optJSONObject("friends");
                                     JSONArray array = object_friends.getJSONArray("data");
@@ -209,6 +210,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         editor.putString(Utils.USER_NAME, user.getName());
         editor.putString(Utils.EMAIL, user.getEmail());
         editor.putString(Utils.IMAGE, user.getImageURI());
+        editor.putString(Utils.TOKEN, user.getToken());
         editor.apply();
 
         gotoHome();
@@ -342,6 +344,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             GoogleSignInAccount acct = result.getSignInAccount();
             //create new user
             User user = new User();
+            String userToken = FirebaseInstanceId.getInstance().getToken();
+            user.setToken(userToken);
             user.setImageURI(acct.getPhotoUrl().toString());
             user.setEmail(acct.getEmail());
             user.setName(acct.getDisplayName());

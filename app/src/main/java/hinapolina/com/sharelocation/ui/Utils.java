@@ -9,8 +9,6 @@ import android.os.BatteryManager;
 
 import java.io.IOException;
 
-import hinapolina.com.sharelocation.ui.BatteryStatus;
-
 /**
  * Created by polina on 10/12/17.
  */
@@ -23,6 +21,7 @@ public class Utils{
     public static final String EMAIL = "email" ;
     public static final String IMAGE = "image";
     public static final int REQUEST_CODE = 123;
+    public static final String TOKEN = "token" ;
 
     public static float getBatteryLevel(Context context) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);

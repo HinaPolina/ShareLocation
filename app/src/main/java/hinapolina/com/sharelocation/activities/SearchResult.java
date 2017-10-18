@@ -33,7 +33,7 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
         if(getIntent().hasExtra(Utils.USER_NAME)) firebaseHelper.findUserByName(getIntent().getStringExtra(Utils.USER_NAME),currentId );
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.rvUsersSearch);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SearchResultsAdapter(users, this, currentId, firebaseHelper);
+        adapter = new SearchResultsAdapter(users, this, currentId, firebaseHelper, sharedPreferences.getString(Utils.TOKEN, ""));
         recyclerView.setAdapter(adapter);
     }
 

@@ -22,6 +22,16 @@ public class User {
     private BatteryStatus batteryStatus;
     private String text;
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    private String token;
+
     public boolean isFriend() {
         return isFriend;
     }

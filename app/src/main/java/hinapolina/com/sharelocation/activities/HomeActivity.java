@@ -39,7 +39,8 @@ import hinapolina.com.sharelocation.messages.Messages;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.DataHolder;
 
-import static hinapolina.com.sharelocation.Utils.REQUEST_CODE;
+import static hinapolina.com.sharelocation.ui.Utils.REQUEST_CODE;
+
 
 /**
  * Created by hinaikhan on 10/14/17.
@@ -134,7 +135,7 @@ public class HomeActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 Intent intent = new Intent(HomeActivity.this, SearchResult.class);
                 intent.putExtra(Utils.USER_NAME, query);
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivityForResult(intent, Utils.REQUEST_CODE);
                 return true;
             }
 

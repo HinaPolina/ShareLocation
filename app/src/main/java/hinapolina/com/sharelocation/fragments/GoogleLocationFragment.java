@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
@@ -48,14 +49,14 @@ import com.squareup.picasso.Transformation;
 import java.util.ArrayList;
 import java.util.List;
 
-import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.activities.LoginActivity;
 import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
+import hinapolina.com.sharelocation.ui.Application;
+import hinapolina.com.sharelocation.ui.Utils;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -366,6 +367,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         user.setLng(location.getLongitude());
         user.setBattery((int) Utils.getBatteryLevel(mContext));
         user.setBatteryStatus(Utils.getBatteryStatus(mContext));
+        user.setToken(FirebaseInstanceId.getInstance().getToken());
         mDatabase.child("users").child(currentUserId).setValue(user);
     }
 
