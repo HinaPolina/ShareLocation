@@ -13,10 +13,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
 
@@ -29,11 +31,11 @@ public class MessageAdapter extends ArrayAdapter<Object> {
     private ImageView imgPhotoImageView;
     private TextView tvMessage;
     private TextView tvAuthorTextView;
-    private List<Object> users;
+    private List<Message> messages;
 
-    public MessageAdapter(Context context, int resource, List<Object> mUsers) {
+    public MessageAdapter(Context context, int resource, List<Message> messages) {
         super(context, resource);
-        this.users = mUsers;
+        this.messages = messages;
 
     }
 
@@ -48,7 +50,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
         tvMessage = (TextView) convertView.findViewById(R.id.messageTextView);
         tvAuthorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
 
-        Message message = (Message) this.users.get(position);
+        Message message = this.messages.get(position);
 
 //        boolean isPhoto = mUser.getImageURI() != null;
 //        if(isPhoto){
@@ -64,6 +66,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
 
         tvAuthorTextView.setText(message.getSender());
         tvMessage.setText(message.getMessage());
+        Picasso.with(getContext()).load(message.getUserProfileImg()).into(imgPhotoImageView);
 
 
         return convertView;
@@ -71,15 +74,21 @@ public class MessageAdapter extends ArrayAdapter<Object> {
 
     @Override
     public int getCount() {
-        return users.size();
+        return messages != null ? messages.size() : 0;
     }
 
-    public void setDataSource(List<Object> users){
-        this.users = users;
+    /**
+     * Adds a new message to messages list
+     * @param message
+     */
+    public void addMessage(Message message) {
+        //Create a new list if messages list hasn't been initialized
+        if (messages == null) {
+            messages = new ArrayList<Message>();
+        }
 
+        //add message to list
+        messages.add(message);
     }
-
-
-
 
 }

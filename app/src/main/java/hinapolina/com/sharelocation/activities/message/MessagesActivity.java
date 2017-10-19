@@ -1,7 +1,5 @@
 package hinapolina.com.sharelocation.activities.message;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +17,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,7 +54,6 @@ public class MessagesActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mFirebasetorageReference;
-    private List<Object> mUsers = new ArrayList<>();
     private ChildEventListener mChildEventListener;
     private String mUserName;
 
@@ -73,7 +71,7 @@ public class MessagesActivity extends AppCompatActivity {
         mFirebasetorageReference = mFirebaseStorage.getReference().child("chat_photos");
 
         //adapter
-        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, mUsers);
+        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, null);
         mlvMessage.setAdapter(mMessageAdapter);
 
         // Initialize progress bar
@@ -100,9 +98,7 @@ public class MessagesActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null){
                     Message message = (Message) dataSnapshot.getValue(Message.class);
-                    mUsers.add(message);
-
-                    mMessageAdapter.setDataSource(mUsers);
+                    mMessageAdapter.addMessage(message);
                     mMessageAdapter.notifyDataSetChanged();
                 }
             }
@@ -159,22 +155,15 @@ public class MessagesActivity extends AppCompatActivity {
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Send messages on click
                 Message message = new Message();
-//               User user = new User();
-//               etMessage.setText(user.getText());
-                SharedPreferences sharedPref;
-//
-                sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+
+                SharedPreferences sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
                 //fetching data with user name now for messaging
                 String userName = sharedPref.getString(Utils.USER_NAME, " ");
                 message.setSender(userName);
 
-                /* fetch data with User id for messaging
-//              currentUserId = sharedPref.getString(Utils.USER_ID, "") ;
-//              message.setSender(currentUserId);*/
-
                 message.setMessage(etMessage.getText().toString());
+                message.setUserProfileImg(sharedPref.getString(Utils.IMAGE, ""));
                 mDatabaseReference.push().setValue(message);
 
                 //clear the input box
@@ -222,17 +211,7 @@ public class MessagesActivity extends AppCompatActivity {
                 }
         }
 
-        private void createUserNotification(){
-            int notificationImp = NotificationManager.IMPORTANCE_DEFAULT;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel("myChannelId", "My Channel", notificationImp);
-                channel.setDescription("messages");
-                // Register the channel with the notifications manager
-                NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.createNotificationChannel(channel);
-            }
 
-        }
     }
 
 

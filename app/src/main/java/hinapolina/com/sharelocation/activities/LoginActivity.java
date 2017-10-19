@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void saveUserToServer(String id, User user) {
-            if (location != null) {
+        if (location != null) {
             user.setLat(location.getLatitude());
             user.setLng(location.getLongitude());
         }

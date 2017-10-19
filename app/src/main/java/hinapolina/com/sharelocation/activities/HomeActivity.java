@@ -289,7 +289,7 @@ public class HomeActivity extends AppCompatActivity
             Picasso.with(this).load(currentUser.getPhotoUrl()).into(imgUserProfile);
         }
 
-            }
+    }
 
 }
 

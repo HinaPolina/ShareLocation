@@ -8,6 +8,7 @@ public class Message {
 
     private String sender;
     private String message;
+    private String userProfileImg;
 
 
     public String getSender() {
@@ -24,5 +25,13 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getUserProfileImg() {
+        return userProfileImg;
+    }
+
+    public void setUserProfileImg(String userProfileImg) {
+        this.userProfileImg = userProfileImg;
     }
 }
