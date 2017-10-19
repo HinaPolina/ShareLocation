@@ -41,7 +41,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
@@ -98,6 +98,18 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private final static String KEY_LOCATION = "location";
     private final static String TAG = GoogleLocationFragment.class.getSimpleName();
+    private ValueEventListener userListener;
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Remove post value event listener
+        if (userListener != null) {
+            mDatabase.removeEventListener(userListener);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,7 +141,6 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
         mRecyclerView = (RecyclerView)  view.findViewById(R.id.profile_details_recycler) ;
         initRecyclerView();
-
         return view;
     }
 
@@ -174,6 +185,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         });
         //Display friends locations as markers on map
         fbHelper.getUsersFromFirebaseByID(currentUserId);
+//
     }
 
     @Override
@@ -225,7 +237,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         if (myUser != null)
             myUser.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
         //Add current user location marker on map
-        sendLocationToServer(location);
+        //sendLocationToServer(location);
     }
 
 
@@ -357,19 +369,6 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
-    // send new Location to the server
-    private void sendLocationToServer(Location location){
-        sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-        user.setName(sharedPref.getString(Utils.USER_NAME, ""));
-        user.setEmail(sharedPref.getString(Utils.EMAIL, ""));
-        user.setImageURI(sharedPref.getString(Utils.IMAGE, ""));
-        user.setLat(location.getLatitude());
-        user.setLng(location.getLongitude());
-        user.setBattery((int) Utils.getBatteryLevel(mContext));
-        user.setBatteryStatus(Utils.getBatteryStatus(mContext));
-        user.setToken(FirebaseInstanceId.getInstance().getToken());
-        mDatabase.child("users").child(currentUserId).setValue(user);
-    }
 
     @Override
     public void updateUserMarker(User user) {

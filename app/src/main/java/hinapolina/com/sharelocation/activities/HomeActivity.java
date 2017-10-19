@@ -24,7 +24,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -33,11 +32,11 @@ import java.lang.reflect.Field;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.message.MessagesActivity;
+import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.DataHolder;
-import hinapolina.com.sharelocation.ui.Utils;
 
 import static hinapolina.com.sharelocation.ui.Utils.REQUEST_CODE;
 
@@ -289,7 +288,7 @@ public class HomeActivity extends AppCompatActivity
             Picasso.with(this).load(currentUser.getPhotoUrl()).into(imgUserProfile);
         }
 
-    }
+            }
 
 }
 

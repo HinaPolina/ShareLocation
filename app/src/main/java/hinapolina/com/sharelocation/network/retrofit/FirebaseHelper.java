@@ -162,7 +162,7 @@ public class FirebaseHelper {
 
         final  HashSet<String> friendsIdList =new HashSet<>();
 
-        mDatabase.child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("friends").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot friends: dataSnapshot.getChildren()) {
