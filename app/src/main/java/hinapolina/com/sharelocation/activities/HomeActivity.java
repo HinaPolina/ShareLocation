@@ -119,7 +119,7 @@ public class HomeActivity extends AppCompatActivity
                         // don't persist past a device reboot
                         .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
                         // start between 0 and 60 seconds from now
-                        .setTrigger(Trigger.executionWindow(0, 60))
+                        .setTrigger(Trigger.executionWindow(60*60, 60*62))
                         // retry with exponential backoff
                         .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                         // constraints that need to be satisfied for the job to run

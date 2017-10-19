@@ -41,13 +41,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.LoginActivity;
@@ -98,18 +99,12 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private final static String KEY_LOCATION = "location";
     private final static String TAG = GoogleLocationFragment.class.getSimpleName();
-    private ValueEventListener userListener;
+   Map <String, Marker> markers = new HashMap<>();
 
 
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        // Remove post value event listener
-        if (userListener != null) {
-            mDatabase.removeEventListener(userListener);
-        }
-    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -278,37 +273,49 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     }
 
     private Marker addMarker(final User user) {
-        Log.d(TAG, "Latitude: " + user.getLat()+ ", longitude: " + user.getLng());
+
         LatLng latLng = new LatLng(user.getLat(), user.getLng());
-        final MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title(user.getName());
-        markerOptions.snippet("Battery level: " + user.getBattery());
-        final Marker marker = mGoogleMap.addMarker(markerOptions);
-        System.err.println("URL: " + user.getImageURI());
-        Picasso.with(getContext())
-                .load(user.getImageURI().replaceAll("large", "small"))
-                .centerCrop()
-                .resize(80, 80)
-                .transform(new RoundTransformation())
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        System.err.println("BITMAP: "+ bitmap);
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                    }
+        Log.d(TAG, "Latitude: " + user.getLat()+ ", longitude: " + user.getLng());
+        if(markers.containsKey(user.getId())) {
+           Marker marker = markers.get(user.getId());
+            markers.remove(user.getId());
+            marker.setPosition(latLng);
+            markers.put(user.getId(), marker);
+            return marker;
+        }  else {
 
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-                        System.err.println("BITMAP Failed");
-                    }
+            final MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title(user.getName());
+            markerOptions.snippet("Battery level: " + user.getBattery());
+          final Marker marker = mGoogleMap.addMarker(markerOptions);
+            System.err.println("URL: " + user.getImageURI());
+            Picasso.with(getContext())
+                    .load(user.getImageURI().replaceAll("large", "small"))
+                    .centerCrop()
+                    .resize(80, 80)
+                    .transform(new RoundTransformation())
+                    .into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            System.err.println("BITMAP: "+ bitmap);
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                        }
 
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+                            System.err.println("BITMAP Failed");
+                        }
 
-                    }
-                });
-        return marker;
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+            markers.put(user.getId(),marker);
+            return marker;
+
+        }
     }
 
 

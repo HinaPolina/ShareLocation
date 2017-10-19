@@ -162,7 +162,7 @@ public class FirebaseHelper {
 
         final  HashSet<String> friendsIdList =new HashSet<>();
 
-        mDatabase.child("friends").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot friends: dataSnapshot.getChildren()) {
@@ -178,7 +178,7 @@ public class FirebaseHelper {
                 }
                 friendsIdList.add(currentUserId);
 
-                mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabase.child("users").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot user: dataSnapshot.getChildren()) {
@@ -186,6 +186,7 @@ public class FirebaseHelper {
 
                             if (friendsIdList.contains(userId)){
                                 User res = user.getValue(User.class);
+                                res.setId(userId);
                                 Log.d(TAG, "Adding user " + res.getName() + " to map");
                                 listener.updateUserMarker(res);
 

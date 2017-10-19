@@ -54,11 +54,9 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
-import hinapolina.com.sharelocation.ui.DataHolder;
-import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
+import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
@@ -425,6 +423,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
         FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
         service.execute(getResources().getString(R.string.firebase_api_key), topic, "Testing Topic Noticitation");
-        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 }
