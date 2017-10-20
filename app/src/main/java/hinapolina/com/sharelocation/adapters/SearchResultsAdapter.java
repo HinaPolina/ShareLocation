@@ -15,6 +15,7 @@ import java.util.List;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
+import hinapolina.com.sharelocation.listener.MassageSenderListener;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
 
@@ -100,14 +101,16 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         @Override
         public void onClick(View view) {
            String id = user.getId();
+
             firebaseHelper.removeAddUser(id, currentId, user.isFriend());
             button.setText(user.isFriend()?R.string.add_user:R.string.remove_friend);
             user.setFriend(!user.isFriend());
 
-//            FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(token)
-//                    .setMessageId(id+currentId)
-//                    .addData("my_message", "User "+ currentName + " add you to friends")
-//                    .build());
+            if(context instanceof MassageSenderListener){
+               if(user.isFriend()) {
+                   ((MassageSenderListener) context).onSendMassageListener(user.getToken(), "User " + user.getName() + " add you to friend");
+               }
+            }
 
         }
     }

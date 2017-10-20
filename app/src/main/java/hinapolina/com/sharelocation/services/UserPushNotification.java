@@ -27,9 +27,10 @@ public class UserPushNotification extends FirebaseMessagingService {
         // If the application is in the foreground handle both data and notification messages here.
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated.
+        Log.d(TAG, "Received: " + remoteMessage);
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-        sendNotification(remoteMessage.getData().get("my_message").toString());
+        sendNotification(remoteMessage.getNotification().getTitle());
 
     }
     private void sendNotification(String messageBody) {
@@ -43,7 +44,7 @@ public class UserPushNotification extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(android.R.drawable.sym_def_app_icon)
-                        .setContentTitle("FCM Message")
+                        .setContentTitle("ShareLocation")
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)

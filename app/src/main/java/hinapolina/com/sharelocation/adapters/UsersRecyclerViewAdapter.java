@@ -86,7 +86,6 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
         public MainViewHolder(View itemView) {
             super(itemView);
-
             imgUsersProfileImage = (ImageView) itemView.findViewById(R.id.users_img);
             imgBatterIcon = (ImageView) itemView.findViewById(R.id.img_battery);
             imgBatteryCharging = (ImageView) itemView.findViewById(R.id.img_battery_charging);
