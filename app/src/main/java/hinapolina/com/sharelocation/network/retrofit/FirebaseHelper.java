@@ -15,9 +15,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.ui.Application;
 
 /**
  * Created by polina on 10/14/17.
@@ -35,29 +35,13 @@ public class FirebaseHelper {
     }
 
     public void removeAddUser(final String id, final String currentId, final Boolean isFriend){
-        final  HashSet<String> friendsIdList =new HashSet<>();
+
         mDatabase.child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                addRemoveUserFromMyList(id, currentId, isFriend, dataSnapshot);
+                addRemoveMyFromUserList(id, currentId, isFriend, dataSnapshot);
 
-                for (DataSnapshot friends: dataSnapshot.getChildren()) {
-                    String userId = friends.getKey();
-
-                    if (userId.equals(currentId)){
-                        String res = friends.getValue(String.class);
-                        String [] arr = res.split(";");
-                        friendsIdList.addAll(Arrays.asList(arr));
-                        System.err.println("Friends of  user " + res + " into DB" );
-                    }
-
-                }
-                if(isFriend) {
-                    friendsIdList.remove(id);
-                } else {
-                    friendsIdList.add(id);
-                }
-                String friendsId =  StringUtils.join(friendsIdList, ";");
-                mDatabase.child("friends").child(currentId).setValue(friendsId);
             }
 
             @Override
@@ -65,6 +49,32 @@ public class FirebaseHelper {
                 System.err.println("The read failed: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void addRemoveMyFromUserList(String id, String currentId, Boolean isFriend, DataSnapshot dataSnapshot) {
+        final  HashSet<String> friendsIdList =new HashSet<>();
+        for (DataSnapshot friends: dataSnapshot.getChildren()) {
+            String userId = friends.getKey();
+
+            if (userId.equals(currentId)){
+                String res = friends.getValue(String.class);
+                String [] arr = res.split(";");
+                friendsIdList.addAll(Arrays.asList(arr));
+                System.err.println("Friends of  user " + res + " into DB" );
+            }
+
+        }
+        if(isFriend) {
+            friendsIdList.remove(id);
+        } else {
+            friendsIdList.add(id);
+        }
+        String friendsId =  StringUtils.join(friendsIdList, ";");
+        mDatabase.child("friends").child(currentId).setValue(friendsId);
+    }
+
+    private void addRemoveUserFromMyList(String id, String currentId, Boolean isFriend, DataSnapshot dataSnapshot) {
+        addRemoveMyFromUserList(currentId, id, isFriend, dataSnapshot);
     }
 
 
@@ -105,39 +115,30 @@ public class FirebaseHelper {
     public void findUserByName(final String name, final String currentID){
         final  HashSet<String> friendsIdList =new HashSet<>();
 
-        mDatabase.child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("friends").child(currentID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot friends: dataSnapshot.getChildren()) {
-                    String userId = friends.getKey();
-
-                    if (userId.equals(currentID)){
-                        String res = friends.getValue(String.class);
-                        String [] arr = res.split(";");
-                        friendsIdList.addAll(Arrays.asList(arr));
-                        System.err.println("Friends of  user " + res + " into DB" );
-                    }
-
-                }
+            public void onDataChange(DataSnapshot friends) {
+                String res = friends.getValue(String.class);
+                String [] arr = res.split(";");
+                friendsIdList.addAll(Arrays.asList(arr));
+                System.err.println("Friends of  user " + res + " into DB" );
 
                 mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-                    List<User> users = new ArrayList<User>();
-                    List<User> usersDefoult = new ArrayList<User>();
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<User> users = new ArrayList();
                         for (DataSnapshot userDB: dataSnapshot.getChildren()) {
                             String userId = userDB.getKey();
                             User user = userDB.getValue(User.class);
                             user.setId(userId);
                             user.setFriend(friendsIdList.contains(userId));
-                            if(!userId.equals(currentID)) usersDefoult.add(user);
-                            if (name.equals(user.getName())&& !userId.equals(currentID)){
+
+                            if (user.getName().toLowerCase().contains(name.toLowerCase())&&!user.getId().equals(currentID)){
                                 users.add(user);
-                                user.setFriend(friendsIdList.contains(userId));
                             }
                         }
 
-                        listener.addUserToAdapter(users.size()>0? users: usersDefoult);
+                        listener.addUserToAdapter(users);
 
                     }
 

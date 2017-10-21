@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/profile_details_profile_container"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="170dp"
         android:orientation="vertical">
 
         <ImageView

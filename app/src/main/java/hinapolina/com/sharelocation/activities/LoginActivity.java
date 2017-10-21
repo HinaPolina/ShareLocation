@@ -52,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.Calendar;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.model.User;
@@ -207,6 +208,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         int battery = (int)Utils.getBatteryLevel(this);
         user.setBattery(battery);
         user.setId(id);
+        String date = Calendar.getInstance().getTime().toString();
+        user.setDate(date);
         mDatabase.child("users").child(id).setValue(user);
         SharedPreferences sharedPref = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

@@ -46,6 +46,7 @@ import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.services.JobScheduler;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
+
 import static hinapolina.com.sharelocation.ui.Utils.REQUEST_CODE;
 
 /**
@@ -119,7 +120,7 @@ public class HomeActivity extends AppCompatActivity
                         // don't persist past a device reboot
                         .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
                         // start between 0 and 60 seconds from now
-                        .setTrigger(Trigger.executionWindow(60*60, 60*62))
+                        .setTrigger(Trigger.executionWindow(0, 60))
                         // retry with exponential backoff
                         .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                         // constraints that need to be satisfied for the job to run
@@ -167,7 +168,6 @@ public class HomeActivity extends AppCompatActivity
         hideCloseButton(searchView);
         ImageView v = (ImageView) searchView.findViewById(searchImgId);
         v.setImageResource(android.R.drawable.ic_menu_search);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -179,7 +179,6 @@ public class HomeActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
                 return false;
             }
         });
@@ -206,7 +205,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-           // todo update new friends list
+
         }
 
     }
@@ -325,7 +324,8 @@ public class HomeActivity extends AppCompatActivity
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
             tvUserName.setText(currentUser.getDisplayName());
-            Picasso.with(this).load(currentUser.getPhotoUrl()).into(imgUserProfile);
+            Picasso.with(this).load(currentUser.getPhotoUrl()).resize(80, 80)
+                    .transform(new GoogleLocationFragment.RoundTransformation()).into(imgUserProfile);
         }
 
             }

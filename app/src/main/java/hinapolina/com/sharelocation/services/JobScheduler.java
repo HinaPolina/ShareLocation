@@ -12,6 +12,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.Calendar;
+
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
 
@@ -37,7 +39,8 @@ public class JobScheduler extends JobService {
                         DatabaseReference mDatabase = Application.getmDatabase();
                         mDatabase.child("users").child(id).child("lat").setValue(location.getLatitude());
                         mDatabase.child("users").child(id).child("lng").setValue(location.getLongitude());
-                        mDatabase.child("users").child(id).child("battery").setValue(Utils.getBatteryLevel(getApplicationContext()));
+                        mDatabase.child("users").child(id).child("battery").setValue((int)Utils.getBatteryLevel(getApplicationContext()));
+                        mDatabase.child("users").child(id).child("date").setValue(Calendar.getInstance().getTime().toString());
                     }
                 });
 

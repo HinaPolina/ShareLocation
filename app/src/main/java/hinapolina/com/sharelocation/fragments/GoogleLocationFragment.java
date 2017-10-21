@@ -52,6 +52,7 @@ import java.util.Map;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.LoginActivity;
+import hinapolina.com.sharelocation.adapters.MarkerAdapter;
 import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
@@ -60,6 +61,8 @@ import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
+
+import static hinapolina.com.sharelocation.R.id.map;
 
 
 /**
@@ -129,7 +132,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
 
-        mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(map);
         mSupportMapFragment.getMapAsync(this);
 
         getPermissionToReadUserContacts();
@@ -148,12 +151,18 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         mRecyclerView.setAdapter(mUsersRecyclerView);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mGoogleApiClient!=null) mSupportMapFragment.getMapAsync(this);
+    }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap.setInfoWindowAdapter(new MarkerAdapter(getLayoutInflater()));
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -188,7 +197,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         super.onPause();
 
         //stop location updates when Activity is no longer active
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient != null&& mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
@@ -274,21 +283,26 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
     private Marker addMarker(final User user) {
 
+        final MarkerOptions markerOptions = new MarkerOptions();
         LatLng latLng = new LatLng(user.getLat(), user.getLng());
+        String date = "";
+        if(user.getDate()!=null) date = Utils.getLastUpdate(user.getDate());
         Log.d(TAG, "Latitude: " + user.getLat()+ ", longitude: " + user.getLng());
         if(markers.containsKey(user.getId())) {
            Marker marker = markers.get(user.getId());
-            markers.remove(user.getId());
-            marker.setPosition(latLng);
-            markers.put(user.getId(), marker);
+            marker.remove();
+            markerOptions.position(latLng);
+            markerOptions.title(user.getName());
+            markerOptions.snippet("Battery level: " + user.getBattery() + "\n" + date);
+            marker = mGoogleMap.addMarker(markerOptions);
+           markers.put(user.getId(), marker);
             return marker;
         }  else {
 
-            final MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
             markerOptions.title(user.getName());
-            markerOptions.snippet("Battery level: " + user.getBattery());
-          final Marker marker = mGoogleMap.addMarker(markerOptions);
+            markerOptions.snippet("Battery level: " + user.getBattery() + "\n"  +date);
+            final Marker marker = mGoogleMap.addMarker(markerOptions);
             System.err.println("URL: " + user.getImageURI());
             Picasso.with(getContext())
                     .load(user.getImageURI().replaceAll("large", "small"))
@@ -299,7 +313,10 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                             System.err.println("BITMAP: "+ bitmap);
-                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                            marker.remove();
+                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                            Marker m = mGoogleMap.addMarker(markerOptions);
+                            markers.put(user.getId(), m);
                         }
 
                         @Override
@@ -421,7 +438,16 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     }
 
     public void addUserToAdapter(User user) {
-        mUsersRecyclerView.addUser(user);
+        boolean isInList = false;
+      for(int i = 0; i<mUsers.size(); i++){
+          if(mUsers.get(i).getId().equals(user.getId())){
+              mUsers.remove(i);
+              mUsers.add(i, user);
+              isInList = true;
+              return;
+          }
+      }
+      if(!isInList) mUsers.add(user);
         mUsersRecyclerView.notifyDataSetChanged();
     }
 

@@ -21,6 +21,17 @@ public class User {
     private double lat;
     private BatteryStatus batteryStatus;
     private String text;
+    String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+
 
     public String getToken() {
         return token;

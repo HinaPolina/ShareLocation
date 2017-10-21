@@ -14,9 +14,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import hinapolina.com.sharelocation.ui.BatteryStatus;
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.ui.BatteryStatus;
 
 /**
  * Created by hinaikhan on 10/16/17.
@@ -61,7 +62,8 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
         MainViewHolder mainViewHolder = (MainViewHolder) holder;
         mainViewHolder.tvUsersName.setText(user.getName());
         mainViewHolder.tvBatteryPercentage.setText(String.valueOf(user.getBattery()));
-        Picasso.with(holder.itemView.getContext()).load(user.getImageURI()).into(mainViewHolder.imgUsersProfileImage);
+        Picasso.with(holder.itemView.getContext()).load(user.getImageURI()) .resize(80, 80)
+                .transform(new GoogleLocationFragment.RoundTransformation()).into(mainViewHolder.imgUsersProfileImage);
 
         if(batteryStatus != null && (batteryStatus.isCharging() || (batteryStatus.isUsbCharge())
                 || batteryStatus.isAcCharge())) {

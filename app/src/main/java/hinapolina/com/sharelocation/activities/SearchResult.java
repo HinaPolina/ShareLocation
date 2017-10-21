@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,12 +41,14 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
     FirebaseHelper firebaseHelper;
     private List<User> users = new ArrayList<>();
     private SearchResultsAdapter adapter;
+    TextView result;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
+        result = (TextView) findViewById(R.id.result_text);
         firebaseHelper = new FirebaseHelper(this);
         final SharedPreferences sharedPreferences = getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         final String currentId =sharedPreferences.getString(Utils.USER_ID, "");
@@ -75,6 +79,9 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
 
     @Override
     public void addUserToAdapter(List<User> users) {
+        if(users!=null&&users.isEmpty()) {
+            result.setVisibility(View.VISIBLE);
+        }
         this.users.addAll(users);
         adapter.notifyDataSetChanged();
     }
