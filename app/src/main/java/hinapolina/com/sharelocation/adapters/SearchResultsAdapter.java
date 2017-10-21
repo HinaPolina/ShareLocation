@@ -17,7 +17,7 @@ import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.listener.MassageSenderListener;
 import hinapolina.com.sharelocation.model.User;
-import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
+import hinapolina.com.sharelocation.network.FirebaseHelper;
 
 /**
  * Created by polina on 10/16/17.

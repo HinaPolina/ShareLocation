@@ -23,7 +23,7 @@ import hinapolina.com.sharelocation.adapters.SearchResultsAdapter;
 import hinapolina.com.sharelocation.listener.MassageSenderListener;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
-import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
+import hinapolina.com.sharelocation.network.FirebaseHelper;
 import hinapolina.com.sharelocation.ui.Utils;
 import okhttp3.Call;
 import okhttp3.Callback;

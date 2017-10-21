@@ -28,10 +28,11 @@ public class Utils{
     public static final String IMAGE = "image";
     public static final int REQUEST_CODE = 123;
     public static final String TOKEN = "token" ;
-    public static final String SEND_DATA = "send";
+    public static final String UPDATE = "send";
     public static final String LAT = "lat" ;
     public static final String LNG = "lng";
     public static final String BATTERY =  "bat";
+    public static final String FRIEND_NEARBY = "near" ;
 
     public static float getBatteryLevel(Context context) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
