@@ -49,6 +49,9 @@ dependencies {
 
     //for conference
     compile 'com.opentok.android:opentok-android-sdk:2.12.0'
+    compile 'pub.devrel:easypermissions:0.4.0'
+
+
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
 }
