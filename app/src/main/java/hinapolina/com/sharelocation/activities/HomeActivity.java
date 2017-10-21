@@ -327,8 +327,7 @@ public class HomeActivity extends AppCompatActivity
             tvUserName.setText(currentUser.getDisplayName());
             Picasso.with(this).load(currentUser.getPhotoUrl()).into(imgUserProfile);
         }
-
-            }
+    }
 
 }
 
