@@ -18,7 +18,7 @@ The following **required** functionality is completed:
   * [X]	User can  add/remove friends 
          
 
-* []	User can **get push notification when new friend request sent**
+* [X]	User can **get push notification when new friend request sent**
 * [X]	User can **locate the friends on map**
   * [X]	User can  see friends on a map with (image, name, level of batter)
    * [X]	User can  see a movements of friends on map
