@@ -5,6 +5,10 @@
     <string name="fb_login_protocol_scheme">fb936475039834902</string>
     <string name="server_client_id">1055929112324-2vu53ek6s0lq14tebfdcn0jqbl9mqb9r.apps.googleusercontent.com</string>
     <string name="firebase_api_key">AIzaSyCLTDg4WJl8MlhEvsLldzIo-lgBWoZLiNA</string>
+    <string name="talk_api_key">45985662</string>
+    <string name="talk_session_id">1_MX40NTk4NTY2Mn5-MTUwODU1ODE3ODE3OH5XNEVCMElBaEFXN0Y5MUJtZHl0N1Z3cTR-fg</string>
+    <string name="talk_token">T1==cGFydG5lcl9pZD00NTk4NTY2MiZzaWc9NjllM2VkMGRlY2IzZDUyNDc2MTNiNGM1YzE2ZDdkNzNiNjVhMjFmMDpzZXNzaW9uX2lkPTFfTVg0ME5UazROVFkyTW41LU1UVXdPRFUxT0RFM09ERTNPSDVYTkVWQ01FbEJhRUZYTjBZNU1VSnRaSGwwTjFaM2NUUi1mZyZjcmVhdGVfdGltZT0xNTA4NTU4MjAyJm5vbmNlPTAuMjQzMjA1NDMzNzExNDA5MzUmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTUxMTE1MzgwMSZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==</string>
+    <string name="servrt_id">AAAA9dpHlwQ:APA91bFWKit_83hOwlHg9aBPy0vUM68w3Uhn4bXSar_X7WUOBhb9Lg2EqoH5euvqzZjEstypSJF1Z5Cj3rHEEpis4zgkTvCKa4Afnh43IYxPjIYIO7hzRjh5X__Wpg9mNwVPL-H2Gd57</string>
 </resources>
 
 

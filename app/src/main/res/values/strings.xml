@@ -27,4 +27,14 @@
     <string name="default_notification_channel_id">notify</string>
     <string name="servrt_id">AAAA9dpHlwQ:APA91bFWKit_83hOwlHg9aBPy0vUM68w3Uhn4bXSar_X7WUOBhb9Lg2EqoH5euvqzZjEstypSJF1Z5Cj3rHEEpis4zgkTvCKa4Afnh43IYxPjIYIO7hzRjh5X__Wpg9mNwVPL-H2Gd57</string>
     <string name="result_not_found">Result not found</string>
+
+    <!--video chat-->
+
+
+    <string name="title_settings_dialog">Permissions Required</string>
+    <string name="rationale_video_app">This app needs access to your camera and mic to make video calls</string>
+    <string name="rationale_ask_again">This app may not work correctly without the requested permissions. Open the app settings screen to modify app permissions.</string>
+
+    <string name="setting">Settings</string>
+    <string name="cancel">Cancel</string>
 </resources>

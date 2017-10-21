@@ -40,7 +40,7 @@ public class FirebaseTopicNotificationService extends AsyncTask<String, Integer,
             jGcmData.put("data", jData);
 
             // Create connection to send GCM Message request.
-            URL url = new URL("https://android.googleapis.com/gcm/send");
+            URL url = new URL("https://fcm.googleapis.com/fcm/send");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization", "key=" + firebaseApiKey);
             conn.setRequestProperty("Content-Type", "application/json");

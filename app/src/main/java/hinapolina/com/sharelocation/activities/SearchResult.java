@@ -57,7 +57,7 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SearchResultsAdapter(users, this, currentId, firebaseHelper, sharedPreferences.getString(Utils.TOKEN, ""), sharedPreferences.getString(Utils.USER_NAME, ""));
         recyclerView.setAdapter(adapter);
-      }
+    }
 
 
     @Override

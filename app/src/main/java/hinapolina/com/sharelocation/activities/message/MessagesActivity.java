@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -164,6 +165,7 @@ public class MessagesActivity extends AppCompatActivity {
                 message.setMessage(etMessage.getText().toString());
                 message.setUserProfileImg(sharedPref.getString(Utils.IMAGE, ""));
                 mDatabaseReference.push().setValue(message);
+                FirebaseMessaging.getInstance().subscribeToTopic("message");
 
                 //clear the input box
                 etMessage.setText(" ");

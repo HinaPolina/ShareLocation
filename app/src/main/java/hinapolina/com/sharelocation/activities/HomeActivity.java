@@ -327,8 +327,7 @@ public class HomeActivity extends AppCompatActivity
             Picasso.with(this).load(currentUser.getPhotoUrl()).resize(80, 80)
                     .transform(new GoogleLocationFragment.RoundTransformation()).into(imgUserProfile);
         }
-
-            }
+    }
 
 }
 

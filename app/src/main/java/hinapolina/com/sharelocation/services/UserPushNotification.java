@@ -28,9 +28,9 @@ public class UserPushNotification extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated.
         Log.d(TAG, "Received: " + remoteMessage);
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-        sendNotification(remoteMessage.getNotification().getTitle());
+//        Log.d(TAG, "From: " + remoteMessage.getFrom());
+//        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+//        sendNotification(remoteMessage.getNotification().getTitle());
 
     }
     private void sendNotification(String messageBody) {
@@ -39,7 +39,7 @@ public class UserPushNotification extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-                String channelId = getString(R.string.default_notification_channel_id);
+        String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
@@ -57,4 +57,3 @@ public class UserPushNotification extends FirebaseMessagingService {
     }
 
 }
-

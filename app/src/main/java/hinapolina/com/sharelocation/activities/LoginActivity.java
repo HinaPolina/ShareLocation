@@ -425,7 +425,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         String topic = "groupmessage";
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
         FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
-        service.execute(getResources().getString(R.string.firebase_api_key), topic, "Testing Topic Noticitation");
+        service.execute(getResources().getString(R.string.servrt_id), topic, "Testing Topic Noticitation");
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
