@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -78,6 +79,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     private GoogleMap mGoogleMap;
     private LocationRequest mLocationRequest;
     private Location mCurrentLocation;
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     private Context mContext;
     String currentUserId;

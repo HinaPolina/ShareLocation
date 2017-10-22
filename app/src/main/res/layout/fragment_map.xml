@@ -1,34 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android:com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="100dp"
+    sothree:umanoShadowHeight="4dp" >
+
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".activities.LoginActivity">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:id="@+id/map"
+    tools:context=".MapLocationActivity"
+    android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:id="@+id/map"
-        tools:context=".MapLocationActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/profile_details_recycler"
+    android:layout_marginTop="@dimen/margin"
+    android:layout_width="match_parent"
+    android:gravity="center|top"
+    android:layout_height="wrap_content" />
 
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/map"
-        android:orientation="vertical">
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/profile_details_recycler"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-
-
-</RelativeLayout>
+</android:com.sothree.slidinguppanel.SlidingUpPanelLayout>
