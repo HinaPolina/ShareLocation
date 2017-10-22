@@ -32,7 +32,7 @@ The following **optional** functionality
 
 * []	User can **share interesting places near**
 * []	User can **start video chat with friends**
-* []	User can **get push notification when friends are near by**
+* [X]	User can **get push notification when friends are near by**
 * [X]	User can **see level of battary of friends**
 * []	User can **order Uber from app**
 * []	User can **see timetable of BART/CalTrain**
