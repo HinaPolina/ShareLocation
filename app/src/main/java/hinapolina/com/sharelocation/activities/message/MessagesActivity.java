@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,21 +28,30 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.MessageAdapter;
+import hinapolina.com.sharelocation.common.Constant;
+import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.network.FirebaseHelper;
+import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
 
-public class MessagesActivity extends AppCompatActivity {
+import static hinapolina.com.sharelocation.R.drawable.user;
+
+public class MessagesActivity extends AppCompatActivity implements UserUpdateListener {
 
     private static final String TAG = MessagesActivity.class.getSimpleName();
     private static final int MESSAGE_LENGTH_LIMIT = 150;
@@ -64,6 +74,9 @@ public class MessagesActivity extends AppCompatActivity {
     private String mUserName;
     private Toolbar mToolbar;
     public ImageView backIcon;
+
+    private FirebaseHelper firebaseHelper;
+    private List<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +103,11 @@ public class MessagesActivity extends AppCompatActivity {
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onClickListeners();
+
+        firebaseHelper = new FirebaseHelper(this);
+        final SharedPreferences sharedPreferences = getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        final String currentId =sharedPreferences.getString(Utils.USER_ID, "");
+        firebaseHelper.findUserByName("", currentId);
 
     }
 
@@ -124,8 +142,10 @@ public class MessagesActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null){
                     Message message = (Message) dataSnapshot.getValue(Message.class);
-                    mMessageAdapter.addMessage(message);
-                    mMessageAdapter.notifyDataSetChanged();
+                    if (!TextUtils.isEmpty(message.getMessage())) {
+                        mMessageAdapter.addMessage(message);
+                        mMessageAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -194,8 +214,7 @@ public class MessagesActivity extends AppCompatActivity {
                 //Push message to firebase
                 mDatabaseReference.push().setValue(message);
 
-                //Subscribe user to topic
-                FirebaseMessaging.getInstance().subscribeToTopic("message");
+                notifyAllUsers(message.getMessage());
 
                 //clear the input box
                 etMessage.setText(" ");
@@ -241,8 +260,40 @@ public class MessagesActivity extends AppCompatActivity {
                 }
         }
 
+    @Override
+    public void updateUserMarker(User user) {
 
     }
+
+    @Override
+    public void addUserToAdapter(User user) {
+
+    }
+
+    @Override
+    public void addUsersToAdapter(List<User> users) {
+       this.users = users;
+    }
+
+    private void notifyAllUsers(String message) {
+        /**
+         TODO - Firebase topic Notification Service isn't working
+         FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
+         service.execute(getResources().getString(R.string.servrt_id), Constant.GROUP_TOPIC_NAME, "Push Notification test");
+         */
+        List<String> registrationIds = new ArrayList<String>();
+        if (users != null && !users.isEmpty()) {
+            //Construct list of registration ids
+            for (User user : users) {
+                registrationIds.add(user.getToken());
+            }
+
+            //Send push notification to all users
+            FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
+            service.notifyAllUsers(MessagesActivity.this, registrationIds, message);
+        }
+    }
+}
 
 
 

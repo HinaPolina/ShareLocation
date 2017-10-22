@@ -69,6 +69,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
         mainViewHolder.tvUsersName.setText(user.getName());
         mainViewHolder.tvBatteryPercentage.setText(String.valueOf(user.getBattery()));
 
+        //for video conference
         mainViewHolder.imgTalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +80,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             }
         });
 
+        //for individual text messages
         mainViewHolder.imgMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

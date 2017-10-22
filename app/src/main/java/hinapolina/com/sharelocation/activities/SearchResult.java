@@ -78,7 +78,7 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
     }
 
     @Override
-    public void addUserToAdapter(List<User> users) {
+    public void addUsersToAdapter(List<User> users) {
         if(users!=null&&users.isEmpty()) {
             result.setVisibility(View.VISIBLE);
         }

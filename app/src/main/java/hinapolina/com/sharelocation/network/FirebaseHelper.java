@@ -137,7 +137,7 @@ public class FirebaseHelper {
                             }
                         }
 
-                        listener.addUserToAdapter(users);
+                        listener.addUsersToAdapter(users);
 
                     }
 

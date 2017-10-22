@@ -93,8 +93,6 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     private List<User> mUsers = new ArrayList<>();
     private LoginActivity loginActivity;
 
-
-
     private UsersRecyclerViewAdapter mUsersRecyclerView =
             new UsersRecyclerViewAdapter(mContext, mUsers);
 
@@ -105,11 +103,6 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     private final static String KEY_LOCATION = "location";
     private final static String TAG = GoogleLocationFragment.class.getSimpleName();
    Map <String, Marker> markers = new HashMap<>();
-
-
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -458,7 +451,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
 
     @Override
-    public void addUserToAdapter(List<User> users) {
+    public void addUsersToAdapter(List<User> users) {
 
     }
 

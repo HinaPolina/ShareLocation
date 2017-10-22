@@ -55,6 +55,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.common.Constant;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.FirebaseHelper;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
@@ -423,10 +424,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void gotoHome(){
-        String topic = "groupmessage";
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
-        FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
-        service.execute(getResources().getString(R.string.servrt_id), topic, "Testing Topic Noticitation");
+        //Subscribe user to group topic upon login
+        FirebaseMessaging.getInstance().subscribeToTopic(Constant.GROUP_TOPIC_NAME);
+
+        //Launch Home Activity
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);

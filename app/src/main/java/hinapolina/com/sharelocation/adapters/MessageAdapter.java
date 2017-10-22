@@ -2,6 +2,8 @@ package hinapolina.com.sharelocation.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -70,14 +72,25 @@ public class MessageAdapter extends ArrayAdapter<Object> {
 //        }
 
         tvAuthorTextView.setText(message.getSender());
-        tvMessage.setText(message.getMessage());
+
+        if (TextUtils.isEmpty(message.getMessage())) {
+            tvMessage.setText("Blank Message");
+        } else {
+            tvMessage.setText(message.getMessage());
+        }
+
         Picasso.with(getContext()).load(message.getUserProfileImg()) .resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(imgPhotoImageView);
 
         if (message.getTimeInMillis() > 0) {
             tvMessageDate.setText(Utils.printableDate(message.getTimeInMillis()));
             tvMessageTime.setText(Utils.printableTime(message.getTimeInMillis()));
+        } else {
+            tvMessageDate.setText("");
+            tvMessageTime.setText("");
         }
+
+
 
 
         return convertView;
