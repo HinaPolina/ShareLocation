@@ -35,7 +35,6 @@ public class FirebaseHelper {
     }
 
     public void removeAddUser(final String id, final String currentId, final Boolean isFriend){
-
         mDatabase.child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -110,7 +110,9 @@ public class HomeActivity extends AppCompatActivity
                 SharedPreferences sharedPref = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
                 String currentUserId = sharedPref.getString(Utils.USER_ID, "") ;
                 myExtrasBundle.putString(Utils.USER_ID, currentUserId);
+                myExtrasBundle.putString(Utils.USER_NAME, sharedPref.getString(Utils.USER_NAME, ""));
                 Job myJob = mDispatcher.newJobBuilder()
+                        .setReplaceCurrent(true)
                         // the JobService that will be called
                         .setService(JobScheduler.class)
                         // uniquely identifies the job
@@ -118,7 +120,7 @@ public class HomeActivity extends AppCompatActivity
                         // one-off job
                         .setRecurring(true)
                         // don't persist past a device reboot
-                        .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                        .setLifetime(Lifetime.FOREVER)
                         // start between 0 and 60 seconds from now
                         .setTrigger(Trigger.executionWindow(0, 60))
                         // retry with exponential backoff
