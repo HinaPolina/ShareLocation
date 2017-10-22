@@ -57,6 +57,8 @@
 
     </LinearLayout>
 
+
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
@@ -64,4 +66,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
+
+
 </RelativeLayout>

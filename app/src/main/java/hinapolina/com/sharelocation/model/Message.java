@@ -9,13 +9,14 @@ public class Message {
     private String sender;
     private String message;
     private String userProfileImg;
+    private int time;
 
 
     public String getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(String sendr) {
         this.sender = sender;
     }
 
@@ -33,5 +34,13 @@ public class Message {
 
     public void setUserProfileImg(String userProfileImg) {
         this.userProfileImg = userProfileImg;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }

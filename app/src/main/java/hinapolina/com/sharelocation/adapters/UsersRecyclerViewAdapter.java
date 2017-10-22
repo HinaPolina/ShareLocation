@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.activities.message.ChatActivity;
 import hinapolina.com.sharelocation.activities.videotalk.VideoTalkActivity;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
@@ -75,9 +76,13 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
                 v.getContext().startActivity(new Intent(v.getContext(),VideoTalkActivity.class));
 
 
-//                Intent myactivity = new Intent(context, VideoTalkActivity.class);
-//                myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
-//                context.startActivity(myactivity);
+            }
+        });
+
+        mainViewHolder.imgMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.getContext().startActivity(new Intent(v.getContext(), ChatActivity.class));
             }
         });
 
@@ -101,7 +106,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
     public class MainViewHolder extends RecyclerView.ViewHolder {
 
-        protected ImageView imgUsersProfileImage, imgBatterIcon, imgBatteryCharging, imgTalk;
+        protected ImageView imgUsersProfileImage, imgBatterIcon, imgBatteryCharging, imgTalk, imgMessage;
         protected TextView tvUsersName, tvBatteryPercentage;
 
         public MainViewHolder(View itemView) {
@@ -112,6 +117,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             tvUsersName = (TextView) itemView.findViewById(R.id.tv_users_name);
             tvBatteryPercentage = (TextView) itemView.findViewById(R.id.tv_battery_percentage);
             imgTalk = (ImageView) itemView.findViewById(R.id.img_talk);
+            imgMessage = (ImageView) itemView.findViewById(R.id.img_message);
 
         }
     }

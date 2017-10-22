@@ -17,6 +17,9 @@ import java.util.List;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.Message;
+import hinapolina.com.sharelocation.ui.Utils;
+
+import static hinapolina.com.sharelocation.R.drawable.user;
 
 /**
  * Created by hinaikhan on 10/16/17.
@@ -27,6 +30,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
     private ImageView imgPhotoImageView;
     private TextView tvMessage;
     private TextView tvAuthorTextView;
+    private TextView tvMessageTime;
     private List<Message> messages;
 
 
@@ -46,6 +50,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
         imgPhotoImageView = (ImageView) convertView.findViewById(R.id.photoImageView);
         tvMessage = (TextView) convertView.findViewById(R.id.messageTextView);
         tvAuthorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
+        tvMessageTime = (TextView) convertView.findViewById(R.id.tv_message_time);
 
 
         Message message = this.messages.get(position);
@@ -66,6 +71,9 @@ public class MessageAdapter extends ArrayAdapter<Object> {
         tvMessage.setText(message.getMessage());
         Picasso.with(getContext()).load(message.getUserProfileImg()) .resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(imgPhotoImageView);
+
+        tvMessageTime.setText(Utils.getLastUpdate(String.valueOf(message.getTime())));
+
 
 
         return convertView;

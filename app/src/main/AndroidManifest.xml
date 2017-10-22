@@ -94,6 +94,7 @@
         <activity android:name=".activities.SearchResult" />
         <activity android:name="hinapolina.com.sharelocation.activities.message.MessagesActivity"></activity>
         <activity android:name=".activities.videotalk.VideoTalkActivity"/>
+        <activity android:name=".activities.message.ChatActivity"/>
 
         <service android:name="hinapolina.com.sharelocation.services.UserPushNotification">
             <intent-filter>
