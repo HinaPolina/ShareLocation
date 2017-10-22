@@ -57,6 +57,15 @@
         android:layout_marginTop="@dimen/margin_left_36"
         />
 
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@id/tv_battery_percentage"
+            android:layout_marginLeft="@dimen/margin_left_32"
+            android:layout_marginTop="26dp"
+            android:id="@+id/img_talk"
+            android:src="@drawable/icon_call"/>
+
 
     </RelativeLayout>
 

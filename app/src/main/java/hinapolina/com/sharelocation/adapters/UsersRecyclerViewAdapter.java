@@ -1,6 +1,7 @@
 package hinapolina.com.sharelocation.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,9 +16,13 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.activities.videotalk.VideoTalkActivity;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.services.TalkWebServiceCoordinator;
 import hinapolina.com.sharelocation.ui.BatteryStatus;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by hinaikhan on 10/16/17.
@@ -62,6 +67,20 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
         MainViewHolder mainViewHolder = (MainViewHolder) holder;
         mainViewHolder.tvUsersName.setText(user.getName());
         mainViewHolder.tvBatteryPercentage.setText(String.valueOf(user.getBattery()));
+
+        mainViewHolder.imgTalk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                v.getContext().startActivity(new Intent(v.getContext(),VideoTalkActivity.class));
+
+
+//                Intent myactivity = new Intent(context, VideoTalkActivity.class);
+//                myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(myactivity);
+            }
+        });
+
         Picasso.with(holder.itemView.getContext()).load(user.getImageURI()) .resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(mainViewHolder.imgUsersProfileImage);
 
@@ -72,9 +91,8 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             mainViewHolder.imgBatterIcon.setImageResource(R.drawable.icon_battery);
 
         }
-
-
     }
+
 
     @Override
     public int getItemCount() {
@@ -83,7 +101,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
     public class MainViewHolder extends RecyclerView.ViewHolder {
 
-        protected ImageView imgUsersProfileImage, imgBatterIcon, imgBatteryCharging;
+        protected ImageView imgUsersProfileImage, imgBatterIcon, imgBatteryCharging, imgTalk;
         protected TextView tvUsersName, tvBatteryPercentage;
 
         public MainViewHolder(View itemView) {
@@ -93,11 +111,11 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             imgBatteryCharging = (ImageView) itemView.findViewById(R.id.img_battery_charging);
             tvUsersName = (TextView) itemView.findViewById(R.id.tv_users_name);
             tvBatteryPercentage = (TextView) itemView.findViewById(R.id.tv_battery_percentage);
-
-
+            imgTalk = (ImageView) itemView.findViewById(R.id.img_talk);
 
         }
     }
+
 
 
 }
