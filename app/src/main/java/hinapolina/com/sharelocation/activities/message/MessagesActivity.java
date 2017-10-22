@@ -1,18 +1,22 @@
 package hinapolina.com.sharelocation.activities.message;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -56,12 +60,19 @@ public class MessagesActivity extends AppCompatActivity {
     private StorageReference mFirebasetorageReference;
     private ChildEventListener mChildEventListener;
     private String mUserName;
+    private Toolbar mToolbar;
+    public ImageView backIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
         initView();
+
+
+        mToolbar.setTitle("My Messages");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //initialize fb references
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -87,6 +98,19 @@ public class MessagesActivity extends AppCompatActivity {
         imgPhotoButton = (ImageButton) findViewById(R.id.photoPickerButton);
         etMessage = (EditText) findViewById(R.id.messageEditText);
         btnSendMessage = (Button) findViewById(R.id.sendButton);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
     }
 
     @Override

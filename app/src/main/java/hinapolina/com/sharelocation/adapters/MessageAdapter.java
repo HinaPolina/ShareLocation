@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
 
@@ -28,6 +29,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
     private TextView tvAuthorTextView;
     private List<Message> messages;
 
+
     public MessageAdapter(Context context, int resource, List<Message> messages) {
         super(context, resource);
         this.messages = messages;
@@ -44,6 +46,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
         imgPhotoImageView = (ImageView) convertView.findViewById(R.id.photoImageView);
         tvMessage = (TextView) convertView.findViewById(R.id.messageTextView);
         tvAuthorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
+
 
         Message message = this.messages.get(position);
 
