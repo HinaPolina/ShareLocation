@@ -32,6 +32,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Calendar;
+
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.MessageAdapter;
 import hinapolina.com.sharelocation.model.Message;
@@ -182,18 +184,21 @@ public class MessagesActivity extends AppCompatActivity {
                 Message message = new Message();
 
                 SharedPreferences sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-                //fetching data with user name now for messaging
-                String userName = sharedPref.getString(Utils.USER_NAME, " ");
-                message.setSender(userName);
 
+                //Set message attributes
+                message.setSender(sharedPref.getString(Utils.USER_NAME, " "));
                 message.setMessage(etMessage.getText().toString());
                 message.setUserProfileImg(sharedPref.getString(Utils.IMAGE, ""));
+                message.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+
+                //Push message to firebase
                 mDatabaseReference.push().setValue(message);
+
+                //Subscribe user to topic
                 FirebaseMessaging.getInstance().subscribeToTopic("message");
 
                 //clear the input box
                 etMessage.setText(" ");
-
             }
         });
 

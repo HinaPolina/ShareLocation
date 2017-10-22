@@ -30,6 +30,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
     private ImageView imgPhotoImageView;
     private TextView tvMessage;
     private TextView tvAuthorTextView;
+    private TextView tvMessageDate;
     private TextView tvMessageTime;
     private List<Message> messages;
 
@@ -50,6 +51,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
         imgPhotoImageView = (ImageView) convertView.findViewById(R.id.photoImageView);
         tvMessage = (TextView) convertView.findViewById(R.id.messageTextView);
         tvAuthorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
+        tvMessageDate = (TextView) convertView.findViewById(R.id.tv_message_date);
         tvMessageTime = (TextView) convertView.findViewById(R.id.tv_message_time);
 
 
@@ -72,8 +74,10 @@ public class MessageAdapter extends ArrayAdapter<Object> {
         Picasso.with(getContext()).load(message.getUserProfileImg()) .resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(imgPhotoImageView);
 
-        tvMessageTime.setText(Utils.getLastUpdate(String.valueOf(message.getTime())));
-
+        if (message.getTimeInMillis() > 0) {
+            tvMessageDate.setText(Utils.printableDate(message.getTimeInMillis()));
+            tvMessageTime.setText(Utils.printableTime(message.getTimeInMillis()));
+        }
 
 
         return convertView;

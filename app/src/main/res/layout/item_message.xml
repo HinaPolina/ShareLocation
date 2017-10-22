@@ -81,27 +81,25 @@
             android:id="@+id/linear_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_weight="1"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_message_date"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:textSize="17sp"
+                android:textColor="@color/primary_text"
+                android:layout_marginLeft="8dp"
+                android:textStyle="bold"/>
 
-                <TextView
-                    android:id="@+id/tv_message_time"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="17sp"
-                    android:maxLines="1"
-                    android:textColor="@color/primary_text"
-                    android:text="Time"
-                    android:layout_marginLeft="@dimen/margin_top_80"
-                    android:textStyle="bold"/>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/primary_text"
+                android:layout_marginLeft="8dp"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 

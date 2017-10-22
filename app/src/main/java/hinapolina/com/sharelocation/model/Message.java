@@ -9,14 +9,14 @@ public class Message {
     private String sender;
     private String message;
     private String userProfileImg;
-    private int time;
+    private long timeInMillis;
 
 
     public String getSender() {
         return sender;
     }
 
-    public void setSender(String sendr) {
+    public void setSender(String sender) {
         this.sender = sender;
     }
 
@@ -36,11 +36,11 @@ public class Message {
         this.userProfileImg = userProfileImg;
     }
 
-    public int getTime() {
-        return time;
+    public long getTimeInMillis() {
+        return timeInMillis;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void setTimeInMillis(long timeInMillis) {
+        this.timeInMillis = timeInMillis;
     }
 }

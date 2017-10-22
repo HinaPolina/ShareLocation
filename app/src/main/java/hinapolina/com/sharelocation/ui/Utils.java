@@ -110,4 +110,14 @@ public class Utils{
             return relativeDate;
 
     }
+
+    public static String printableDate(long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
+        return sdf.format(timeInMillis);
+    }
+
+    public static String printableTime(long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+        return sdf.format(timeInMillis);
+    }
 }
