@@ -33,6 +33,7 @@ public class Utils{
     public static final String LNG = "lng";
     public static final String BATTERY =  "bat";
     public static final String FRIEND_NEARBY = "near" ;
+    public static final String USER =  "user";
 
     public static float getBatteryLevel(Context context) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);

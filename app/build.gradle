@@ -46,6 +46,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.sothree.slidinguppanel:library:3.4.0'
 
     //for conference
     compile 'com.opentok.android:opentok-android-sdk:2.12.0'

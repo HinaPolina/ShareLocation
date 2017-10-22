@@ -211,6 +211,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         String date = Calendar.getInstance().getTime().toString();
         user.setDate(date);
         mDatabase.child("users").child(id).setValue(user);
+        mDatabase.child("near").child(id).setValue("");
         SharedPreferences sharedPref = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(Utils.USER_ID, id);

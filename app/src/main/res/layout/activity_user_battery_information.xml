@@ -66,6 +66,16 @@
             android:id="@+id/img_talk"
             android:src="@drawable/icon_call"/>
 
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@id/img_talk"
+            android:layout_marginLeft="@dimen/margin_left_26"
+            android:layout_marginTop="26dp"
+            android:id="@+id/icon_message"
+            android:src="@drawable/icon_message"/>
+
+
 
     </RelativeLayout>
 
