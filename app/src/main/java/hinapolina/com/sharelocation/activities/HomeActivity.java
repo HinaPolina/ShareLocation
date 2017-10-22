@@ -114,7 +114,7 @@ public class HomeActivity extends AppCompatActivity
                         // the JobService that will be called
                         .setService(JobScheduler.class)
                         // uniquely identifies the job
-                        .setTag(Utils.SEND_DATA)
+                        .setTag(Utils.UPDATE)
                         // one-off job
                         .setRecurring(true)
                         // don't persist past a device reboot

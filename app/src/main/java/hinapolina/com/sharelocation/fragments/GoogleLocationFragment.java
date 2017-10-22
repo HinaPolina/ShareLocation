@@ -56,7 +56,7 @@ import hinapolina.com.sharelocation.adapters.MarkerAdapter;
 import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.User;
-import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
+import hinapolina.com.sharelocation.network.FirebaseHelper;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
 import permissions.dispatcher.NeedsPermission;

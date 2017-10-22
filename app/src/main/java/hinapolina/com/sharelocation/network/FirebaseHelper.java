@@ -1,4 +1,4 @@
-package hinapolina.com.sharelocation.network.retrofit;
+package hinapolina.com.sharelocation.network;
 
 import android.util.Log;
 

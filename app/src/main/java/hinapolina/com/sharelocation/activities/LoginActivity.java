@@ -56,7 +56,7 @@ import java.util.Calendar;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.model.User;
-import hinapolina.com.sharelocation.network.retrofit.FirebaseHelper;
+import hinapolina.com.sharelocation.network.FirebaseHelper;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.DataHolder;
