@@ -22,7 +22,7 @@ The following **required** functionality is completed:
 * [X]	User can **locate the friends on map**
   * [X]	User can  see friends on a map with (image, name, level of batter)
    * [X]	User can  see a movements of friends on map
-* []	User can **send a message to friends**
+* [X]	User can **send a message to friends**
    * [X]	User can  start char with friends
    * [X]	User can  get push notification once his friend send him a message
 * [X]	User can **navigate to friends location** 
@@ -31,11 +31,11 @@ The following **required** functionality is completed:
 The following **optional** functionality
 
 * []	User can **share interesting places near**
-* [X]	User can **start video chat with friends**
+* []	User can **start video chat with friends**
 * [X]	User can **get push notification when friends are near by**
 * [X]	User can **see level of battary of friends**
-* []	User can **order Uber from app**
-* []	User can **see timetable of BART/CalTrain**
+* [X]	User can **order Uber from app**
+* [X]	User can **see timetable of BART/CalTrain**
 
 
 
