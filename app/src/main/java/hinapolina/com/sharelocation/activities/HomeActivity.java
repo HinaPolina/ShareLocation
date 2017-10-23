@@ -133,9 +133,6 @@ public class HomeActivity extends AppCompatActivity
 
             }
 
-
-
-
     private void initUI(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -276,20 +273,65 @@ public class HomeActivity extends AppCompatActivity
                         break;
                     }
                     case R.id.nav_uber:{
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://auth.uber.com/login/?next_url=https%3A%2F%2Friders.uber.com%2F&state=kA4qZSJ3TeW7ePvE4WLbd787yFyN4QKwqWREArE_b8w%3D"));
-                        startActivity(browserIntent);
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
+                                .setTitle("Do you want to navigate to UBER website?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://auth.uber.com/login/?next_url=https%3A%2F%2Friders.uber.com%2F&state=kA4qZSJ3TeW7ePvE4WLbd787yFyN4QKwqWREArE_b8w%3D"));
+                                        startActivity(browserIntent);
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.create().show();
                         break;
                     }
 
                     case R.id.nav_caltrain:{
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.caltrain.com/schedules/weekdaytimetable.html"));
-                        startActivity(browserIntent);
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
+                                .setTitle("Do you want to navigate to CALTRAIN website?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.caltrain.com/schedules/weekdaytimetable.html"));
+                                        startActivity(browserIntent);
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.create().show();
                         break;
                     }
 
                     case R.id.nav_bart:{
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bart.gov/schedules/bystation"));
-                        startActivity(browserIntent);
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
+                                .setTitle("Do you want to navigate to BART website?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bart.gov/schedules/bystation"));
+                                        startActivity(browserIntent);
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.create().show();
                         break;
                     }
                     case R.id.nav_log_out: {
