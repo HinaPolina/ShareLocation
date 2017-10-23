@@ -51,6 +51,11 @@ Here's a walkthrough of implemented user stories:
 
 +![alt text](https://github.com/HinaPolina/ShareLocation/blob/master/demo_sprint1.gif)
 
+https://imgur.com/a/GFwM3
+
+For Splash
+https://imgur.com/a/hFj54
+
 GIF created with [Android Studio]
 
 ## Notes
