@@ -280,6 +280,18 @@ public class HomeActivity extends AppCompatActivity
                         startActivity(browserIntent);
                         break;
                     }
+
+                    case R.id.nav_caltrain:{
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.caltrain.com/schedules/weekdaytimetable.html"));
+                        startActivity(browserIntent);
+                        break;
+                    }
+
+                    case R.id.nav_bart:{
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bart.gov/schedules/bystation"));
+                        startActivity(browserIntent);
+                        break;
+                    }
                     case R.id.nav_log_out: {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
                                 .setTitle("Do you want to quit the app?")

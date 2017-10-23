@@ -25,4 +25,19 @@
 
     </group>
 
+    <item android:title="Caltrain and Bart TimeTable">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_caltrain"
+                    android:icon="@drawable/share_icon"
+                    android:title="Caltrain" />
+                <item
+                    android:id="@+id/nav_bart"
+                    android:icon="@drawable/share_icon"
+                    android:title="Bart" />
+            </group>
+        </menu>
+    </item>
+
 </menu>
