@@ -31,7 +31,7 @@ The following **required** functionality is completed:
 The following **optional** functionality
 
 * []	User can **share interesting places near**
-* []	User can **start video chat with friends**
+* []	User can **start video chat with friends** -- This needs more efforts and implementation 
 * [X]	User can **get push notification when friends are near by**
 * [X]	User can **see level of battary of friends**
 * [X]	User can **order Uber from app**
@@ -48,8 +48,17 @@ https://www.fluidui.com/editor/live/preview/cF84ZmFmMGE5NWM0NzQyZjkxMmVmOTQzMjc3
 
 Here's a walkthrough of implemented user stories:
 
-
+Srrint 1 : Demo
 +![alt text](https://github.com/HinaPolina/ShareLocation/blob/master/demo_sprint1.gif)
+
+
+2nd sprint : 
+
+https://imgur.com/a/GFwM3
+
+For Splash
+
+https://imgur.com/a/hFj54
 
 GIF created with [Android Studio]
 

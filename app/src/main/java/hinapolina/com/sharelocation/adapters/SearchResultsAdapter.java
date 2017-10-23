@@ -18,7 +18,6 @@ import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.listener.MassageSenderListener;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.FirebaseHelper;
-import hinapolina.com.sharelocation.services.FirebasePushNotificationService;
 
 /**
  * Created by polina on 10/16/17.
@@ -112,11 +111,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                    ((MassageSenderListener) context).onSendMassageListener(user.getToken(), "User " + user.getName() + " add you to friend");
                }
             }
-            /*if(user.isFriend()) {
-                FirebasePushNotificationService service = new FirebasePushNotificationService(context);
-                service.onSendMassageListener(user.getToken(), "User " + user.getName() + " add you to friend");
-                //((MassageSenderListener) context).onSendMassageListener(user.getToken(), "User " + user.getName() + " add you to friend");
-            }*/
 
         }
     }

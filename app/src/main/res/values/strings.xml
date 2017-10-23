@@ -8,7 +8,7 @@
 
     <string name="title_location_permission">Location permission</string>
     <string name="text_location_permission">App ask for permission to see your location</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
     <string name="log_out">Log Out</string>
     <string name="location_sharing">Location Sharing</string>
     <string name="messages">Group Messages</string>
