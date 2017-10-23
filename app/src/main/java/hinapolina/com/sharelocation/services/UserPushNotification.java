@@ -28,9 +28,9 @@ public class UserPushNotification extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated.
         Log.d(TAG, "Received: " + remoteMessage);
-//        Log.d(TAG, "From: " + remoteMessage.getFrom());
-//        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-//        sendNotification(remoteMessage.getNotification().getTitle());
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+        sendNotification(remoteMessage.getNotification().getTitle());
 
     }
     private void sendNotification(String messageBody) {
