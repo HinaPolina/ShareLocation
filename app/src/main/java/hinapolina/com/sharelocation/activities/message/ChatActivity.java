@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -51,8 +52,11 @@ import hinapolina.com.sharelocation.ui.Utils;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerViewChatItems;
-    private ChatRecyclerViewAdapter mChatRecyclerViewAdapter;
+    public static final String TO_USER = "toUser";
+    public static final String TO_USER_TOKEN = "toUserToken";
+
+    private ListView mlvMessage;
+    private MessageAdapter mMessageAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -74,41 +78,53 @@ public class ChatActivity extends AppCompatActivity {
     private static final int RC_PHOTO_PICKER = 2;
 
     private LinearLayoutManager layoutManager;
+    private String toUserId;
+    private String toUserToken;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_recycler_view_adapter);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            toUserId = bundle.getString(TO_USER);
+            toUserToken = bundle.getString(TO_USER_TOKEN);
+        }
+
+        if (toUserId != null) {
+            mDatabaseReference = Application.getmDatabase().child("privatemsg_" +  toUserId);
+        }
+
         initUI();
 
         //initialize fb references
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = Application.getmDatabase().child("messages");
+        //mDatabaseReference = Application.getmDatabase().child("messages");
         mFirebaseStorage = FirebaseStorage.getInstance();
         mFirebasetorageReference = mFirebaseStorage.getReference().child("chat_photos");
 
 
         //adapter
-        mChatRecyclerViewAdapter = new ChatRecyclerViewAdapter(messages, mContext);
-        mRecyclerViewChatItems.setAdapter(mChatRecyclerViewAdapter);
-        new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        //mChatRecyclerViewAdapter = new ChatRecyclerViewAdapter(mContext);
+        //mRecyclerViewChatItems.setAdapter(mChatRecyclerViewAdapter);
+        //new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        //adapter
+        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, null);
+        mlvMessage.setAdapter(mMessageAdapter);
 
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onClickListeners();
-
-
     }
 
     private void initUI() {
-
-        mRecyclerViewChatItems = (RecyclerView) findViewById(R.id.rv_chat_items);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         imgPhotoButton = (ImageButton) findViewById(R.id.photoPickerButton);
         etMessage = (EditText) findViewById(R.id.messageEditText);
         btnSendMessage = (Button) findViewById(R.id.sendButton);
-
+        mlvMessage = (ListView) findViewById(R.id.messageListView);
 
     }
 
@@ -133,8 +149,8 @@ public class ChatActivity extends AppCompatActivity {
                 if (dataSnapshot != null) {
                     Message message = (Message) dataSnapshot.getValue(Message.class);
                     if (!TextUtils.isEmpty(message.getMessage())) {
-                        mChatRecyclerViewAdapter.addMessage(message);
-                        mChatRecyclerViewAdapter.notifyDataSetChanged();
+                        mMessageAdapter.addMessage(message);
+                        mMessageAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -205,11 +221,13 @@ public class ChatActivity extends AppCompatActivity {
                 //Push message to firebase
                 mDatabaseReference.push().setValue(message);
 
-                //Subscribe user to topic
-                //FirebaseMessaging.getInstance().subscribeToTopic("message");
-
                 //clear the input box
                 etMessage.setText(" ");
+
+                //Send push notification to all users
+                FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
+                service.notifyAllUsers(ChatActivity.this, Arrays.asList(toUserToken), message.getMessage());
+
             }
         });
 

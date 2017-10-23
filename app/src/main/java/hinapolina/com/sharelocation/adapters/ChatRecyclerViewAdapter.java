@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -33,15 +34,16 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Context context;
     private LayoutInflater mInflater;
 
-    public ChatRecyclerViewAdapter(List<Message> mMessageModel, Context context) {
+    public ChatRecyclerViewAdapter(Context context) {
         super();
-        this.mMessageModel = mMessageModel;
         this.context = context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ContentHolder(mInflater.inflate(R.layout.chat_items, parent, false));
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_items, parent, false);
+        ContentHolder viewHolder = new ContentHolder(view);
+        return viewHolder;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount () {
-        return mMessageModel.size ();
+        return  mMessageModel != null ? mMessageModel.size() : 0;
     }
 
     private class ContentHolder extends RecyclerView.ViewHolder  {

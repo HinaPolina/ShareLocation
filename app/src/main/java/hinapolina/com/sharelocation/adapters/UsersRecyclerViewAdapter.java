@@ -84,7 +84,10 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
         mainViewHolder.imgMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.getContext().startActivity(new Intent(v.getContext(), ChatActivity.class));
+                Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                intent.putExtra(ChatActivity.TO_USER, user.getId());
+                intent.putExtra(ChatActivity.TO_USER_TOKEN, user.getToken());
+                v.getContext().startActivity(intent);
             }
         });
 
