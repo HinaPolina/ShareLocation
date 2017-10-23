@@ -12,6 +12,11 @@
             android:icon="@drawable/share_icon"
             android:title="@string/messages"/>
 
+        <item
+            android:id="@+id/nav_uber"
+            android:icon="@drawable/share_icon"
+            android:title="@string/uber"/>
+
 
         <item
             android:id="@+id/nav_log_out"

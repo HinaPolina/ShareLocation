@@ -11,7 +11,9 @@
     <string name="ok">ok</string>
     <string name="log_out">Log Out</string>
     <string name="location_sharing">Location Sharing</string>
-    <string name="messages">Messages</string>
+    <string name="messages">Group Messages</string>
+    <string name="uber">Order Uber</string>
+
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -272,6 +273,11 @@ public class HomeActivity extends AppCompatActivity
                     case R.id.nav_sharing_location: {
                         navItemIndex = 0;
                         loadHomeFragment();
+                        break;
+                    }
+                    case R.id.nav_uber:{
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://auth.uber.com/login/?next_url=https%3A%2F%2Friders.uber.com%2F&state=kA4qZSJ3TeW7ePvE4WLbd787yFyN4QKwqWREArE_b8w%3D"));
+                        startActivity(browserIntent);
                         break;
                     }
                     case R.id.nav_log_out: {
