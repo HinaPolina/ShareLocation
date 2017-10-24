@@ -117,7 +117,7 @@ public class JobScheduler extends JobService {
                                         float [] dist = new float[1];
                                         Location.distanceBetween(current.getLatitude(),current.getLongitude(),user.getLat(),user.getLng(),dist);
                                         boolean isNear = dist[0] < 1000;
-                                        if(isNear && !friendsNear.contains(user)){
+                                        if(isNear && !friendsNear.contains(user.getId())){
                                             sendPush(user, name);
                                         }
                                         if (isNear)
