@@ -108,7 +108,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
             if(context instanceof MassageSenderListener){
                if(user.isFriend()) {
-                   ((MassageSenderListener) context).onSendMassageListener(user.getToken(), "User " + user.getName() + " add you to friend");
+                   ((MassageSenderListener) context).onSendMassageListener(user, "User " + user.getName() + " add you to friend");
                }
             }
 
