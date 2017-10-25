@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.listener.MassageSenderListener;
+import hinapolina.com.sharelocation.model.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -18,8 +19,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static hinapolina.com.sharelocation.activities.SearchResult.FCM_MESSAGE_URL;
 
 /**
  * Created by hinaikhan on 10/22/17.
@@ -36,7 +35,7 @@ public class FirebasePushNotificationService implements MassageSenderListener {
         mClient = new OkHttpClient();
     }
 
-    @Override
+
     public void onSendMassageListener(String token, String massage) {
         JSONObject root = new JSONObject();
         JSONObject notification = new JSONObject();
@@ -74,6 +73,11 @@ public class FirebasePushNotificationService implements MassageSenderListener {
                 System.err.println("RESPONSE: " + response.body().string());
             }
         });
+
+    }
+
+    @Override
+    public void onSendMassageListener(User user, String massage) {
 
     }
 }

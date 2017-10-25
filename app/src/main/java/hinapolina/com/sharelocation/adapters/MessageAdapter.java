@@ -3,13 +3,11 @@ package hinapolina.com.sharelocation.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
 
@@ -20,8 +18,6 @@ import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.ui.Utils;
-
-import static hinapolina.com.sharelocation.R.drawable.user;
 
 /**
  * Created by hinaikhan on 10/16/17.
@@ -79,7 +75,7 @@ public class MessageAdapter extends ArrayAdapter<Object> {
             tvMessage.setText(message.getMessage());
         }
 
-        Picasso.with(getContext()).load(message.getUserProfileImg()) .resize(80, 80)
+        Picasso.with(getContext()).load(message.getUserProfileImg()).centerCrop() .resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(imgPhotoImageView);
 
         if (message.getTimeInMillis() > 0) {

@@ -36,4 +36,7 @@
     <string name="setting">Settings</string>
     <string name="cancel">Cancel</string>
     <string name="nearby">is near you</string>
+    <string name="send">Send</string>
+    <string name="list_of_places">Share interesting place</string>
+    <string name="placeFragment">place_fragment</string>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,9 +37,16 @@
 
         <ImageButton
             android:id="@+id/photoPickerButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/image_button_message"
+            android:layout_height="@dimen/image_button_message"
             android:background="@android:drawable/ic_menu_gallery" />
+
+        <ImageButton
+            android:id="@+id/sharePlaces"
+            android:layout_width="@dimen/image_button_message"
+            android:layout_height="@dimen/image_button_message"
+            android:onClick="onSharePlace"
+            app:srcCompat="@drawable/bg_circle_counter" />
 
         <EditText
             android:id="@+id/messageEditText"
@@ -53,8 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:enabled="false"
-            android:text="Send Button"/>
-
+            android:text="@string/send"/>
     </LinearLayout>
 
 

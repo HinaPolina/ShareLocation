@@ -30,7 +30,9 @@
     <dimen name="publisher_right_margin">16dp</dimen>
     <dimen name="publisher_bottom_margin">16dp</dimen>
     <dimen name="publisher_padding">2dp</dimen>
-
+    <dimen name="image_button_message">36dp</dimen>
+    <dimen name="image_place">50dp</dimen>
+    <dimen name="margin_image_place">7dp</dimen>
 
 
 </resources>

@@ -20,10 +20,7 @@ import hinapolina.com.sharelocation.activities.message.ChatActivity;
 import hinapolina.com.sharelocation.activities.videotalk.VideoTalkActivity;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
-import hinapolina.com.sharelocation.services.TalkWebServiceCoordinator;
 import hinapolina.com.sharelocation.ui.BatteryStatus;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by hinaikhan on 10/16/17.
@@ -91,7 +88,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             }
         });
 
-        Picasso.with(holder.itemView.getContext()).load(user.getImageURI()) .resize(80, 80)
+        Picasso.with(holder.itemView.getContext()).load(user.getImageURI()) .centerCrop().resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(mainViewHolder.imgUsersProfileImage);
 
         if(batteryStatus != null && (batteryStatus.isCharging() || (batteryStatus.isUsbCharge())
