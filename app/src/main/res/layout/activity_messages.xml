@@ -44,7 +44,8 @@
             android:layout_width="@dimen/image_button_message"
             android:layout_height="@dimen/image_button_message"
             android:onClick="onSharePlace"
-            app:srcCompat="@drawable/bg_circle_counter" />
+            android:background="@android:color/transparent"
+            app:srcCompat="@android:drawable/ic_menu_share" />
 
         <EditText
             android:id="@+id/messageEditText"

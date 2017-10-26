@@ -35,6 +35,7 @@
     <dimen name="margin_image_place">7dp</dimen>
     <dimen name="image_group_chat">55dp</dimen>
     <dimen name="image_group_chat_image">120dp</dimen>
+    <dimen name="single_chat_image">120dp</dimen>
 
 
 </resources>

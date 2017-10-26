@@ -1,10 +1,15 @@
 package hinapolina.com.sharelocation.activities.message;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -40,7 +46,10 @@ import java.util.Calendar;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.HomeActivity;
 import hinapolina.com.sharelocation.adapters.MessageRecyclerAdapter;
+import hinapolina.com.sharelocation.fragments.SharePlacesDialog;
+import hinapolina.com.sharelocation.listener.OnPlaceListener;
 import hinapolina.com.sharelocation.model.Message;
+import hinapolina.com.sharelocation.model.Place;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
@@ -51,7 +60,7 @@ import hinapolina.com.sharelocation.ui.Utils;
  * Created by hinaikhan on 10/22/17.
  */
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
     public static final String TO_USER = "toUser";
     public static final String TO_USER_TOKEN = "toUserToken";
@@ -82,6 +91,11 @@ public class ChatActivity extends AppCompatActivity {
     private User  toUser;
     private String currentUserName;
     Boolean isGroup = false;
+    private Location location;
+
+    public static final String URI_STATIC = "https://maps.googleapis.com/maps/api/staticmap?center=";
+    private String PARAMETERS = "&zoom=15&size=600x300&maptype=roadmap&markers=color%3Ared%7C";
+    private String downloadUrl;
 
 
     @Override
@@ -95,6 +109,16 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         mDatabaseReference = Application.getmDatabase().child(tableName());
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(this).getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location loc) {
+                if (loc != null)
+                    location = loc;
+            }
+        });
 
         initUI();
 
@@ -126,6 +150,12 @@ public class ChatActivity extends AppCompatActivity {
         mLinearLayoutBack = (LinearLayout) findViewById(R.id.back);
 
 
+    }
+
+
+    public void onSharePlace (View v){
+        DialogFragment dialog = SharePlacesDialog.newInstance(location);
+        dialog.show(getSupportFragmentManager(), getResources().getString(R.string.placeFragment));
     }
 
     @Override
@@ -207,7 +237,7 @@ public class ChatActivity extends AppCompatActivity {
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage(null);
+                sendMessage(null, downloadUrl);
             }
         });
 
@@ -245,14 +275,15 @@ public class ChatActivity extends AppCompatActivity {
                     .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             // When the image has successfully uploaded, we get its download URL
-                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            sendMessage(downloadUrl.toString());
+                            downloadUrl = taskSnapshot.getDownloadUrl().toString();
+
+                         //   sendMessage(null, downloadUrl);
                         }
                     });
         }
     }
 
-    private void sendMessage(String imgUrl) {
+    private void sendMessage(Place place, String imgUrl) {
         Message message = new Message();
 
         SharedPreferences sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
@@ -265,6 +296,16 @@ public class ChatActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(imgUrl)) {
             message.setImgUrl(imgUrl);
         }
+
+        if(place!=null){
+
+            message.setPlaceName(place.getName());
+            message.setLat(place.getLat());
+            message.setLng(place.getLng());
+            message.setMessage(getString(R.string.share) +" " +place.getName());
+            message.setImgUrl(place.getUrl());
+        }
+
 
 
         //Push message to firebase
@@ -292,5 +333,16 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         return sbuf.toString();
+    }
+
+    @Override
+    public void onPlace(final Place place) {
+        System.err.println("SELECTED PLACE: " + place);
+        String uri = URI_STATIC + place.getLat() +"," +place.getLng()+
+                PARAMETERS + place.getLat()+"%2C"+ place.getLng()+"&key="
+                +getResources().getString(R.string.google_maps_static_api_key);
+        place.setUrl(uri);
+        sendMessage(place, "");
+
     }
 }

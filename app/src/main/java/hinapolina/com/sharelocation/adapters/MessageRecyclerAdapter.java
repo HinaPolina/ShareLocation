@@ -1,8 +1,10 @@
 package hinapolina.com.sharelocation.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -54,19 +56,15 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = mMessages.get(position);
+        holder.message = message;
         holder.tvAuthorTextView.setText(message.getSender());
-
-        if (!TextUtils.isEmpty(message.getMessage())) {
-            holder.tvMessage.setVisibility(View.VISIBLE);
             holder.tvMessage.setText(message.getMessage());
             if (!currentUserName.equals(message.getSender())) {
                 holder.tvMessage.setTextColor(Color.RED);
             } else {
                 holder.tvMessage.setTextColor(Color.BLACK);
             }
-        } else {
-            holder.tvMessage.setVisibility(View.GONE);
-        }
+
 
         Picasso.with(context).load(message.getUserProfileImg()).centerCrop().resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(holder.imgPhotoImageView);
@@ -78,7 +76,8 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
         }
 
         if (!TextUtils.isEmpty(message.getImgUrl())) {
-            holder.tvMessage.setVisibility(View.GONE);
+            // I want to see both image and text
+         //   holder.tvMessage.setVisibility(View.GONE);
             holder.imgReceiveImgView.setVisibility(View.VISIBLE);
             Picasso.with(context).load(message.getImgUrl()).into(holder.imgReceiveImgView);
         } else {
@@ -114,12 +113,13 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
         return mMessages != null ? mMessages.size() : 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
 
         private ImageView imgPhotoImageView, imgReceiveImgView;
         private TextView tvMessage;
         private TextView tvAuthorTextView;
         private TextView tvMessageDateTime;
+        Message message;
 
         public ViewHolder(View itemView) {
 
@@ -129,6 +129,16 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
             tvAuthorTextView = (TextView) itemView.findViewById(R.id.nameTextView);
             tvMessageDateTime = (TextView) itemView.findViewById(R.id.tv_message_datetime);
             imgReceiveImgView = (ImageView) itemView.findViewById(R.id.receive_image_view);
+            imgReceiveImgView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(message.getLng()!=null) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("https://www.google.com/maps/search/?api=1&query=" + message.getLat() + "," + message.getLng()));
+                context.startActivity(intent);
+            }
         }
     }
 
