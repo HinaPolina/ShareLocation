@@ -1,12 +1,17 @@
 package hinapolina.com.sharelocation.activities.message;
 
-import android.app.ActionBar;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -18,9 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -28,19 +31,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.adapters.MessageAdapter;
-import hinapolina.com.sharelocation.common.Constant;
+import hinapolina.com.sharelocation.adapters.MessageRecyclerAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
@@ -49,7 +49,6 @@ import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
 
-import static hinapolina.com.sharelocation.R.drawable.user;
 
 public class MessagesActivity extends AppCompatActivity implements UserUpdateListener {
 
@@ -57,13 +56,12 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
     private static final int MESSAGE_LENGTH_LIMIT = 150;
     private static final int RC_PHOTO_PICKER =  2;
 
-
-    private ListView mlvMessage;
+    private RecyclerView mRecyclerViewMessage;
     private ProgressBar mProgressBar;
     private ImageButton imgPhotoButton;
     private EditText etMessage;
     private Button btnSendMessage;
-    private MessageAdapter mMessageAdapter;
+    private MessageRecyclerAdapter mMessageAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -77,6 +75,8 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
 
     private FirebaseHelper firebaseHelper;
     private List<User> users;
+    Map<String, Object> addMessage;
+    private List<Message> message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +97,9 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         mFirebasetorageReference = mFirebaseStorage.getReference().child("chat_photos");
 
         //adapter
-        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, null);
-        mlvMessage.setAdapter(mMessageAdapter);
+        mRecyclerViewMessage.setLayoutManager(new LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false));
+        mMessageAdapter = new MessageRecyclerAdapter(this);
+        mRecyclerViewMessage.setAdapter(mMessageAdapter);
 
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -114,7 +115,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
     private void initView(){
         // Initialize references to views
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mlvMessage = (ListView) findViewById(R.id.messageListView);
+        mRecyclerViewMessage = (RecyclerView) findViewById(R.id.messageRecyclerView);
         imgPhotoButton = (ImageButton) findViewById(R.id.photoPickerButton);
         etMessage = (EditText) findViewById(R.id.messageEditText);
         btnSendMessage = (Button) findViewById(R.id.sendButton);
@@ -143,7 +144,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                 if (dataSnapshot != null){
                     Message message = (Message) dataSnapshot.getValue(Message.class);
                     if (!TextUtils.isEmpty(message.getMessage())) {
-                        mMessageAdapter.addMessage(message);
+                        mMessageAdapter.addMessage(message, dataSnapshot.getKey());
                         mMessageAdapter.notifyDataSetChanged();
                     }
                 }
@@ -210,6 +211,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                 message.setMessage(etMessage.getText().toString());
                 message.setUserProfileImg(sharedPref.getString(Utils.IMAGE, ""));
                 message.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+                message.setRead(false); //New Message Indicator
 
                 //Push message to firebase
                 mDatabaseReference.push().setValue(message);
@@ -229,6 +231,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                 intentPhoto.setType("image/jpeg");
                 intentPhoto.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 startActivityForResult(Intent.createChooser(intentPhoto, "Complete action using"), RC_PHOTO_PICKER);
+                isPermissionGrantedImage();
             }
         });
 
@@ -259,6 +262,27 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                     });
                 }
         }
+
+
+    public void isPermissionGrantedImage()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
+
+        }
+        else
+        {
+            sendImageAttachment();
+        }
+    }
+
+    public void sendImageAttachment()
+    {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, 0);
+
+    }
 
     @Override
     public void updateUserMarker(User user) {
@@ -293,6 +317,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
             service.notifyAllUsers(MessagesActivity.this, registrationIds, message);
         }
     }
+
 }
 
 

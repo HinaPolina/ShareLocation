@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="hinapolina.com.sharelocation.adapters.ChatRecyclerViewAdapter">
+    >
 
-    <ListView
-        android:id="@+id/messageListView"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stackFromBottom="true"
+        android:layout_height="match_parent"
+        android:src="@drawable/background_image"
+        android:scaleType="centerCrop"/>
+
+    <include
+        layout="@layout/toolbar_messge"
+        android:id="@+id/toolbar_messge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/messageRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_below="@id/toolbar_messge"
+        android:layout_height="match_parent"
         android:divider="@android:color/transparent"
-        android:transcriptMode="alwaysScroll"
-        tools:listitem="@layout/item_message"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:minHeight="100dp"
         android:layout_above="@+id/linearLayout"
+        android:paddingTop="@dimen/activity_horizontal_margin"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_top_80"
         android:layout_marginBottom="16dp" />
 
     <LinearLayout
@@ -52,7 +62,6 @@
             android:text="Send Button"/>
 
     </LinearLayout>
-
 
 
     <ProgressBar

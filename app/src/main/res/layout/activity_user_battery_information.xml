@@ -75,6 +75,22 @@
             android:id="@+id/img_message"
             android:src="@drawable/icon_message"/>
 
+        <TextView
+            android:id="@+id/tv_unread_messages_count"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/bg_circle_counter"
+            android:text="20"
+            android:layout_marginLeft="16dp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/img_message"
+            android:padding="2dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="13dp"
+            android:layout_marginTop="26dp"
+            android:visibility="visible"/>
+
 
 
     </RelativeLayout>

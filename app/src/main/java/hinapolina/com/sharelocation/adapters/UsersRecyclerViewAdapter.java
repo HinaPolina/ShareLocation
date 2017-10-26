@@ -11,19 +11,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.message.ChatActivity;
+import hinapolina.com.sharelocation.activities.message.MessagesActivity;
 import hinapolina.com.sharelocation.activities.videotalk.VideoTalkActivity;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
+import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
-import hinapolina.com.sharelocation.services.TalkWebServiceCoordinator;
 import hinapolina.com.sharelocation.ui.BatteryStatus;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by hinaikhan on 10/16/17.
@@ -35,8 +35,6 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
     private Context context;
     private List<User> mUsers;
     private FragmentManager fragmentManager;
-
-    private FirebaseAuth mAuth;
 
     public UsersRecyclerViewAdapter(Context context, List<User> mUsers) {
         this.context = context;
@@ -55,7 +53,6 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
     public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_user_battery_information, parent, false);
         MainViewHolder viewHolder = new MainViewHolder(view);
-        mAuth = FirebaseAuth.getInstance();
         return viewHolder;
     }
 
@@ -85,8 +82,9 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                intent.putExtra(ChatActivity.TO_USER, user.getId());
-                intent.putExtra(ChatActivity.TO_USER_TOKEN, user.getToken());
+                //intent.putExtra(ChatActivity.TO_USER, user.getId());
+                //intent.putExtra(ChatActivity.TO_USER_TOKEN, user.getToken());
+                intent.putExtra(ChatActivity.TO_USER, user);
                 v.getContext().startActivity(intent);
             }
         });
@@ -101,6 +99,10 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             mainViewHolder.imgBatterIcon.setImageResource(R.drawable.icon_battery);
 
         }
+
+        if (user.getUndreadMessagesCount() > 0) {
+            mainViewHolder.tvUnreadMessagesCount.setText(user.getUndreadMessagesCount() +  "");
+        }
     }
 
 
@@ -112,7 +114,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
     public class MainViewHolder extends RecyclerView.ViewHolder {
 
         protected ImageView imgUsersProfileImage, imgBatterIcon, imgBatteryCharging, imgTalk, imgMessage;
-        protected TextView tvUsersName, tvBatteryPercentage;
+        protected TextView tvUsersName, tvBatteryPercentage, tvUnreadMessagesCount;
 
         public MainViewHolder(View itemView) {
             super(itemView);
@@ -123,7 +125,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             tvBatteryPercentage = (TextView) itemView.findViewById(R.id.tv_battery_percentage);
             imgTalk = (ImageView) itemView.findViewById(R.id.img_talk);
             imgMessage = (ImageView) itemView.findViewById(R.id.img_message);
-
+            tvUnreadMessagesCount = (TextView) itemView.findViewById(R.id.tv_unread_messages_count);
         }
     }
 

@@ -94,7 +94,7 @@ public class Utils{
 
     public static String getLastUpdate(String date) {
 
-            String twitterFormat = "EEE MMM dd HH:mm:ss ZZZ yyyy";
+            String twitterFormat = "MMM d, h:mm a";
             SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
             sf.setLenient(true);
 
@@ -112,12 +112,17 @@ public class Utils{
     }
 
     public static String printableDate(long timeInMillis) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d");
         return sdf.format(timeInMillis);
     }
 
     public static String printableTime(long timeInMillis) {
         SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+        return sdf.format(timeInMillis);
+    }
+
+    public static String printableDateTime(long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d 'at' h:mm a");
         return sdf.format(timeInMillis);
     }
 }

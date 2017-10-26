@@ -3,13 +3,15 @@ package hinapolina.com.sharelocation.model;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 import hinapolina.com.sharelocation.ui.BatteryStatus;
 
 /**
  * Created by polina on 10/11/17.
  */
 @IgnoreExtraProperties
-public class User {
+public class User implements Serializable {
 
     @Exclude
     private String id;
@@ -22,6 +24,7 @@ public class User {
     private BatteryStatus batteryStatus;
     private String text;
     String date;
+    private int undreadMessagesCount;
 
     public String getDate() {
         return date;
@@ -139,6 +142,14 @@ public class User {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public int getUndreadMessagesCount() {
+        return undreadMessagesCount;
+    }
+
+    public void setUndreadMessagesCount(int undreadMessagesCount) {
+        this.undreadMessagesCount = undreadMessagesCount;
     }
 
     @Override

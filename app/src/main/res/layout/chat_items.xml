@@ -86,19 +86,7 @@
                         android:layout_marginTop="2dp"
                         android:text="text message"/>
 
-                    <TextView
-                        android:id="@+id/tv_new_message_count"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/bg_circle_counter"
-                        android:text="20"
-                        android:textStyle="bold"
-                        android:padding="2dp"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:textSize="13dp"
-                        android:layout_marginTop="2dp"
-                        android:visibility="visible"/>
+
                 </LinearLayout>
 
             </LinearLayout>

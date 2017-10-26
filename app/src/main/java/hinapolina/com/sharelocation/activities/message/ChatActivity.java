@@ -3,6 +3,8 @@ package hinapolina.com.sharelocation.activities.message;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,16 +13,19 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,18 +34,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.adapters.ChatRecyclerViewAdapter;
-import hinapolina.com.sharelocation.adapters.MessageAdapter;
-import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
-import hinapolina.com.sharelocation.common.Constant;
+import hinapolina.com.sharelocation.activities.HomeActivity;
+import hinapolina.com.sharelocation.adapters.MessageRecyclerAdapter;
 import hinapolina.com.sharelocation.model.Message;
-import hinapolina.com.sharelocation.network.FirebaseHelper;
+import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
@@ -55,31 +61,31 @@ public class ChatActivity extends AppCompatActivity {
     public static final String TO_USER = "toUser";
     public static final String TO_USER_TOKEN = "toUserToken";
 
-    private ListView mlvMessage;
-    private MessageAdapter mMessageAdapter;
+    private RecyclerView mRecyclerViewMessage;
+    private MessageRecyclerAdapter mMessageAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mFirebasetorageReference;
-    private Context mContext;
-    private List<Message> messages;
     private ChildEventListener mChildEventListener;
 
     private ProgressBar mProgressBar;
     private ImageButton imgPhotoButton;
+    private TextView tvUserName;
     private EditText etMessage;
     private Button btnSendMessage;
+    private Toolbar mToolbar;
+    private LinearLayout mLinearLayoutBack;
 
 
     private static final String TAG = ChatActivity.class.getSimpleName();
     private static final int MESSAGE_LENGTH_LIMIT = 150;
     private static final int RC_PHOTO_PICKER = 2;
 
-    private LinearLayoutManager layoutManager;
-    private String toUserId;
-    private String toUserToken;
+    private User  toUser;
+    private String currentUserName;
 
 
     @Override
@@ -89,13 +95,10 @@ public class ChatActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            toUserId = bundle.getString(TO_USER);
-            toUserToken = bundle.getString(TO_USER_TOKEN);
+            toUser = (User)bundle.get(TO_USER);
         }
 
-        if (toUserId != null) {
-            mDatabaseReference = Application.getmDatabase().child("privatemsg_" +  toUserId);
-        }
+        mDatabaseReference = Application.getmDatabase().child(tableName());
 
         initUI();
 
@@ -107,13 +110,11 @@ public class ChatActivity extends AppCompatActivity {
         mFirebasetorageReference = mFirebaseStorage.getReference().child("chat_photos");
 
 
-        //adapter
-        //mChatRecyclerViewAdapter = new ChatRecyclerViewAdapter(mContext);
-        //mRecyclerViewChatItems.setAdapter(mChatRecyclerViewAdapter);
-        //new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        //adapter
-        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, null);
-        mlvMessage.setAdapter(mMessageAdapter);
+        mMessageAdapter = new MessageRecyclerAdapter(this);
+        mRecyclerViewMessage.setLayoutManager(new LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false));
+        mRecyclerViewMessage.setAdapter(mMessageAdapter);
+
+        tvUserName.setText(toUser.getName());
 
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onClickListeners();
@@ -124,7 +125,10 @@ public class ChatActivity extends AppCompatActivity {
         imgPhotoButton = (ImageButton) findViewById(R.id.photoPickerButton);
         etMessage = (EditText) findViewById(R.id.messageEditText);
         btnSendMessage = (Button) findViewById(R.id.sendButton);
-        mlvMessage = (ListView) findViewById(R.id.messageListView);
+        mRecyclerViewMessage = (RecyclerView) findViewById(R.id.messageRecyclerView);
+        tvUserName = (TextView) findViewById(R.id.tv_profile_name);
+        mLinearLayoutBack = (LinearLayout) findViewById(R.id.back);
+
 
     }
 
@@ -148,10 +152,9 @@ public class ChatActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null) {
                     Message message = (Message) dataSnapshot.getValue(Message.class);
-                    if (!TextUtils.isEmpty(message.getMessage())) {
-                        mMessageAdapter.addMessage(message);
-                        mMessageAdapter.notifyDataSetChanged();
-                    }
+                    Log.d("ChatActivity", "Message: " + message.toString());
+                    mMessageAdapter.addMessage(message, dataSnapshot.getKey());
+                    //mMessageAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -208,26 +211,7 @@ public class ChatActivity extends AppCompatActivity {
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message message = new Message();
-
-                SharedPreferences sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-
-                //Set message attributes
-                message.setSender(sharedPref.getString(Utils.USER_NAME, " "));
-                message.setMessage(etMessage.getText().toString());
-                message.setUserProfileImg(sharedPref.getString(Utils.IMAGE, ""));
-                message.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
-
-                //Push message to firebase
-                mDatabaseReference.push().setValue(message);
-
-                //clear the input box
-                etMessage.setText(" ");
-
-                //Send push notification to all users
-                FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
-                service.notifyAllUsers(ChatActivity.this, Arrays.asList(toUserToken), message.getMessage());
-
+                sendMessage(null);
             }
         });
 
@@ -242,6 +226,75 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        mLinearLayoutBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
 
+
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            // Get a reference to store file at chat_photos/<FILENAME>
+            StorageReference photoRef = mFirebasetorageReference.child(selectedImageUri.getLastPathSegment());
+            // Upload file to Firebase Storage
+            photoRef.putFile(selectedImageUri)
+                    .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // When the image has successfully uploaded, we get its download URL
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            sendMessage(downloadUrl.toString());
+                        }
+                    });
+        }
+    }
+
+    private void sendMessage(String imgUrl) {
+        Message message = new Message();
+
+        SharedPreferences sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        //Set message attributes
+        message.setSender(sharedPref.getString(Utils.USER_NAME, " "));
+        message.setMessage(etMessage.getText().toString());
+        message.setUserProfileImg(sharedPref.getString(Utils.IMAGE, ""));
+        message.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+
+        if (!TextUtils.isEmpty(imgUrl)) {
+            message.setImgUrl(imgUrl);
+        }
+
+
+        //Push message to firebase
+        mDatabaseReference.push().setValue(message);
+
+        //clear the input box
+        etMessage.setText(" ");
+
+        //Send push notification to all users
+        FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
+        service.notifyAllUsers(ChatActivity.this, Arrays.asList(toUser.getToken()), message.getMessage());
+    }
+
+    private String tableName() {
+        StringBuffer sbuf = new StringBuffer();
+        sbuf.append("privatemsg_");
+
+        SharedPreferences sharedPref = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        String fromUserId = sharedPref.getString(Utils.USER_ID, "") ;
+
+        if (fromUserId.compareTo(toUser.getId()) > 0) {
+            sbuf.append(toUser.getId()).append("-").append(fromUserId);
+        } else {
+            sbuf.append(fromUserId).append("-").append(toUser.getId());
+        }
+
+        return sbuf.toString();
     }
 }
