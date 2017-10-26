@@ -4,11 +4,16 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import android.content.pm.PackageManager;
+
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +29,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -37,10 +44,10 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.MessageRecyclerAdapter;
+import hinapolina.com.sharelocation.fragments.SharePlacesDialog;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
@@ -49,12 +56,11 @@ import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
 
-
 public class MessagesActivity extends AppCompatActivity implements UserUpdateListener {
 
     private static final String TAG = MessagesActivity.class.getSimpleName();
     private static final int MESSAGE_LENGTH_LIMIT = 150;
-    private static final int RC_PHOTO_PICKER =  2;
+    private static final int RC_PHOTO_PICKER = 2;
 
     private RecyclerView mRecyclerViewMessage;
     private ProgressBar mProgressBar;
@@ -75,8 +81,8 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
 
     private FirebaseHelper firebaseHelper;
     private List<User> users;
-    Map<String, Object> addMessage;
-    private List<Message> message;
+
+    Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +90,16 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         setContentView(R.layout.activity_messages);
         initView();
 
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(this).getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location loc) {
+                if (loc != null)
+                   location = loc;
+            }
+        });
         mToolbar.setTitle("My Messages");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -120,6 +135,11 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         etMessage = (EditText) findViewById(R.id.messageEditText);
         btnSendMessage = (Button) findViewById(R.id.sendButton);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    }
+
+    public void onSharePlace (View v){
+        DialogFragment dialog = SharePlacesDialog.newInstance(location);
+        dialog.show(getSupportFragmentManager(), getResources().getString(R.string.placeFragment));
     }
 
     @Override

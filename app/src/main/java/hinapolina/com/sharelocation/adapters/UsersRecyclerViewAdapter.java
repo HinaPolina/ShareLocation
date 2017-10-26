@@ -89,7 +89,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             }
         });
 
-        Picasso.with(holder.itemView.getContext()).load(user.getImageURI()) .resize(80, 80)
+        Picasso.with(holder.itemView.getContext()).load(user.getImageURI()) .centerCrop().resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(mainViewHolder.imgUsersProfileImage);
 
         if(batteryStatus != null && (batteryStatus.isCharging() || (batteryStatus.isUsbCharge())

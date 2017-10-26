@@ -3,15 +3,31 @@ package hinapolina.com.sharelocation.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
 import android.text.format.DateUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Locale;
+
+import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.model.User;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by polina on 10/12/17.
@@ -31,9 +47,13 @@ public class Utils{
     public static final String UPDATE = "send";
     public static final String LAT = "lat" ;
     public static final String LNG = "lng";
-    public static final String BATTERY =  "bat";
-    public static final String FRIEND_NEARBY = "near" ;
+    public static final String BATTERY =  "battery";
     public static final String USER =  "user";
+    public static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
+    public static final String NEAR = "near" ;
+    public static final String USERS = "users";
+    public static final String FRIENDS = "friends";
+    public static final String DATE = "date";
 
     public static float getBatteryLevel(Context context) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -90,6 +110,48 @@ public class Utils{
         }
         return false;
     }
+
+
+
+  public static void sendPush(User user, String massage, Resources resources){
+        OkHttpClient mClient = new OkHttpClient();
+        JSONObject root = new JSONObject();
+        JSONObject notification = new JSONObject();
+//        notification.put("body", body);
+        try {
+            notification.put("title", massage);
+
+            JSONObject data = new JSONObject();
+            data.put("message", "I am message");
+            root.put("notification", notification);
+            root.put("data", data);
+            root.put("registration_ids", new JSONArray(Arrays.asList(user.getToken())));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), root.toString());
+        Request request = new Request.Builder()
+                .url(FCM_MESSAGE_URL)
+                .post(body)
+                .addHeader("Authorization", "key=" + resources.getString(R.string.servrt_id))
+                .addHeader("Content-Type", "application/json")
+                .build();
+        mClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("Ooops!! ");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.err.println("RESPONSE CODE: " + response.code());
+                System.err.println("RESPONSE: " + response.body().string());
+            }
+        });
+
+    }
+
 
 
     public static String getLastUpdate(String date) {

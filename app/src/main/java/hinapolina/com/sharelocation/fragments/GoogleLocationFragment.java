@@ -125,6 +125,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
             // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+
         }
 
         mSupportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(map);
@@ -180,6 +181,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
             public void onSuccess(Location location) {
                 if (location != null)
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 8));
+
             }
         });
         //Display friends locations as markers on map
