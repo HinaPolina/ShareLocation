@@ -14,8 +14,6 @@ public class OKHTTPHelper {
 
     public static void gelLestOfPlaces(Double lat, Double lng, String key, final String pageToken, Callback callbake){
         OkHttpClient client = new OkHttpClient();
-      //  final OnListOfPlacesListener listOfPlacesListener = (OnListOfPlacesListener)context;
-
 
         Request request = new Request.Builder()
                 .url(URI+"?location=" + lat +"," +lng+ "&radius=500&key=" +key+ "&pagetoken="+pageToken)

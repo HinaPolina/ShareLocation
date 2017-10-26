@@ -23,6 +23,7 @@ import java.util.List;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.PlaceAdapter;
 import hinapolina.com.sharelocation.listener.EndlessScrollListener;
+import hinapolina.com.sharelocation.listener.OnPlaceListener;
 import hinapolina.com.sharelocation.model.Place;
 import hinapolina.com.sharelocation.network.OKHTTPHelper;
 import hinapolina.com.sharelocation.ui.Utils;
@@ -140,7 +141,7 @@ public class SharePlacesDialog extends DialogFragment {
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-        adapter = new PlaceAdapter(placeList, getContext());
+        adapter = new PlaceAdapter(placeList, (OnPlaceListener) getActivity(), this);
 
         recyclerView.setAdapter(adapter);
         return builder.create();

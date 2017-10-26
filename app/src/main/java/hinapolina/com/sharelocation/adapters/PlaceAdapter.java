@@ -1,6 +1,7 @@
 package hinapolina.com.sharelocation.adapters;
 
 import android.content.Context;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
+import hinapolina.com.sharelocation.listener.OnPlaceListener;
 import hinapolina.com.sharelocation.model.Place;
 
 /**
@@ -23,11 +25,13 @@ import hinapolina.com.sharelocation.model.Place;
 public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ItemsHolder> {
 
     List<Place> placeList;
-    Context context;
+    OnPlaceListener onPlaceListener;
+    DialogFragment dialog;
 
-    public PlaceAdapter(List<Place> placeList, Context context) {
+    public PlaceAdapter(List<Place> placeList, OnPlaceListener listener, DialogFragment dialog) {
         this.placeList = placeList;
-        this.context = context;
+        this.onPlaceListener = listener;
+        this.dialog = dialog;
     }
 
     @Override
@@ -62,17 +66,16 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ItemsHolder>
         Place place;
         public ItemsHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             name = (TextView) itemView.findViewById(R.id.placeName);
             image = (ImageView) itemView.findViewById(R.id.placeImage);
         }
 
         @Override
         public void onClick(View v) {
-
-        }
-
-        public Place getPlace() {
-            return place;
+            dialog.dismiss();
+            if (onPlaceListener != null)
+                onPlaceListener.onPlace(place);
         }
 
         public void setPlace(Place place) {

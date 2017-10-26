@@ -156,7 +156,7 @@ public class Utils{
 
     public static String getLastUpdate(String date) {
 
-            String twitterFormat = "MMM d, h:mm a";
+            String twitterFormat = "EEE MMM dd HH:mm:ss ZZZ yyyy";
             SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
             sf.setLenient(true);
 

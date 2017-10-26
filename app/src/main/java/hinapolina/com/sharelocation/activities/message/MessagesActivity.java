@@ -48,15 +48,17 @@ import java.util.List;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.MessageRecyclerAdapter;
 import hinapolina.com.sharelocation.fragments.SharePlacesDialog;
+import hinapolina.com.sharelocation.listener.OnPlaceListener;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
 import hinapolina.com.sharelocation.model.Message;
+import hinapolina.com.sharelocation.model.Place;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.FirebaseHelper;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
 
-public class MessagesActivity extends AppCompatActivity implements UserUpdateListener {
+public class MessagesActivity extends AppCompatActivity implements UserUpdateListener, OnPlaceListener {
 
     private static final String TAG = MessagesActivity.class.getSimpleName();
     private static final int MESSAGE_LENGTH_LIMIT = 150;
@@ -336,6 +338,10 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
             FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
             service.notifyAllUsers(MessagesActivity.this, registrationIds, message);
         }
+    }
+    @Override
+    public void onPlace(Place place) {
+        System.err.println("SELECTED PLACE: " + place);
     }
 
 }
