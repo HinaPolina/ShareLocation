@@ -66,7 +66,7 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
             holder.tvMessage.setVisibility(View.GONE);
         }
 
-        Picasso.with(context).load(message.getUserProfileImg()) .resize(80, 80)
+        Picasso.with(context).load(message.getUserProfileImg()).centerCrop() .resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(holder.imgPhotoImageView);
 
         if (message.getTimeInMillis() > 0) {
