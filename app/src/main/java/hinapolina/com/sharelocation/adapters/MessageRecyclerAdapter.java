@@ -5,15 +5,17 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.Message;
@@ -66,7 +68,7 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
             holder.tvMessage.setVisibility(View.GONE);
         }
 
-        Picasso.with(context).load(message.getUserProfileImg()).centerCrop() .resize(80, 80)
+        Picasso.with(context).load(message.getUserProfileImg()).centerCrop().resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(holder.imgPhotoImageView);
 
         if (message.getTimeInMillis() > 0) {
@@ -100,7 +102,7 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
 
         if (!mMessageKeys.contains(msgKey)) {
             //add message to list
-            mMessages.add(message);
+            mMessages.add(0,message);
             mMessageKeys.add(msgKey);
             this.notifyItemInserted(mMessages.size()-1);
         }

@@ -14,7 +14,34 @@ public class Message {
     private String userUID;
     private String receiver;
     private String imgUrl;
+    private String placeName;
+    private Double lat;
+    private Double lng;
 
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
 
     public String getSender() {
         return sender;
@@ -91,6 +118,9 @@ public class Message {
                 ", userUID='" + userUID + '\'' +
                 ", receiver='" + receiver + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
+                ", placeName='" + placeName + '\'' +
+                ", lat=" + lat +
+                ", lng=" + lng +
                 '}';
     }
 }

@@ -33,6 +33,8 @@
     <dimen name="image_button_message">36dp</dimen>
     <dimen name="image_place">50dp</dimen>
     <dimen name="margin_image_place">7dp</dimen>
+    <dimen name="image_group_chat">55dp</dimen>
+    <dimen name="image_group_chat_image">120dp</dimen>
 
 
 </resources>

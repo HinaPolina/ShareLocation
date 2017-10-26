@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/photoImageView"
+        android:layout_width="@dimen/image_group_chat"
+        android:layout_height="@dimen/image_group_chat"
+        android:clickable="true"
+        android:layout_margin="@dimen/margin"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user" />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Polina Sliusarchuk"
+        android:textColor="@color/primary_text"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_alignTop="@+id/photoImageView"
+        android:layout_toEndOf="@+id/photoImageView" />
+
+    <TextView
+        android:id="@+id/messageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/margin"
+        android:text="Text me"
+        android:textSize="12sp"
+        android:layout_below="@+id/nameTextView"
+        android:layout_toEndOf="@+id/photoImageView" />
+
+    <ImageView
+        android:id="@+id/receive_image_view"
+        android:layout_width="match_parent"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_height="@dimen/image_group_chat_image"
+        android:visibility="gone"
+        android:clickable="true"
+        android:layout_below="@+id/messageTextView"
+        android:layout_toEndOf="@+id/photoImageView" />
+
+    <TextView
+        android:id="@+id/tv_message_datetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="slfnlskdcsmd;lcmsd;lmc;lsdmc"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="10sp"
+        android:layout_above="@+id/messageTextView"
+        android:layout_alignEnd="@+id/messageTextView" />
+
+
+
+
+</RelativeLayout>

@@ -153,6 +153,11 @@ public class Utils{
     }
 
 
+    public static String getDate(long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZ yyyy");
+        String res = sdf.format(timeInMillis);
+        return  getLastUpdate(res);
+    }
 
     public static String getLastUpdate(String date) {
 

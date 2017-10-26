@@ -4,15 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
 import android.content.pm.PackageManager;
-
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,12 +38,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.adapters.MessageRecyclerAdapter;
+import hinapolina.com.sharelocation.adapters.GroupChatAdapter;
 import hinapolina.com.sharelocation.fragments.SharePlacesDialog;
 import hinapolina.com.sharelocation.listener.OnPlaceListener;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
@@ -69,7 +67,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
     private ImageButton imgPhotoButton;
     private EditText etMessage;
     private Button btnSendMessage;
-    private MessageRecyclerAdapter mMessageAdapter;
+    private GroupChatAdapter mMessageAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -80,11 +78,15 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
     private String mUserName;
     private Toolbar mToolbar;
     public ImageView backIcon;
+    Boolean isGroup = true;
+    String downloadUrl;
+    public static final String URI_STATIC = "https://maps.googleapis.com/maps/api/staticmap?center=";
 
     private FirebaseHelper firebaseHelper;
     private List<User> users;
 
     Location location;
+    private String PARAMETERS = "&zoom=15&size=600x300&maptype=roadmap&markers=color%3Ared%7C";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +117,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
 
         //adapter
         mRecyclerViewMessage.setLayoutManager(new LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false));
-        mMessageAdapter = new MessageRecyclerAdapter(this);
+        mMessageAdapter = new GroupChatAdapter(this);
         mRecyclerViewMessage.setAdapter(mMessageAdapter);
 
         // Initialize progress bar
@@ -224,24 +226,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message message = new Message();
-
-                SharedPreferences sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-
-                //Set message attributes
-                message.setSender(sharedPref.getString(Utils.USER_NAME, " "));
-                message.setMessage(etMessage.getText().toString());
-                message.setUserProfileImg(sharedPref.getString(Utils.IMAGE, ""));
-                message.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
-                message.setRead(false); //New Message Indicator
-
-                //Push message to firebase
-                mDatabaseReference.push().setValue(message);
-
-                notifyAllUsers(message.getMessage());
-
-                //clear the input box
-                etMessage.setText(" ");
+              sendMessage(null, downloadUrl );
             }
         });
 
@@ -253,15 +238,49 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                 intentPhoto.setType("image/jpeg");
                 intentPhoto.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 startActivityForResult(Intent.createChooser(intentPhoto, "Complete action using"), RC_PHOTO_PICKER);
-                isPermissionGrantedImage();
             }
         });
 
 
     }
 
+    private void sendMessage(Place place, String imgUrl ) {
+        Message message = new Message();
 
-    @Override
+        SharedPreferences sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+
+        //Set message attributes
+        message.setSender(sharedPref.getString(Utils.USER_NAME, " "));
+        message.setMessage(etMessage.getText().toString());
+        message.setUserProfileImg(sharedPref.getString(Utils.IMAGE, ""));
+        message.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+        message.setRead(false);
+        if (!TextUtils.isEmpty(imgUrl)) {
+            message.setImgUrl(imgUrl);
+        }
+        if(place!=null){
+
+            message.setPlaceName(place.getName());
+            message.setLat(place.getLat());
+            message.setLng(place.getLng());
+            message.setMessage(getString(R.string.share) +" " +place.getName());
+            message.setImgUrl(place.getUrl());
+
+        }
+
+
+
+
+        //Push message to firebase
+        mDatabaseReference.push().setValue(message);
+
+        notifyAllUsers(message.getMessage());
+
+        //clear the input box
+        etMessage.setText(" ");
+    }
+
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
@@ -270,20 +289,16 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
             StorageReference photoRef = mFirebasetorageReference.child(selectedImageUri.getLastPathSegment());
             // Upload file to Firebase Storage
             photoRef.putFile(selectedImageUri)
-                .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // When the image has successfully uploaded, we get its download URL
-                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                        // Set the download URL to the message box, so that the user can send it to the database
+                            // When the image has successfully uploaded, we get its download URL
+                            downloadUrl = taskSnapshot.getDownloadUrl().toString();
 
-                                User user = new User();
-                                mDatabaseReference.push().setValue(user, downloadUrl.toString());
-                            }
-
-
+                            sendMessage(null, downloadUrl);
+                        }
                     });
-                }
         }
+    }
 
 
     public void isPermissionGrantedImage()
@@ -340,8 +355,14 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         }
     }
     @Override
-    public void onPlace(Place place) {
+    public void onPlace(final Place place) {
         System.err.println("SELECTED PLACE: " + place);
+        String uri = URI_STATIC + place.getLat() +"," +place.getLng()+
+                PARAMETERS + place.getLat()+"%2C"+ place.getLng()+"&key="
+                +getResources().getString(R.string.google_maps_static_api_key);
+        place.setUrl(uri);
+                sendMessage(place, "");
+
     }
 
 }
