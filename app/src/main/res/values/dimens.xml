@@ -40,6 +40,7 @@
     <dimen name="margin_text">10dp</dimen>
     <dimen name="edit_text_padding">5dp</dimen>
     <dimen name="text_size_13">13sp</dimen>
+    <dimen name="header_margin_left">17dp</dimen>
 
 
 </resources>
