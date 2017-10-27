@@ -38,6 +38,8 @@
     <dimen name="single_chat_image">120dp</dimen>
     <dimen name="margin_top">14dp</dimen>
     <dimen name="margin_text">10dp</dimen>
+    <dimen name="edit_text_padding">5dp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
 
 
 </resources>
