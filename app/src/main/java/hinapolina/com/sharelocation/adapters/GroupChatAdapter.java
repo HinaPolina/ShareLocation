@@ -44,16 +44,39 @@ public class GroupChatAdapter  extends RecyclerView.Adapter<GroupChatAdapter.Vie
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_group_chat, parent, false);
+            View view = parent;
+            switch (viewType){
+               case 0:
+                   view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_group_chat, parent, false);
+                   break;
+                case 1:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_group_chat_me, parent, false);
+                    break;
+
+           }
+
             ViewHolder viewHolder = new ViewHolder(view);
             return viewHolder;
         }
 
+    @Override
+    public int getItemViewType(int position) {
+        Message message = mMessages.get(position);
+        if (!currentUserName.equals(message.getSender())) {
+            return 0;
+        } else {
+           return 1;
+        }
 
-        @Override
+    }
+
+    @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             Message message = mMessages.get(position);
+
             holder.message = message;
+
+
             holder.tvAuthorTextView.setText(message.getSender());
 
                 holder.tvMessage.setText(message.getMessage());
@@ -67,7 +90,7 @@ public class GroupChatAdapter  extends RecyclerView.Adapter<GroupChatAdapter.Vie
 
             if (!TextUtils.isEmpty(message.getImgUrl())) {
                 holder.imgReceiveImgView.setVisibility(View.VISIBLE);
-                Picasso.with(context).load(message.getImgUrl()).into(holder.imgReceiveImgView);
+                Picasso.with(context).load(message.getImgUrl()).placeholder(R.mipmap.ic_launcher).centerCrop().resize(600, 350).into(holder.imgReceiveImgView);
             } else {
                 holder.imgReceiveImgView.setVisibility(View.GONE);
             }
