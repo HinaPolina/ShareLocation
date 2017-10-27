@@ -283,6 +283,8 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
         if(markers.containsKey(user.getId())) {
           markers.get(user.getId()).remove();
+            markers.remove(user.getId());
+
            Marker m = creatMarker(user);
 
            markers.put(user.getId(), m);

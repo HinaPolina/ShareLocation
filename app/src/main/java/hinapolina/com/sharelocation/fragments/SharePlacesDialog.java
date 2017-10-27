@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +24,7 @@ import java.util.List;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.adapters.PlaceAdapter;
 import hinapolina.com.sharelocation.listener.EndlessScrollListener;
+import hinapolina.com.sharelocation.listener.OnPlaceListener;
 import hinapolina.com.sharelocation.model.Place;
 import hinapolina.com.sharelocation.network.OKHTTPHelper;
 import hinapolina.com.sharelocation.ui.Utils;
@@ -44,6 +46,7 @@ public class SharePlacesDialog extends DialogFragment {
     Double lng ;
     PlaceAdapter adapter;
     Callback callback;
+    ProgressBar progressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,6 +107,8 @@ public class SharePlacesDialog extends DialogFragment {
                             try {
                                 placeList.addAll(listPlaces);
                                 adapter.notifyDataSetChanged();
+                                progressBar.setVisibility(View.GONE);
+
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -128,6 +133,9 @@ public class SharePlacesDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View content = inflater.inflate(R.layout.list_of_places_dialog, null);
+        progressBar = (ProgressBar) content.findViewById(R.id.progress);
+        progressBar.setVisibility(View.VISIBLE);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         builder.setView(content).setTitle(R.string.list_of_places);
         RecyclerView recyclerView = (RecyclerView) content.findViewById(R.id.list_of_places);
@@ -140,7 +148,7 @@ public class SharePlacesDialog extends DialogFragment {
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-        adapter = new PlaceAdapter(placeList, getContext());
+        adapter = new PlaceAdapter(placeList, (OnPlaceListener) getActivity(), this);
 
         recyclerView.setAdapter(adapter);
         return builder.create();

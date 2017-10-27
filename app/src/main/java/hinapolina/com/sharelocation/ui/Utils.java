@@ -153,10 +153,15 @@ public class Utils{
     }
 
 
+    public static String getDate(long timeInMillis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZ yyyy");
+        String res = sdf.format(timeInMillis);
+        return  getLastUpdate(res);
+    }
 
     public static String getLastUpdate(String date) {
 
-            String twitterFormat = "MMM d, h:mm a";
+            String twitterFormat = "EEE MMM dd HH:mm:ss ZZZ yyyy";
             SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
             sf.setLenient(true);
 

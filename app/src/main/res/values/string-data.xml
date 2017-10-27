@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="google_maps_api_key">AIzaSyBN3Sj2RcFIjeYfGC-ev3laktFq3k9n0GY</string>
+    <string name="google_maps_static_api_key">AIzaSyCzCUCVurSKoH2UziYXKDCNnUP2u0HNiYs</string>
     <string name="google_place_api_key">AIzaSyDoBqOd7--afaAp5jE_D80S7xBGLwKN6JQ</string>
     <string name="facebook_app_id">936475039834902</string>
     <string name="fb_login_protocol_scheme">fb936475039834902</string>
