@@ -294,7 +294,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                             // When the image has successfully uploaded, we get its download URL
                             downloadUrl = taskSnapshot.getDownloadUrl().toString();
 
-                            sendMessage(null, downloadUrl);
+
                         }
                     });
         }
