@@ -115,7 +115,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".adapters.ChatRecyclerViewAdapter"></activity>
+        <activity android:name=".adapters.ChatRecyclerViewAdapter" />
     </application>
 
 </manifest>

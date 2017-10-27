@@ -17,6 +17,7 @@ import com.opentok.android.Stream;
 import com.opentok.android.Subscriber;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.services.TalkWebServiceCoordinator;
 import hinapolina.com.sharelocation.ui.OpenTokConfig;
 import pub.devrel.easypermissions.AppSettingsDialog;
@@ -29,15 +30,19 @@ import com.opentok.android.PublisherKit;
 import com.opentok.android.Subscriber;
 import com.opentok.android.OpentokError;
 import com.opentok.android.SubscriberKit;
+import com.squareup.picasso.Picasso;
 
 import android.support.annotation.NonNull;
 import android.Manifest;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static hinapolina.com.sharelocation.R.drawable.user;
 
 /**
  * Created by hinaikhan on 10/20/17.
@@ -64,6 +69,8 @@ public class VideoTalkActivity extends AppCompatActivity implements Session.Sess
     private FrameLayout mPublisherViewContainer;
     private FrameLayout mSubscriberViewContainer;
 
+    private ImageView profilePicture;
+
     // Suppressing this warning. mWebServiceCoordinator will get GarbageCollected if it is local.
     @SuppressWarnings("FieldCanBeLocal")
     private TalkWebServiceCoordinator mWebServiceCoordinator;
@@ -77,6 +84,16 @@ public class VideoTalkActivity extends AppCompatActivity implements Session.Sess
         // initialize view objects from your layout
         mPublisherViewContainer = (FrameLayout)findViewById(R.id.publisher_container);
         mSubscriberViewContainer = (FrameLayout)findViewById(R.id.subscriber_container);
+        String imageUri = null;
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            imageUri = bundle.getString("image");
+        }
+        profilePicture = (ImageView) findViewById(R.id.profilePic);
+        if (imageUri != null && imageUri.length() > 0){
+            Picasso.with(getBaseContext()).load(imageUri).centerCrop().resize(80, 80)
+                    .transform(new GoogleLocationFragment.RoundTransformation()).into(profilePicture);
+        }
 
         requestPermissions();
 
