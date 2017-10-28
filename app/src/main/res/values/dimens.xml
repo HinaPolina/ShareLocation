@@ -23,6 +23,7 @@
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_18">18sp</dimen>
     <dimen name="margin_image">10dp</dimen>
+    <dimen name="margin_24">24dp</dimen>
 
     <dimen name="publisher_height">120dp</dimen>
     <dimen name="publisher_width">90dp</dimen>

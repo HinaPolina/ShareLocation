@@ -2,11 +2,14 @@ package hinapolina.com.sharelocation.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Set;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.message.ChatActivity;
@@ -36,9 +40,11 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
     private List<User> mUsers;
     private FragmentManager fragmentManager;
 
+
     public UsersRecyclerViewAdapter(Context context, List<User> mUsers) {
         this.context = context;
         this.mUsers = mUsers;
+
     }
 
     public void addUser(User user) {
@@ -102,10 +108,20 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
         }
 
+        //setup unread message count
         if (user.getUndreadMessagesCount() > 0) {
-            mainViewHolder.tvUnreadMessagesCount.setText(user.getUndreadMessagesCount() +  "");
+            mainViewHolder.tvUnreadMessagesCount.setText(Integer.parseInt(user.getUndreadMessagesCount() +  ""));
+            mainViewHolder.tvUnreadMessagesCount.setVisibility(View.VISIBLE);
+
+        }else{
+            mainViewHolder.tvUnreadMessagesCount.setVisibility(View.GONE);
         }
+
     }
+
+
+
+
 
 
     @Override

@@ -48,14 +48,17 @@ import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.LoginActivity;
 import hinapolina.com.sharelocation.adapters.MarkerAdapter;
 import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
+import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.FirebaseHelper;
 import hinapolina.com.sharelocation.ui.Application;
@@ -92,6 +95,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     User user = new User();
     private List<User> mUsers = new ArrayList<>();
     private LoginActivity loginActivity;
+    private Set<Integer> currentUnCheckedItems;
 
     private UsersRecyclerViewAdapter mUsersRecyclerView =
             new UsersRecyclerViewAdapter(mContext, mUsers);
@@ -190,6 +194,12 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        currentUnCheckedItems = new HashSet<Integer>();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
@@ -198,6 +208,8 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
+
+
 
 
 
@@ -458,6 +470,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
     public void addUsersToAdapter(List<User> users) {
 
     }
+
 
 }
 

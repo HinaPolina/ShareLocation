@@ -27,6 +27,7 @@
     <string name="remove_friend">Remove</string>
     <string name="default_notification_channel_id">notify</string>
     <string name="result_not_found">Result not found</string>
+    <string name="friends_list">Friends List</string>
 
     <!--video chat-->
 

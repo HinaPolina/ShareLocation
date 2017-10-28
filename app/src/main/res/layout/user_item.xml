@@ -5,6 +5,14 @@
     android:layout_height="wrap_content">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linear_action_items"
+        android:layout_marginTop="@dimen/margin_top_80"
+        >
+
+
     <ImageView
         android:id="@+id/userImage"
         android:layout_width="50dp"
@@ -28,7 +36,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_marginLeft="@dimen/margin_top_80"
         android:layout_alignTop="@+id/userImage"
         android:background="@android:color/transparent"
         android:text="@string/add_user" />
+
+    </LinearLayout>
 </RelativeLayout>
