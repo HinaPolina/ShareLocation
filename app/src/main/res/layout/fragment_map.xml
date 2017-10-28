@@ -1,12 +1,13 @@
-<android:com.sothree.slidinguppanel.SlidingUpPanelLayout
-    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+<android:com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoPanelHeight="100dp"
-    sothree:umanoShadowHeight="4dp"  layout_height="match_parent" layout_width="match_parent">
+    sothree:umanoPanelHeight="30dp"
+    sothree:umanoShadowHeight="4dp"
+    layout_height="match_parent"
+    layout_width="match_parent">
 
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,11 +18,29 @@
     tools:context=".MapLocationActivity"
     android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
-<android.support.v7.widget.RecyclerView
-    android:id="@+id/profile_details_recycler"
-    android:layout_marginTop="@dimen/margin"
-    android:layout_width="match_parent"
-    android:gravity="center|top"
-    android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_list_drawer"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/profile_details_recycler"
+        android:layout_width="match_parent"
+        android:gravity="center|top"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+
 
 </android:com.sothree.slidinguppanel.SlidingUpPanelLayout>

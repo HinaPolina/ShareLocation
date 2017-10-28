@@ -21,6 +21,7 @@
 
     <style name="splashScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:background">@color/teal</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

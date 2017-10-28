@@ -21,11 +21,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,10 +61,9 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
     private static final int RC_PHOTO_PICKER = 2;
 
     private RecyclerView mRecyclerViewMessage;
-    private ProgressBar mProgressBar;
     private ImageButton imgPhotoButton;
     private EditText etMessage;
-    private Button btnSendMessage;
+    private ImageButton btnSendMessage;
     private GroupChatAdapter mMessageAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -120,8 +117,6 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         mMessageAdapter = new GroupChatAdapter(this);
         mRecyclerViewMessage.setAdapter(mMessageAdapter);
 
-        // Initialize progress bar
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onClickListeners();
 
         firebaseHelper = new FirebaseHelper(this);
@@ -133,11 +128,10 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
 
     private void initView(){
         // Initialize references to views
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mRecyclerViewMessage = (RecyclerView) findViewById(R.id.messageRecyclerView);
         imgPhotoButton = (ImageButton) findViewById(R.id.photoPickerButton);
         etMessage = (EditText) findViewById(R.id.messageEditText);
-        btnSendMessage = (Button) findViewById(R.id.sendButton);
+        btnSendMessage = (ImageButton) findViewById(R.id.sendButton);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
@@ -277,7 +271,9 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         notifyAllUsers(message.getMessage());
 
         //clear the input box
-        etMessage.setText(" ");
+        etMessage.setText("");
+        imgPhotoButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_vector_attach_image_grey));
+
     }
 
 
@@ -293,7 +289,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             // When the image has successfully uploaded, we get its download URL
                             downloadUrl = taskSnapshot.getDownloadUrl().toString();
-
+                            imgPhotoButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_vector_attach_pressed));
 
                         }
                     });
