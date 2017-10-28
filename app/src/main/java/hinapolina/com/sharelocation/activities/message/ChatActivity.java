@@ -22,8 +22,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -79,7 +79,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
     private ImageButton imgPhotoButton;
     private TextView tvUserName;
     private EditText etMessage;
-    private Button btnSendMessage;
+    private ImageButton btnSendMessage;
     private Toolbar mToolbar;
     private LinearLayout mLinearLayoutBack;
 
@@ -144,7 +144,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         imgPhotoButton = (ImageButton) findViewById(R.id.photoPickerButton);
         etMessage = (EditText) findViewById(R.id.messageEditText);
-        btnSendMessage = (Button) findViewById(R.id.sendButton);
+        btnSendMessage = (ImageButton) findViewById(R.id.sendButton);
         mRecyclerViewMessage = (RecyclerView) findViewById(R.id.messageRecyclerView);
         tvUserName = (TextView) findViewById(R.id.tv_profile_name);
         mLinearLayoutBack = (LinearLayout) findViewById(R.id.back);

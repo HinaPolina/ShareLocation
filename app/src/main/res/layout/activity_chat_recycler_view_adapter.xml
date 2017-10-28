@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/background_image"
+        android:src="@drawable/green_background"
         android:scaleType="centerCrop"/>
 
     <include
@@ -42,33 +42,40 @@
 
         <ImageButton
             android:id="@+id/photoPickerButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@android:drawable/ic_menu_gallery" />
+            android:layout_width="@dimen/image_button_message"
+            android:layout_height="@dimen/image_button_message"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_vector_attach_image_grey" />
+
         <ImageButton
             android:id="@+id/sharePlaces"
             android:layout_width="@dimen/image_button_message"
             android:layout_height="@dimen/image_button_message"
-            android:onClick="onSharePlace"
             android:background="@android:color/transparent"
-            app:srcCompat="@android:drawable/ic_menu_share" />
+            android:onClick="onSharePlace"
+            app:srcCompat="@drawable/ic_vector_share" />
 
         <EditText
             android:id="@+id/messageEditText"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="@dimen/text_size_13"
+            android:padding="@dimen/edit_text_padding"
+            android:background="@drawable/edit_text_message"
+            android:hint="Aa" />
 
-        <Button
+
+        <ImageButton
             android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_width="@dimen/image_button_message"
+            android:layout_height="@dimen/image_button_message"
+            android:background="@android:color/transparent"
             android:enabled="false"
-            android:text="Send Button"/>
-
+            app:srcCompat="@drawable/ic_vector_send" />
     </LinearLayout>
+
 
 
     <ProgressBar
