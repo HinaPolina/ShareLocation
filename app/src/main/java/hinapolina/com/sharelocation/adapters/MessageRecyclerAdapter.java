@@ -58,6 +58,15 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
         return viewHolder;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        Message message = mMessages.get(position);
+        if(!currentUserName.equals(message.getSender())){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -76,8 +85,8 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
             holder.tvMessage.setVisibility(View.GONE);
         }
 
-        Picasso.with(context).load(message.getUserProfileImg()).centerCrop() .resize(80, 80)
-                .transform(new GoogleLocationFragment.RoundTransformation()).into(holder.imgPhotoImageView);
+        Picasso.with(context).load(message.getUserProfileImg()).placeholder(R.mipmap.ic_launcher).centerCrop().
+                resize(600, 350).into(holder.imgPhotoImageView);
 
         if (message.getTimeInMillis() > 0) {
             holder.tvMessageDateTime.setText(Utils.printableDateTime(message.getTimeInMillis()));
