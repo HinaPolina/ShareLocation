@@ -57,6 +57,7 @@
             android:textSize="@dimen/text_size_13"
             android:padding="@dimen/edit_text_padding"
             android:background="@drawable/edit_text_message"
+            android:inputType="textMultiLine|textShortMessage"
             android:hint="Aa" />
 
 
