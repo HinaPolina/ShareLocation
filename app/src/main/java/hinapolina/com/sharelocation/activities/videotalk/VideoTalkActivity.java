@@ -1,6 +1,8 @@
 package hinapolina.com.sharelocation.activities.videotalk;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,8 +20,11 @@ import com.opentok.android.Subscriber;
 
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
+import hinapolina.com.sharelocation.model.Message;
+import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.services.TalkWebServiceCoordinator;
 import hinapolina.com.sharelocation.ui.OpenTokConfig;
+import hinapolina.com.sharelocation.ui.Utils;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import android.util.Log;
@@ -35,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import android.support.annotation.NonNull;
 import android.Manifest;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -43,6 +49,8 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static hinapolina.com.sharelocation.R.drawable.user;
+import static hinapolina.com.sharelocation.R.id.userName;
+import static hinapolina.com.sharelocation.activities.message.ChatActivity.TO_USER;
 
 /**
  * Created by hinaikhan on 10/20/17.
@@ -70,6 +78,8 @@ public class VideoTalkActivity extends AppCompatActivity implements Session.Sess
     private FrameLayout mSubscriberViewContainer;
 
     private ImageView profilePicture;
+    private TextView tvVideoUserName;
+    private User toUser;
 
     // Suppressing this warning. mWebServiceCoordinator will get GarbageCollected if it is local.
     @SuppressWarnings("FieldCanBeLocal")
@@ -81,19 +91,33 @@ public class VideoTalkActivity extends AppCompatActivity implements Session.Sess
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_talk);
 
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            toUser = (User)bundle.get(TO_USER);
+        }
+
         // initialize view objects from your layout
         mPublisherViewContainer = (FrameLayout)findViewById(R.id.publisher_container);
         mSubscriberViewContainer = (FrameLayout)findViewById(R.id.subscriber_container);
+
         String imageUri = null;
-        Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             imageUri = bundle.getString("image");
         }
+        tvVideoUserName = (TextView) findViewById(R.id.tv_video_username);
         profilePicture = (ImageView) findViewById(R.id.profilePic);
         if (imageUri != null && imageUri.length() > 0){
-            Picasso.with(getBaseContext()).load(imageUri).centerCrop().resize(80, 80)
+            Picasso.with(getBaseContext()).load(imageUri).centerCrop().resize(80 ,80)
                     .transform(new GoogleLocationFragment.RoundTransformation()).into(profilePicture);
+
         }
+
+        Message message = new Message();
+
+        SharedPreferences sharedPref = getBaseContext().getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        //Set message attributes
+        message.setReceiver(sharedPref.getString(Utils.USER_NAME, " "));
+        tvVideoUserName.setText(message.getReceiver());
 
         requestPermissions();
 

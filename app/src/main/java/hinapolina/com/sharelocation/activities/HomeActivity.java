@@ -40,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.activities.fingerprint.FingerPrintActivity;
 import hinapolina.com.sharelocation.activities.message.MessagesActivity;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
@@ -334,6 +335,14 @@ public class HomeActivity extends AppCompatActivity
                         alertDialog.create().show();
                         break;
                     }
+
+                    case R.id.nav_fingerprint: {
+                        Intent intent = new Intent(HomeActivity.this, FingerPrintActivity.class);
+                        intent.putExtra(FingerPrintActivity.ACTION, FingerPrintActivity.ACTION_STORE_FINGERPRINT);
+                        startActivity(intent);
+                        break;
+                    }
+
                     case R.id.nav_log_out: {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
                                 .setTitle("Do you want to quit the app?")
@@ -358,6 +367,7 @@ public class HomeActivity extends AppCompatActivity
                         alertDialog.create().show();
                         break;
                     }
+
                     case R.id.nav_messages:
                         Intent intent = new Intent(HomeActivity.this, MessagesActivity.class);
                         startActivity(intent);

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/dot_light_screen2"
     android:orientation="vertical"
     tools:context=".activities.videotalk.VideoTalkActivity">
 
@@ -44,7 +45,7 @@
             android:padding="5dp">
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/tv_video_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User Name"
@@ -72,19 +73,20 @@
         >
         <ImageView
             android:id="@+id/profilePic"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
             android:src="@drawable/icon_profile"
             android:scaleType="centerCrop"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/end"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/icon_call_msg"
             app:backgroundTint="@color/red"
             android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="@dimen/margin_top_80"/>
     </FrameLayout>
 
     <FrameLayout

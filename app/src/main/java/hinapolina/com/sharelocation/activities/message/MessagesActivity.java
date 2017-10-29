@@ -262,9 +262,6 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
 
         }
 
-
-
-
         //Push message to firebase
         mDatabaseReference.push().setValue(message);
 

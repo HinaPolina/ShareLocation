@@ -54,6 +54,9 @@ public class Utils{
     public static final String USERS = "users";
     public static final String FRIENDS = "friends";
     public static final String DATE = "date";
+    public static final String FB_ACCESS_TOKEN = "fbAccessToken";
+    public static final String GOOGLE_ACCESS_TOKEN = "googleAccessToken";
+    public static final String FINGERPRINT_CIPHER = "fingerprintCipher";
 
     public static float getBatteryLevel(Context context) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);

@@ -1,6 +1,7 @@
 package hinapolina.com.sharelocation.activities;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,8 +14,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -54,7 +57,10 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import javax.crypto.Cipher;
+
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.activities.fingerprint.FingerPrintActivity;
 import hinapolina.com.sharelocation.common.Constant;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.FirebaseHelper;
@@ -62,6 +68,9 @@ import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
+import hinapolina.com.sharelocation.ui.dialog.DialogHelper;
+
+import static junit.runner.Version.id;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -76,6 +85,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private DatabaseReference mDatabase;
     private final static int MY_PERMISSIONS_REQUEST_LOCATION = 1001;
     FirebaseHelper firebaseHelper;
+    private ImageButton imgbtnFingerPrintLogin;
 
     public Location getLocation() {
         return location;
@@ -112,10 +122,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mDatabase = Application.getmDatabase();
         loginButton = (LoginButton) findViewById(R.id.login_button);
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        imgbtnFingerPrintLogin = (ImageButton) findViewById(R.id.fingerprint_login_button);
         googleSignIn();
         facebookSingIn();
-
+        fingerPrintSignIn();
     }
+
+
 
     private void googleSignIn() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -196,6 +209,26 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
+    }
+
+    public void fingerPrintSignIn(){
+        imgbtnFingerPrintLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, FingerPrintActivity.class);
+                intent.putExtra(FingerPrintActivity.ACTION, FingerPrintActivity.ACTION_VERIFY_FINGERPRINT);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void showNetworkError(String title, String errorMsg){
+        DialogHelper.getInstance().showDefaultErrorDialog(getBaseContext(),title, errorMsg, false, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
     }
 
 
@@ -320,6 +353,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void handleFacebookAccessToken(AccessToken accessToken) {
         System.err.println("handleFacebookAccessToken:" + accessToken);
 
+        saveAccessToken(Utils.FB_ACCESS_TOKEN, accessToken.getToken());
+
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -329,9 +364,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             // Sign in success, update UI with the signed-in user's information
                             System.err.println("signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-
-
-
                         } else {
                             // If sign in fails, display a message to the user.
                             System.err.println("signInWithCredential:failure" + task.getException());
@@ -368,6 +400,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         System.err.println("firebaseAuthWithGoogle:" + acct.getId());
+        saveAccessToken(Utils.GOOGLE_ACCESS_TOKEN, acct.getIdToken());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -431,5 +464,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
+    }
+
+    private void saveAccessToken(String key, String token) {
+        SharedPreferences sharedPref = getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(key, token);
+        editor.commit();
     }
 }
