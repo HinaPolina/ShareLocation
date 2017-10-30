@@ -25,7 +25,7 @@ public class SinchService extends Service {
 
     private static final String APP_KEY = "f0e983e8-ecc8-4de7-aff2-7101417ecdc5";
     private static final String APP_SECRET = "bEpWHW07tkqi8/D0rURPRw==";
-    private static final String ENVIRONMENT = "sclientapi.sinch.com";
+    private static final String ENVIRONMENT = "sandbox.sinch.com";
 
     public static final String CALL_ID = "CALL_ID";
     static final String TAG = SinchService.class.getSimpleName();

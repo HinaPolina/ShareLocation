@@ -3,6 +3,7 @@ package hinapolina.com.sharelocation.activities;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
 
     protected void onServiceConnected() {
         // for subclasses
+        getSinchServiceInterface().setStartListener(this);
     }
 
     protected void onServiceDisconnected() {
@@ -70,9 +72,10 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
     }
 
     protected void openPlaceCallActivity() {
-        //Intent mainActivity = new Intent(this, PlaceCallActivity.class);
-        //startActivity(mainActivity);
-        Log.d("BaseActivity", "Placing call ....");
+        Intent mainActivity = new Intent(this, PlaceCallActivity.class);
+        startActivity(mainActivity);
     }
+
+
 
 }

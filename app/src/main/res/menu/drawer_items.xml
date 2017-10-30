@@ -5,28 +5,40 @@
         <item
             android:id="@+id/nav_sharing_location"
             android:icon="@drawable/ic_location"
+            android:background="?attr/selectableItemBackground"
             android:title="@string/location_sharing"/>
 
         <item
             android:id="@+id/nav_messages"
             android:icon="@drawable/ic_chat_vector"
+            android:background="?attr/selectableItemBackground"
             android:title="@string/messages"/>
 
         <item
             android:id="@+id/nav_uber"
             android:icon="@drawable/ic_uber_vector"
+            android:background="?attr/selectableItemBackground"
             android:title="@string/uber"/>
 
         <item
             android:id="@+id/nav_fingerprint"
             android:icon="@drawable/ic_uber_vector"
+            android:background="?attr/selectableItemBackground"
             android:title="@string/fingerprint"/>
 
 
         <item
             android:id="@+id/nav_log_out"
             android:icon="@drawable/ic_log_out_vector"
+            android:background="?attr/selectableItemBackground"
             android:title="@string/log_out"/>
+
+
+        <item
+            android:id="@+id/nav_call"
+            android:icon="@drawable/icon_call"
+            android:background="?attr/selectableItemBackground"
+            android:title="Call"/>
 
     </group>
 

@@ -217,10 +217,6 @@ public class HomeActivity extends BaseActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        if (!getSinchServiceInterface().isStarted()) {
-            getSinchServiceInterface().startClient(mUser.getId());
-        }
-
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -348,6 +344,16 @@ public class HomeActivity extends BaseActivity
                         break;
                     }
 
+                    case R.id.nav_call: {
+                        if (!getSinchServiceInterface().isStarted()) {
+                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            getSinchServiceInterface().startClient(firebaseUser.getDisplayName());
+                        } else {
+                            openPlaceCallActivity();
+                        }
+                        break;
+                    }
+
                     case R.id.nav_log_out: {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
                                 .setTitle("Do you want to quit the app?")
@@ -401,8 +407,13 @@ public class HomeActivity extends BaseActivity
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
             tvUserName.setText(currentUser.getDisplayName());
-            Picasso.with(this).load(currentUser.getPhotoUrl()).resize(80, 80)
-                    .transform(new GoogleLocationFragment.RoundTransformation()).into(imgUserProfile);
+            int avatarSize = getResources().getDimensionPixelSize(R.dimen.global_menu_avatar_size);
+            Picasso.with(this)
+                    .load(currentUser.getPhotoUrl())
+                    .resize(avatarSize, avatarSize)
+                    .centerCrop()
+                    .transform(new CircleTransformation())
+                    .into(imgUserProfile);
         }
     }
 

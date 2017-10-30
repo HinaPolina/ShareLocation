@@ -136,6 +136,7 @@
 
         <activity android:name=".activities.CallScreenActivity" />
         <activity android:name=".activities.IncomingCallScreenActivity" />
+        <activity android:name=".activities.PlaceCallActivity"/>
     </application>
 
 </manifest>

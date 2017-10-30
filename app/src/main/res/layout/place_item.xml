@@ -19,4 +19,6 @@
         android:layout_marginRight="@dimen/margin_image_place"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/placeImage" />
+
+
 </RelativeLayout>

@@ -61,6 +61,7 @@ public class CallScreenActivity extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putBoolean(ADDED_LISTENER, mAddedListener);
     }
 

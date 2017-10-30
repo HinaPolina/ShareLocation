@@ -1,7 +1,12 @@
 package hinapolina.com.sharelocation.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +29,8 @@ public class IncomingCallScreenActivity extends BaseActivity {
     static final String TAG = IncomingCallScreenActivity.class.getSimpleName();
     private String mCallId;
     private AudioPlayer mAudioPlayer;
+    public static final int MY_PERMISSIONS_RECORD_AUDIO = 1;
+    private Call call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +63,35 @@ public class IncomingCallScreenActivity extends BaseActivity {
 
     private void answerClicked() {
         mAudioPlayer.stopRingtone();
-        Call call = getSinchServiceInterface().getCall(mCallId);
+        call = getSinchServiceInterface().getCall(mCallId);
         if (call != null) {
-            call.answer();
-            Intent intent = new Intent(this, CallScreenActivity.class);
-            intent.putExtra(SinchService.CALL_ID, mCallId);
-            startActivity(intent);
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.RECORD_AUDIO)) {
+
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                } else {
+
+                    // No explanation needed, we can request the permission.
+
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.RECORD_AUDIO},
+                            MY_PERMISSIONS_RECORD_AUDIO);
+
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            } else {
+                answerCall();
+            }
         } else {
             finish();
         }
@@ -128,4 +158,36 @@ public class IncomingCallScreenActivity extends BaseActivity {
             }
         }
     };
+
+    private void answerCall() {
+        call.answer();
+        Intent intent = new Intent(this, CallScreenActivity.class);
+        intent.putExtra(SinchService.CALL_ID, mCallId);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_RECORD_AUDIO: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 }

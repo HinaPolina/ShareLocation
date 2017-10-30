@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,6 +55,12 @@ import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
+import nl.dionsegijn.konfetti.KonfettiView;
+
+
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 
 
 /**
@@ -105,7 +112,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            toUser = (User)bundle.get(TO_USER);
+            toUser = (User) bundle.get(TO_USER);
         }
 
         mDatabaseReference = Application.getmDatabase().child(tableName());
@@ -131,13 +138,35 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
 
         mMessageAdapter = new MessageRecyclerAdapter(this);
-        mRecyclerViewMessage.setLayoutManager(new LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false));
+        mRecyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mRecyclerViewMessage.setAdapter(mMessageAdapter);
 
         tvUserName.setText(toUser.getName());
 
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onClickListeners();
+        KonfettiView();
+
+    }
+
+    private void KonfettiView(){
+        final KonfettiView konfettiView = (KonfettiView) findViewById(R.id.konfettiView);
+        konfettiView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                konfettiView.build()
+                        .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+                        .setDirection(0.0, 359.0)
+                        .setSpeed(1f, 5f)
+                        .setFadeOutEnabled(true)
+                        .setTimeToLive(2000L)
+                        .addShapes(nl.dionsegijn.konfetti.models.Shape.RECT, nl.dionsegijn.konfetti.models.Shape.CIRCLE)
+                        .addSizes(new Size(12, 5f))
+                        .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                        .stream(300, 5000L);
+            }
+        });
+
     }
 
     private void initUI() {
@@ -151,6 +180,8 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
 
     }
+
+
 
 
     public void onSharePlace (View v){
