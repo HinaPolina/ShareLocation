@@ -5,10 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hanks.htextview.line.LineTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -59,6 +64,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         } else {
             holder.button.setText(R.string.add_user);
         }
+
+
         Picasso.with(context)
                 .load(user.getImageURI().replaceAll("large", "small"))
                 .centerCrop()
@@ -66,6 +73,20 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 .transform(new GoogleLocationFragment.RoundTransformation())
                 .into(holder.image);
         holder.name.setText(user.getName());
+//        holder.name.startAnimation(AnimationUtils.loadAnimation(context, android.R.anim.fade_in));
+
+        //added RotateAnimation for user image profile
+        RotateAnimation anim = new RotateAnimation(0f, 350f, 15f, 15f);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.setDuration(700);
+
+        // Start animating the image
+        holder.image.startAnimation(anim);
+
+        // Later.. stop the animation
+        holder.image.setAnimation(null);
+
     }
 
     @Override

@@ -32,13 +32,18 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
     private List<User> users = new ArrayList<>();
     private SearchResultsAdapter adapter;
     TextView result;
-    private LinearLayout mLinearLayoutBack;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setTitle("List of Freinds");
 
         result = (TextView) findViewById(R.id.result_text);
         firebaseHelper = new FirebaseHelper(this);
@@ -49,10 +54,16 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SearchResultsAdapter(users, this, currentId, firebaseHelper, sharedPreferences.getString(Utils.TOKEN, ""), sharedPreferences.getString(Utils.USER_NAME, ""));
         recyclerView.setAdapter(adapter);
-        mLinearLayoutBack = (LinearLayout) findViewById(R.id.back);
-        initOnClick();
+
 
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 
 
     @Override
@@ -88,15 +99,4 @@ public class SearchResult extends AppCompatActivity implements UserUpdateListene
 
     }
 
-    private void initOnClick(){
-        mLinearLayoutBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SearchResult.this, HomeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-    }
 }

@@ -275,23 +275,9 @@ public class HomeActivity extends BaseActivity
                         break;
                     }
                     case R.id.nav_uber:{
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
-                                .setTitle("Do you want to navigate to UBER website?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://auth.uber.com/login/?next_url=https%3A%2F%2Friders.uber.com%2F&state=kA4qZSJ3TeW7ePvE4WLbd787yFyN4QKwqWREArE_b8w%3D"));
-                                        startActivity(browserIntent);
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.create().show();
+                        Intent intent = new Intent(HomeActivity.this, UberLoginActivity.class);
+                        startActivity(intent);
+
                         break;
                     }
 

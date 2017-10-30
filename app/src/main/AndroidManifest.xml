@@ -20,12 +20,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <uses-permission android:name="android.permission.CAMERA" />
 
     <permission
@@ -47,8 +44,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <service android:name=".services.CallingService" android:enabled="true"/>
-        <service android:name=".SinchService" android:enabled="true"/>
+        <service
+            android:name=".services.CallingService"
+            android:enabled="true" />
+        <service
+            android:name=".SinchService"
+            android:enabled="true" />
         <service
             android:name=".services.MessagesIntentService"
             android:exported="false" />
@@ -130,13 +131,14 @@
         <activity
             android:name=".activities.fingerprint.FingerPrintActivity"
             android:label="@string/title_activity_finger_print"
-            android:theme="@style/AppTheme"></activity>
-
-
-
+            android:theme="@style/AppTheme" />
         <activity android:name=".activities.CallScreenActivity" />
         <activity android:name=".activities.IncomingCallScreenActivity" />
-        <activity android:name=".activities.PlaceCallActivity"/>
+        <activity android:name=".activities.PlaceCallActivity" />
+        <activity
+            android:name=".activities.UberLoginActivity"
+            android:label="@string/title_activity_uber_login"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
