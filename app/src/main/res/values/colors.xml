@@ -78,4 +78,8 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="light_gray">#8b8b8b</color>
+
+    <color name="sinch_purple">#ff63029d</color>
+    <color name="off_white">#fffafafa</color>
+    <color name="greyish">#fff2f1f2</color>
 </resources>

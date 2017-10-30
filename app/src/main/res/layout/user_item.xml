@@ -5,41 +5,57 @@
     android:layout_height="wrap_content">
 
 
+    <RelativeLayout
+        android:id="@+id/linear_action_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp">
+
+
+        <ImageView
+            android:id="@+id/userImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="150dp"
+            app:srcCompat="@drawable/com_facebook_button_icon_blue" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userImage"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:text="TextView" />
+
+        </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linear_action_items"
-        android:layout_marginTop="@dimen/margin_top_80"
-        >
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_below="@id/linear_action_items"
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/buttonAddUser"
+            style="@style/dialog_blue_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/add_user" />
 
-    <ImageView
-        android:id="@+id/userImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/margin_image"
-        app:srcCompat="@drawable/com_facebook_button_icon_blue" />
-
-    <TextView
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/buttonAddUser"
-        android:layout_alignBottom="@+id/buttonAddUser"
-        android:layout_toEndOf="@+id/userImage"
-        android:text="TextView" />
-
-    <Button
-        android:id="@+id/buttonAddUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="@dimen/margin_top_80"
-        android:layout_alignTop="@+id/userImage"
-        android:background="@android:color/transparent"
-        android:text="@string/add_user" />
+        <!--<Button-->
+            <!--android:id="@+id/buttonRemoveUser"-->
+            <!--style="@style/dialog_blue_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0.5"-->
+            <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
+            <!--android:text="@string/remove_friend" />-->
 
     </LinearLayout>
 </RelativeLayout>

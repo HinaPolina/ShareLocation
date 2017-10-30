@@ -49,13 +49,14 @@ import hinapolina.com.sharelocation.services.JobScheduler;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
 
+import static hinapolina.com.sharelocation.R.id.userName;
 import static hinapolina.com.sharelocation.ui.Utils.REQUEST_CODE;
 
 /**
  * Created by hinaikhan on 10/14/17.
  */
 
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -216,6 +217,10 @@ public class HomeActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        if (!getSinchServiceInterface().isStarted()) {
+            getSinchServiceInterface().startClient(mUser.getId());
+        }
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.listener.MassageSenderListener;
@@ -23,7 +24,7 @@ import hinapolina.com.sharelocation.network.FirebaseHelper;
  * Created by polina on 10/16/17.
  */
 
-public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>  {
+public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ViewHolder> {
     List<User> users;
     Context context;
     String currentId;
@@ -53,7 +54,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         User user = users.get(position);
         holder.setUser(user);
-        if(user.isFriend()) {
+        if (user.isFriend()) {
             holder.button.setText(R.string.remove_friend);
         } else {
             holder.button.setText(R.string.add_user);
@@ -65,14 +66,14 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 .transform(new GoogleLocationFragment.RoundTransformation())
                 .into(holder.image);
         holder.name.setText(user.getName());
-         }
+    }
 
     @Override
     public int getItemCount() {
         return users.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView name;
         ImageView image;
@@ -91,8 +92,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         public ViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.userName);
-            image = (ImageView)itemView.findViewById(R.id.userImage);
-            button = (Button)itemView.findViewById(R.id.buttonAddUser);
+            image = (ImageView) itemView.findViewById(R.id.userImage);
+            button = (Button) itemView.findViewById(R.id.buttonAddUser);
             button.setOnClickListener(this);
 
 
@@ -100,17 +101,52 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         @Override
         public void onClick(View view) {
-           String id = user.getId();
+            String id = user.getId();
 
             firebaseHelper.removeAddUser(id, currentId, user.isFriend());
-            button.setText(user.isFriend()?R.string.add_user:R.string.remove_friend);
+
+            if (user.isFriend()) {
+                setButtonUserUnFriend();
+            } else if (!user.isFriend()) {
+                setButtonUserFriend();
+            }
+
+//            button.setText(user.isFriend()?R.string.add_user:R.string.remove_friend);
             user.setFriend(!user.isFriend());
 
-            if(context instanceof MassageSenderListener){
-               if(user.isFriend()) {
-                   ((MassageSenderListener) context).onSendMassageListener(user, "User " + user.getName() + " add you to friend");
-               }
+            if (context instanceof MassageSenderListener) {
+                if (user.isFriend()) {
+                    ((MassageSenderListener) context).onSendMassageListener(user, "User " + user.getName() + " add you to friend");
+                }
             }
+
+        }
+
+        private void setButtonUserFriend() {
+            SweetAlertDialog alertDialog = new SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE);
+            alertDialog.setTitleText("Great!")
+                    .setContentText("Your Friend has been Added!")
+                    .setCustomImage(R.drawable.custom_img)
+                    .show();
+        }
+
+        private void setButtonUserUnFriend() {
+            SweetAlertDialog sd = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
+            sd.setTitleText("Are you sure?")
+                    .setContentText("You want to delete this Friend")
+                    .setConfirmText("Yes,delete it!")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            // reuse previous dialog instance
+                            sDialog.setTitleText("Deleted!")
+                                    .setContentText("Your Friend has been deleted!")
+                                    .setConfirmText("OK")
+                                    .setConfirmClickListener(null)
+                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        }
+                    })
+                    .show();
 
         }
     }

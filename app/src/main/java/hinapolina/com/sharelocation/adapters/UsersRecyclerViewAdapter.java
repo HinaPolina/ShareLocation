@@ -8,24 +8,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.Set;
-
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.message.ChatActivity;
-import hinapolina.com.sharelocation.activities.message.MessagesActivity;
-import hinapolina.com.sharelocation.activities.videotalk.VideoTalkActivity;
+import hinapolina.com.sharelocation.activities.videotalk.VideoCall;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
-import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.BatteryStatus;
 
@@ -76,12 +67,9 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
         mainViewHolder.imgTalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), VideoTalkActivity.class);
+                Intent intent = new Intent(v.getContext(), VideoCall.class);
                 intent.putExtra("image", user.getImageURI());
                 v.getContext().startActivity(intent);
-
-
-
             }
         });
 

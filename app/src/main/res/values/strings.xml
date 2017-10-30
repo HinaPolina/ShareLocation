@@ -23,8 +23,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="add_user">add user</string>
-    <string name="remove_friend">Remove</string>
+    <string name="add_user">Add\n Friend</string>
+    <string name="remove_friend">Remove\n Friend</string>
     <string name="default_notification_channel_id">notify</string>
     <string name="result_not_found">Result not found</string>
     <string name="friends_list">Friends List</string>
