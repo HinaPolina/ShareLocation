@@ -166,6 +166,8 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                     if (!TextUtils.isEmpty(message.getMessage())) {
                         mMessageAdapter.addMessage(message, dataSnapshot.getKey());
                         mMessageAdapter.notifyDataSetChanged();
+                        mRecyclerViewMessage.scrollToPosition(mMessageAdapter.getItemCount()-1);
+
                     }
                 }
             }
@@ -272,6 +274,7 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         //clear the input box
         etMessage.setText("");
         imgPhotoButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_vector_attach_image_grey));
+
 
     }
 

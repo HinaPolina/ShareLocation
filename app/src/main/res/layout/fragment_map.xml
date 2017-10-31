@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_list_drawer"/>
+        android:src="@drawable/ic_menu_list"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/profile_details_recycler"

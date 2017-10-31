@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hanks.htextview.line.LineTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -59,12 +57,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         User user = users.get(position);
         holder.setUser(user);
-        if (user.isFriend()) {
-            holder.button.setText(R.string.remove_friend);
-        } else {
-            holder.button.setText(R.string.add_user);
-        }
-
+        holder.button.setImageDrawable(context.getResources().getDrawable(!user.isFriend()?R.drawable.ic_add_user:R.drawable.ic_remove_user));
 
         Picasso.with(context)
                 .load(user.getImageURI().replaceAll("large", "small"))
@@ -98,7 +91,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         TextView name;
         ImageView image;
-        Button button;
+        ImageButton button;
 
         public User getUser() {
             return user;
@@ -114,7 +107,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.userName);
             image = (ImageView) itemView.findViewById(R.id.userImage);
-            button = (Button) itemView.findViewById(R.id.buttonAddUser);
+            button = (ImageButton) itemView.findViewById(R.id.buttonAddUser);
             button.setOnClickListener(this);
 
 
@@ -132,7 +125,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                 setButtonUserFriend();
             }
 
-//            button.setText(user.isFriend()?R.string.add_user:R.string.remove_friend);
+            button.setImageDrawable(context.getResources().getDrawable(user.isFriend()?R.drawable.ic_add_user:R.drawable.ic_remove_user));
             user.setFriend(!user.isFriend());
 
             if (context instanceof MassageSenderListener) {
