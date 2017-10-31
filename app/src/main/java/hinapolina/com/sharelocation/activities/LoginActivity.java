@@ -1,7 +1,6 @@
 package hinapolina.com.sharelocation.activities;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,10 +13,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -57,20 +56,15 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import javax.crypto.Cipher;
-
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.fingerprint.FingerPrintActivity;
 import hinapolina.com.sharelocation.common.Constant;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.FirebaseHelper;
-import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
 import hinapolina.com.sharelocation.ui.dialog.DialogHelper;
-
-import static junit.runner.Version.id;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -122,6 +116,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mDatabase = Application.getmDatabase();
         loginButton = (LoginButton) findViewById(R.id.login_button);
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(getString(R.string.log_in_google));
+                return;
+            }
+        }
         imgbtnFingerPrintLogin = (ImageButton) findViewById(R.id.fingerprint_login_button);
         googleSignIn();
         facebookSingIn();

@@ -86,6 +86,7 @@ public class JobScheduler extends JobService {
                     @Override
                     public void onDataChange(final DataSnapshot friends) {
                         String res = friends.getValue(String.class);
+                        if(res==null) return;
                         String [] arr = res.split(";");
                         final Set<String> friendsIdList =  new HashSet<>(Arrays.asList(arr));
                         System.err.println("Friends of  user " + res + " into DB" );

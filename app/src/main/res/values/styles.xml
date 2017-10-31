@@ -20,8 +20,8 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="splashScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:background">@color/teal</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="dialog_blue_button" parent="android:Widget.Button">
@@ -32,6 +32,14 @@
         <item name="android:paddingLeft">21dp</item>
         <item name="android:paddingRight">21dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="FacebookLoginButton">
+        <item name="android:textSize">@dimen/text_size_13</item>
+        <item name="android:background">@drawable/com_facebook_button_login_logo</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
 </resources>
