@@ -25,6 +25,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -56,6 +57,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.fingerprint.FingerPrintActivity;
 import hinapolina.com.sharelocation.common.Constant;
@@ -219,12 +221,37 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         imgbtnFingerPrintLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, FingerPrintActivity.class);
-                intent.putExtra(FingerPrintActivity.ACTION, FingerPrintActivity.ACTION_VERIFY_FINGERPRINT);
-                startActivity(intent);
+//                Intent intent = new Intent(LoginActivity.this, FingerPrintActivity.class);
+//                intent.putExtra(FingerPrintActivity.ACTION, FingerPrintActivity.ACTION_VERIFY_FINGERPRINT);
+//                startActivity(intent);
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+                        alertDialog.setTitle("Fingerprint Login is now available");
+                        alertDialog.setMessage("Do you want to set up Fingerprint in your system settings?")
+                        .setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DataHolder.getInstance().clear();
+                                FirebaseAuth.getInstance().signOut();
+                                LoginManager.getInstance().logOut();
+                                Intent intent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("GOT IT", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.create().show();
             }
         });
     }
+
+
 
     public void showNetworkError(String title, String errorMsg){
         DialogHelper.getInstance().showDefaultErrorDialog(getBaseContext(),title, errorMsg, false, new DialogInterface.OnClickListener() {
