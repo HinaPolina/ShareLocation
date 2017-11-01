@@ -25,6 +25,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -56,9 +57,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.activities.fingerprint.FingerPrintActivity;
 import hinapolina.com.sharelocation.common.Constant;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.FirebaseHelper;
