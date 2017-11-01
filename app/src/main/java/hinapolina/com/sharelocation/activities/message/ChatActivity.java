@@ -99,8 +99,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
     public static final String URI_STATIC = "https://maps.googleapis.com/maps/api/staticmap?center=";
     private String PARAMETERS = "&zoom=15&size=600x300&maptype=roadmap&markers=color%3Ared%7C";
-    private String downloadUrl;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,7 +266,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage(null, downloadUrl);
+                sendMessage(null, null);
             }
         });
 
@@ -298,9 +296,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
                     .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             // When the image has successfully uploaded, we get its download URL
-                            downloadUrl = taskSnapshot.getDownloadUrl().toString();
-
-                         //   sendMessage(null, downloadUrl);
+                            sendMessage(null, taskSnapshot.getDownloadUrl().toString());
                         }
                     });
         }
