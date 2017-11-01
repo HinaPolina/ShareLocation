@@ -55,12 +55,6 @@ import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
-import nl.dionsegijn.konfetti.KonfettiView;
-
-
-import nl.dionsegijn.konfetti.KonfettiView;
-import nl.dionsegijn.konfetti.models.Shape;
-import nl.dionsegijn.konfetti.models.Size;
 
 
 /**
@@ -145,27 +139,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onClickListeners();
-        KonfettiView();
-
-    }
-
-    private void KonfettiView(){
-        final KonfettiView konfettiView = (KonfettiView) findViewById(R.id.konfettiView);
-        konfettiView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                konfettiView.build()
-                        .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
-                        .setDirection(0.0, 359.0)
-                        .setSpeed(1f, 5f)
-                        .setFadeOutEnabled(true)
-                        .setTimeToLive(2000L)
-                        .addShapes(nl.dionsegijn.konfetti.models.Shape.RECT, nl.dionsegijn.konfetti.models.Shape.CIRCLE)
-                        .addSizes(new Size(12, 5f))
-                        .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
-                        .stream(300, 5000L);
-            }
-        });
 
     }
 
@@ -212,6 +185,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
                     Log.d("ChatActivity", "Message: " + message.toString());
                     mMessageAdapter.addMessage(message, dataSnapshot.getKey());
                     //mMessageAdapter.notifyDataSetChanged();
+                    mRecyclerViewMessage.scrollToPosition(mMessageAdapter.getItemCount()-1);
                 }
             }
 

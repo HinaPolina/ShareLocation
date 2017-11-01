@@ -50,7 +50,7 @@ public class SinchService extends Service {
     }
 
     private void start(String userName) {
-        if (mSinchClient == null) {
+        if (mSinchClient != null) {
             mUserId = userName;
             mSinchClient = Sinch.getSinchClientBuilder().context(getApplicationContext()).userId(userName)
                     .applicationKey(APP_KEY)

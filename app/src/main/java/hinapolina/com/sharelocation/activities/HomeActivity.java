@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,11 +42,13 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.SinchService;
 import hinapolina.com.sharelocation.activities.fingerprint.FingerPrintActivity;
 import hinapolina.com.sharelocation.activities.message.MessagesActivity;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
+import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.services.JobScheduler;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
@@ -281,48 +285,6 @@ public class HomeActivity extends BaseActivity
                         break;
                     }
 
-                    case R.id.nav_caltrain:{
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
-                                .setTitle("Do you want to navigate to CALTRAIN website?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.caltrain.com/schedules/weekdaytimetable.html"));
-                                        startActivity(browserIntent);
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.create().show();
-                        break;
-                    }
-
-                    case R.id.nav_bart:{
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
-                                .setTitle("Do you want to navigate to BART website?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.bart.gov/schedules/bystation"));
-                                        startActivity(browserIntent);
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.create().show();
-                        break;
-                    }
-
                     case R.id.nav_fingerprint: {
                         Intent intent = new Intent(HomeActivity.this, FingerPrintActivity.class);
                         intent.putExtra(FingerPrintActivity.ACTION, FingerPrintActivity.ACTION_STORE_FINGERPRINT);
@@ -330,7 +292,7 @@ public class HomeActivity extends BaseActivity
                         break;
                     }
 
-                    case R.id.nav_call: {
+                    /*case R.id.nav_call: {
                         if (!getSinchServiceInterface().isStarted()) {
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             getSinchServiceInterface().startClient(firebaseUser.getDisplayName());
@@ -338,7 +300,7 @@ public class HomeActivity extends BaseActivity
                             openPlaceCallActivity();
                         }
                         break;
-                    }
+                    }*/
 
                     case R.id.nav_log_out: {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
@@ -402,6 +364,11 @@ public class HomeActivity extends BaseActivity
                     .into(imgUserProfile);
         }
     }
+
+    public void callUser(String userId) {
+        openPlaceCallActivity(userId);
+    }
+
 
 }
 

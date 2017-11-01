@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:weightSum="5"
-              android:background="#ffffffff">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:weightSum="5"
+    android:background="#ffffffff">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -54,14 +69,22 @@
             android:layout_height="0dp"
             android:padding="0dip"
             android:layout_weight="3"
-            android:background="@drawable/callbg" android:orientation="vertical">
+            android:background="@drawable/icon_profile"
+            android:orientation="vertical">
 
-        <LinearLayout android:id="@+id/remoteVideo" android:layout_width="wrap_content"
-                      android:layout_height="wrap_content" android:layout_alignParentLeft="true"
-                      android:layout_alignParentTop="true" android:orientation="horizontal"/>
+        <LinearLayout
+            android:id="@+id/remoteVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"/>
 
-        <RelativeLayout android:id="@+id/localVideo" android:layout_width="150dp"
-                        android:layout_alignParentRight="true" android:layout_height="200dp"
+        <RelativeLayout
+            android:id="@+id/localVideo"
+            android:layout_width="150dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="200dp"
             android:layout_alignParentTop="true" />
 
     </RelativeLayout>

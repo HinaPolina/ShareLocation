@@ -15,6 +15,18 @@
       },
       "oauth_client": [
         {
+          "client_id": "1055929112324-snrm7549fd2glo0e6q03le6ceshirl2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hinapolina.com.sharelocation",
+            "certificate_hash": "4dadbfc36aaa6a215bb8df3837e81334111e7951"
+          }
+        },
+        {
+          "client_id": "1055929112324-sgkl5gi44a2oa3sl235uhrvs1cpkrtb8.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "1055929112324-2vu53ek6s0lq14tebfdcn0jqbl9mqb9r.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +41,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055929112324-sgkl5gi44a2oa3sl235uhrvs1cpkrtb8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

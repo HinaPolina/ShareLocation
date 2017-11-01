@@ -27,21 +27,12 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/viewUser"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/colorPrimary"
-        android:clickable="true"
-        android:layout_weight="1"
-        android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_profile_name"
@@ -53,7 +44,15 @@
                 android:text=""
                 android:maxLines="1"/>
 
+            <ImageButton
+                android:id="@+id/img_call"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="190dp"
+                android:layout_gravity="end"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_video_med" />
+
 
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>

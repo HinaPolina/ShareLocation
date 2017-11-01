@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hanks.htextview.line.LineTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
