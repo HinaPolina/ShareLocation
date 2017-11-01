@@ -68,8 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:padding="0dip"
-            android:layout_weight="3"
-            android:background="@drawable/icon_profile"
+            android:layout_weight="3.3"
             android:orientation="vertical">
 
         <LinearLayout
@@ -94,15 +93,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/greyish"
-            android:layout_weight="1">
-        <Button
+            android:layout_weight="0.7">
+        <ImageButton
                 android:id="@+id/hangupButton"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/button_end"/>
+                android:background="@drawable/ic_decline_video_call"/>
 
     </RelativeLayout>
 

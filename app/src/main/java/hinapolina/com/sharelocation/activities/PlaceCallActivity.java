@@ -21,6 +21,8 @@ public class PlaceCallActivity extends BaseActivity {
     private EditText mCallName;
     private String mUserId;
 
+    public static final int DIAL_USER_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +112,14 @@ public class PlaceCallActivity extends BaseActivity {
 
         Intent callScreen = new Intent(this, CallScreenActivity.class);
         callScreen.putExtra(SinchService.CALL_ID, callId);
-        startActivity(callScreen);
+        startActivityForResult(callScreen, DIAL_USER_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == DIAL_USER_REQUEST) {
+            finish();
+        }
     }
 }
