@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if (v instanceof TextView) {
                 TextView tv = (TextView) v;
                 tv.setText(getString(R.string.log_in_google));
-                return;
+                break;
             }
         }
         imgbtnFingerPrintLogin = (ImageButton) findViewById(R.id.fingerprint_login_button);
