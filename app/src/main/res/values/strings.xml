@@ -10,6 +10,7 @@
     <string name="text_location_permission">App ask for permission to see your location</string>
     <string name="ok">OK</string>
     <string name="log_out">Log Out</string>
+    <string name="log_in_facebook">Facebook</string>
     <string name="location_sharing">Location Sharing</string>
     <string name="messages">Group Messages</string>
     <string name="uber">Order Uber</string>
@@ -55,11 +56,14 @@
     <string name="activity_home_desc">You have successfully logged in with fingerprint authentication</string>
     <string name="activity_home_note">Close and re-open the app to see the fingerprint auth screen again</string>
     <string name="title_activity_finger_print">FingerPrintActivity</string>
+
     <string name="title_activity_uber_login">Uber Login</string>
 
     <string name="rider_login">RIDER SIGN IN</string>
     <string name="driver_login">DRIVER SIGN IN</string>
     <string name="uber_sign_in">Sign In</string>
 
+
+    <string name="log_in_google">Google</string>
 </resources>
 

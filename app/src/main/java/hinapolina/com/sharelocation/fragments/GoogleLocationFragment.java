@@ -61,7 +61,6 @@ import hinapolina.com.sharelocation.activities.LoginActivity;
 import hinapolina.com.sharelocation.adapters.MarkerAdapter;
 import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
 import hinapolina.com.sharelocation.listener.UserUpdateListener;
-import hinapolina.com.sharelocation.model.Message;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.network.FirebaseHelper;
 import hinapolina.com.sharelocation.ui.Application;
@@ -102,7 +101,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
     private UsersRecyclerViewAdapter mUsersRecyclerView;
 
-    private LinearLayoutManager layoutManager = new LinearLayoutManager(mContext,  LinearLayoutManager.VERTICAL, false);
+    private LinearLayoutManager layoutManager;
     private RecyclerView mRecyclerView;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
@@ -117,6 +116,9 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         mContext = container.getContext();
+        mUsersRecyclerView =
+                new UsersRecyclerViewAdapter(mContext, this, mUsers);
+        layoutManager = new LinearLayoutManager(mContext,  LinearLayoutManager.VERTICAL, false);
         mDatabase = Application.getmDatabase();
         sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         currentUserId = sharedPref.getString(Utils.USER_ID, "") ;

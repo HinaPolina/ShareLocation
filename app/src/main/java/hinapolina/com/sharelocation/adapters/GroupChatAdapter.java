@@ -112,9 +112,10 @@ public class GroupChatAdapter  extends RecyclerView.Adapter<GroupChatAdapter.Vie
 
         if (!mMessageKeys.contains(msgKey)) {
             //add message to list
-            mMessages.add(0,message);
+            mMessages.add(message);
             mMessageKeys.add(msgKey);
             this.notifyItemInserted(mMessages.size()-1);
+
         }
     }
 

@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/relative_users_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin"
-        android:layout_marginTop="@dimen/activity_horizontal_margin">
+<RelativeLayout android:id="@+id/relative_users_info"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/margin"
+    android:layout_marginTop="@dimen/margin"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 
         <ImageView
             android:id="@+id/users_img"
-            android:layout_width="@dimen/profile_img_size"
-            android:layout_height="@dimen/profile_img_size"
-            android:layout_marginLeft="@dimen/margin_left_36"
+            android:layout_width="@dimen/image_place"
+            android:layout_height="@dimen/image_place"
+            android:layout_marginLeft="@dimen/margin"
             android:src="@android:color/black" />
 
         <TextView
@@ -23,82 +20,85 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin"
-            android:layout_marginTop="@dimen/margin_left_36"
-            android:layout_toRightOf="@id/users_img"
             android:text="User's Name"
-            android:textSize="@dimen/text_size_12" />
+
+            android:textSize="@dimen/text_size_14"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/users_img"
+            android:layout_marginStart="16dp" />
 
         <ImageView
-        android:id="@+id/img_battery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_left_32"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_toRightOf="@id/tv_users_name"
-        android:src="@drawable/icon_battery" />
+            android:id="@+id/img_battery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_battery"
+            android:layout_above="@+id/view"
+            android:layout_alignStart="@+id/tv_users_name" />
 
         <ImageView
             android:id="@+id/img_battery_charging"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_left_32"
             android:layout_marginLeft="@dimen/margin"
-            android:visibility="gone"
+            android:layout_marginTop="@dimen/margin_left_32"
             android:layout_toRightOf="@id/tv_users_name"
-            android:src="@drawable/icon_battery_charging" />
+            android:src="@drawable/icon_battery_charging"
+            android:visibility="gone" />
 
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_battery_percentage"
-        android:textSize="@dimen/text_size_12"
-        android:layout_marginLeft="@dimen/margin"
-        android:text="Percentage"
-        android:layout_toRightOf="@id/img_battery"
-        android:layout_marginTop="@dimen/margin_left_36"
-        />
+            android:id="@+id/tv_battery_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin"
+            android:text="Percentage"
+            android:textSize="@dimen/text_size_12"
+            android:layout_alignBottom="@+id/img_talk"
+            android:layout_toEndOf="@+id/img_battery"
+            android:layout_marginStart="11dp" />
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_toRightOf="@id/tv_battery_percentage"
-            android:layout_marginLeft="@dimen/margin_left_32"
-            android:layout_marginTop="26dp"
             android:id="@+id/img_talk"
-            android:src="@drawable/icon_video_calling"/>
-
-        <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_toRightOf="@id/img_talk"
-            android:layout_marginLeft="@dimen/margin_left_26"
-            android:layout_marginTop="26dp"
+            android:layout_marginLeft="@dimen/margin_left_32"
+            android:src="@drawable/icon_video_calling"
+            android:layout_alignTop="@+id/img_battery"
+            android:layout_toStartOf="@+id/img_message"
+            android:layout_marginEnd="23dp" />
+
+        <ImageView
             android:id="@+id/img_message"
-            android:src="@drawable/icon_message"/>
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="@dimen/margin_left_26"
+            android:src="@drawable/icon_message"
+            android:layout_alignTop="@+id/img_talk"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp" />
 
         <TextView
             android:id="@+id/tv_unread_messages_count"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/bg_circle_counter"
-            android:text="20"
             android:layout_marginLeft="16dp"
-            android:textStyle="bold"
+            android:layout_marginTop="26dp"
             android:layout_toRightOf="@id/img_message"
-            android:padding="2dp"
+            android:background="@drawable/bg_circle_counter"
             android:gravity="center"
+            android:padding="2dp"
+            android:text="20"
             android:textColor="@android:color/white"
             android:textSize="13dp"
-            android:layout_marginTop="26dp"
-            android:visibility="visible"/>
+            android:textStyle="bold"
+            android:visibility="gone" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/users_img"
+            android:layout_marginTop="@dimen/margin"
+            android:background="@android:color/black"
+            android:id="@+id/view" />
 
 
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black" />
-
-</LinearLayout>

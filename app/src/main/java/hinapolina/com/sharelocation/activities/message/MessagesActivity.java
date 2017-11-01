@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -57,6 +58,9 @@ import hinapolina.com.sharelocation.ui.Utils;
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
+
+import hinapolina.com.sharelocation.utils.ImageUtils;
+
 
 public class MessagesActivity extends AppCompatActivity implements UserUpdateListener, OnPlaceListener {
 
@@ -185,6 +189,8 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
                     if (!TextUtils.isEmpty(message.getMessage())) {
                         mMessageAdapter.addMessage(message, dataSnapshot.getKey());
                         mMessageAdapter.notifyDataSetChanged();
+                        mRecyclerViewMessage.scrollToPosition(mMessageAdapter.getItemCount()-1);
+
                     }
                 }
             }
@@ -292,25 +298,37 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         etMessage.setText("");
         imgPhotoButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_vector_attach_image_grey));
 
+
     }
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            Uri selectedImageUri = data.getData();
+            final Uri selectedImageUri = data.getData();
             // Get a reference to store file at chat_photos/<FILENAME>
-            StorageReference photoRef = mFirebasetorageReference.child(selectedImageUri.getLastPathSegment());
-            // Upload file to Firebase Storage
-            photoRef.putFile(selectedImageUri)
-                    .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            System.err.println("URI: " + selectedImageUri);
+            new AsyncTask<Void, Void, Uri>(){
+            @Override
+            protected Uri doInBackground(Void... params) {
+                return ImageUtils.decodeFile(MessagesActivity.this, selectedImageUri, 500, 500);
+            }
+
+            @Override
+            protected void onPostExecute(Uri scaledImageUri) {
+                final StorageReference photoRef = mFirebasetorageReference.child(scaledImageUri.getLastPathSegment());
+                // Upload file to Firebase Storage
+                photoRef.putFile(scaledImageUri)
+                    .addOnSuccessListener(MessagesActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             // When the image has successfully uploaded, we get its download URL
                             downloadUrl = taskSnapshot.getDownloadUrl().toString();
+                            System.err.println("Download URL: " + downloadUrl);
                             imgPhotoButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_vector_attach_pressed));
-
                         }
                     });
+            }
+        }.execute();
         }
     }
 
