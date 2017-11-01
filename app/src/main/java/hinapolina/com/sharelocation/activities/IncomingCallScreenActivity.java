@@ -21,6 +21,7 @@ import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.calling.Call;
 import com.sinch.android.rtc.calling.CallEndCause;
 import com.sinch.android.rtc.video.VideoCallListener;
+import com.skyfishjy.library.RippleBackground;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class IncomingCallScreenActivity extends BaseActivity {
     private String mCallId;
     private AudioPlayer mAudioPlayer;
     private Call call;
+    private RippleBackground rippleBackground;
     FirebaseHelper firebaseHelper;
 
     @Override
@@ -52,29 +54,19 @@ public class IncomingCallScreenActivity extends BaseActivity {
 
         toolbar.setTitle("Answer Your Call");
 
-
-        /*TODO check the user name through SharedPrefex
-        final SharedPreferences sharedPreferences = getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
-        final String currentId =sharedPreferences.getString(Utils.USER_ID, "");
-        firebaseHelper.findUserByName("", currentId);
-        Message message = new Message();*/
-
-
-
         ImageButton answer = (ImageButton) findViewById(R.id.answerButton);
         answer.setOnClickListener(mClickListener);
         ImageButton decline = (ImageButton) findViewById(R.id.declineButton);
         decline.setOnClickListener(mClickListener);
-
-        //TODO check the user name
-        /*TextView tvRemoteUser = (TextView) findViewById(R.id.tv_remoteUser);
-        tvRemoteUser.setText(message.getReceiver());*/
 
         mAudioPlayer = new AudioPlayer(this);
         mAudioPlayer.playRingtone();
         mCallId = getIntent().getStringExtra(SinchService.CALL_ID);
 
         requestCameraPermission();
+
+        rippleBackground=(RippleBackground)findViewById(R.id.content);
+        rippleBackground.startRippleAnimation();
 
     }
 
@@ -106,6 +98,7 @@ public class IncomingCallScreenActivity extends BaseActivity {
         } else {
             finish();
         }
+        rippleBackground.stopRippleAnimation();
     }
 
     private void declineClicked() {
@@ -115,6 +108,8 @@ public class IncomingCallScreenActivity extends BaseActivity {
             call.hangup();
         }
         finish();
+
+        rippleBackground.stopRippleAnimation();
     }
 
     private class SinchCallListener implements VideoCallListener {

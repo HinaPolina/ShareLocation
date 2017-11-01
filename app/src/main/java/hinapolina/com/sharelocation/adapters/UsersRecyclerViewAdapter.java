@@ -81,10 +81,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
         mainViewHolder.imgTalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(v.getContext(), VideoCall.class);
-                intent.putExtra("image", user.getImageURI());
-                v.getContext().startActivity(intent);*/
-                talkListener.callUser(user.getId());
+                talkListener.callUser(user.getName());
             }
         });
 

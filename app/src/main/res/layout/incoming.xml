@@ -30,7 +30,7 @@
             android:orientation="vertical"
             android:layout_weight="1"
             android:background="#fffafafa"
-            >
+            android:paddingBottom="6dp">
 
         <TextView
             android:id="@+id/remoteUser"
@@ -55,68 +55,49 @@
 
     </LinearLayout>
 
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:src="@drawable/user_profile"
-            android:padding="0dip"
-            android:layout_weight="3"
-            android:contentDescription="Call background">
-
-    </ImageView>
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/content"
+        app:rb_color="#0099CC"
+        app:rb_radius="32dp"
+        app:rb_rippleAmount="4"
+        app:rb_duration="3000"
+        app:rb_scale="6"
+        android:layout_weight="3.3">
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/phone1"
+            android:layout_centerInParent="true"/>
+    </com.skyfishjy.library.RippleBackground>
 
     <RelativeLayout
         android:id="@+id/bottomPanel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_weight="0.7"
         android:background="@color/greyish"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:gravity="center">
 
-        <!--<Button-->
-        <!--android:id="@+id/answerButton"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="100dp"-->
-        <!--android:background="@drawable/button_accept"-->
-        <!--/>-->
-
         <ImageButton
             android:id="@+id/answerButton"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="50dp"
             android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:background="@drawable/rec_button"
-            android:minWidth="100dp"
             android:onClick="pickUpCall"
-            android:src="@drawable/ic_video_call"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:minHeight="100dp"/>
+            android:src="@drawable/ic_answer_video_call" />
 
         <ImageButton
             android:id="@+id/declineButton"
-            android:layout_width="100dp"
-            android:maxHeight="@dimen/activity_vertical_margin"
+            android:layout_width="wrap_content"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_height="wrap_content"
-            android:minWidth="100dp"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:background="@drawable/button"
-            android:src="@drawable/ic_video_of"
+            android:src="@drawable/ic_decline_video_call"
             android:layout_toRightOf="@+id/answerButton"
-
             />
-
-
-        <!--<Button-->
-        <!--android:id="@+id/declineButton"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="100dp"-->
-        <!--android:background="@drawable/button_decline"-->
-        <!--android:layout_toRightOf="@+id/answerButton"/>-->
 
     </RelativeLayout>
 

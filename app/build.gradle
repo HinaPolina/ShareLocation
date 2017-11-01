@@ -67,6 +67,7 @@ dependencies {
     compile 'com.hanks:htextview-fall:0.1.1'
     compile 'com.android.support:customtabs:23.3.0'
     compile 'nl.dionsegijn:konfetti:1.1.0'
+    compile 'com.skyfishjy.ripplebackground:library:1.0.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
 }

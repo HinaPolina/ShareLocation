@@ -292,16 +292,6 @@ public class HomeActivity extends BaseActivity
                         break;
                     }
 
-                    /*case R.id.nav_call: {
-                        if (!getSinchServiceInterface().isStarted()) {
-                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                            getSinchServiceInterface().startClient(firebaseUser.getDisplayName());
-                        } else {
-                            openPlaceCallActivity();
-                        }
-                        break;
-                    }*/
-
                     case R.id.nav_log_out: {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)
                                 .setTitle("Do you want to quit the app?")

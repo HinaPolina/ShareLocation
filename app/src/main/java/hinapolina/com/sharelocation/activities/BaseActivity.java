@@ -64,7 +64,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ServiceC
 
         SharedPreferences sharedPref = getSharedPreferences(Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         if (!getSinchServiceInterface().isStarted()) {
-            getSinchServiceInterface().startClient(sharedPref.getString(Utils.USER_ID, null));
+            getSinchServiceInterface().startClient(sharedPref.getString(Utils.USER_NAME, null));
         }
     }
 
