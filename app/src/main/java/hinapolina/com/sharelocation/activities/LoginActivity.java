@@ -116,16 +116,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mDatabase = Application.getmDatabase();
         loginButton = (LoginButton) findViewById(R.id.login_button);
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-
-        for (int i = 0; i < signInButton.getChildCount(); i++) {
-            View v = signInButton.getChildAt(i);
-
-            if (v instanceof TextView) {
-                TextView tv = (TextView) v;
-                tv.setText(getString(R.string.log_in_google));
-                return;
-            }
-        }
         imgbtnFingerPrintLogin = (ImageButton) findViewById(R.id.fingerprint_login_button);
         googleSignIn();
         facebookSingIn();
@@ -135,6 +125,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void googleSignIn() {
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(R.string.log_in_google);
+                break;
+            }
+        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -192,13 +191,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 request.setParameters(parameters);
                 request.executeAsync();
                 System.err.println("Starting load fiends:");
-                GraphRequest.newMyFriendsRequest(
-                        loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONArrayCallback() {
-                            @Override
-                            public void onCompleted(JSONArray array, GraphResponse response) {
-                            }
-                        }).executeAsync();
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -210,6 +202,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onError(FacebookException exception) {
                 Log.d("", "Error logging in via facebook");
+                exception.printStackTrace();
             }
         });
 
@@ -436,6 +429,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_CANCELED) return;
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
