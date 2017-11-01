@@ -32,7 +32,6 @@
 
     <!--video chat-->
 
-
     <string name="title_settings_dialog">Permissions Required</string>
     <string name="rationale_video_app">This app needs access to your camera and mic to make video calls</string>
     <string name="rationale_ask_again">This app may not work correctly without the requested permissions. Open the app settings screen to modify app permissions.</string>
@@ -57,7 +56,14 @@
     <string name="activity_home_desc">You have successfully logged in with fingerprint authentication</string>
     <string name="activity_home_note">Close and re-open the app to see the fingerprint auth screen again</string>
     <string name="title_activity_finger_print">FingerPrintActivity</string>
-    <string name="title_activity_uber_login">UberLoginActivity</string>
+
+    <string name="title_activity_uber_login">Uber Login</string>
+
+    <string name="rider_login">RIDER SIGN IN</string>
+    <string name="driver_login">DRIVER SIGN IN</string>
+    <string name="uber_sign_in">Sign In</string>
+
+
     <string name="log_in_google">Google</string>
 </resources>
 

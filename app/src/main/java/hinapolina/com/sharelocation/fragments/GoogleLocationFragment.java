@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +55,8 @@ import java.util.Map;
 import java.util.Set;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.TalkListener;
+import hinapolina.com.sharelocation.activities.HomeActivity;
 import hinapolina.com.sharelocation.activities.LoginActivity;
 import hinapolina.com.sharelocation.adapters.MarkerAdapter;
 import hinapolina.com.sharelocation.adapters.UsersRecyclerViewAdapter;
@@ -75,7 +78,7 @@ import static hinapolina.com.sharelocation.R.id.map;
 public class GoogleLocationFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener ,UserUpdateListener {
+        LocationListener ,UserUpdateListener, TalkListener {
 
     private SupportMapFragment mSupportMapFragment;
     private GoogleMap mGoogleMap;
@@ -114,7 +117,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
         mContext = container.getContext();
         mUsersRecyclerView =
-                new UsersRecyclerViewAdapter(mContext, mUsers);
+                new UsersRecyclerViewAdapter(mContext, this, mUsers);
         layoutManager = new LinearLayoutManager(mContext,  LinearLayoutManager.VERTICAL, false);
         mDatabase = Application.getmDatabase();
         sharedPref = mContext.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
@@ -145,7 +148,7 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
     private void initRecyclerView() {
         Log.d(TAG, "initiating recycler");
-
+        mUsersRecyclerView = new UsersRecyclerViewAdapter(mContext, this, mUsers);
         mUsersRecyclerView.setFragmentManager(getFragmentManager());
         layoutManager.scrollToPosition(0);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -472,6 +475,12 @@ public class GoogleLocationFragment extends Fragment implements OnMapReadyCallba
 
     }
 
+    public void callUser(String userId) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof HomeActivity) {
+            ((HomeActivity)activity).callUser(userId);
+        }
+    }
 
 }
 

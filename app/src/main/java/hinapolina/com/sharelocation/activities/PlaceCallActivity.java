@@ -2,6 +2,7 @@ package hinapolina.com.sharelocation.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,11 +19,28 @@ public class PlaceCallActivity extends BaseActivity {
 
     private Button mCallButton;
     private EditText mCallName;
+    private String mUserId;
+
+    public static final int DIAL_USER_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.placecall);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mUserId = extras.getString("USER_ID");
+        }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setTitle("Call");
+
 
         mCallName = (EditText) findViewById(R.id.callName);
         mCallButton = (Button) findViewById(R.id.callButton);
@@ -34,10 +52,20 @@ public class PlaceCallActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onServiceConnected() {
+        super.onServiceConnected();
+
         TextView userName = (TextView) findViewById(R.id.loggedInName);
         userName.setText(getSinchServiceInterface().getUserName());
         mCallButton.setEnabled(true);
+
+        requestRecordAudioPermission();
     }
 
     private void stopButtonClicked() {
@@ -54,12 +82,7 @@ public class PlaceCallActivity extends BaseActivity {
             return;
         }
 
-        Call call = getSinchServiceInterface().callUserVideo(userName);
-        String callId = call.getCallId();
-
-        Intent callScreen = new Intent(this, CallScreenActivity.class);
-        callScreen.putExtra(SinchService.CALL_ID, callId);
-        startActivity(callScreen);
+        dialUser(userName);
     }
 
     private OnClickListener buttonClickListener = new OnClickListener() {
@@ -77,4 +100,26 @@ public class PlaceCallActivity extends BaseActivity {
             }
         }
     };
+
+    @Override
+    protected void doPostRequestRecordAudioPermission() {
+        dialUser(mUserId);
+    }
+
+    private void dialUser(String userId) {
+        Call call = getSinchServiceInterface().callUserVideo(userId);
+        String callId = call.getCallId();
+
+        Intent callScreen = new Intent(this, CallScreenActivity.class);
+        callScreen.putExtra(SinchService.CALL_ID, callId);
+        startActivityForResult(callScreen, DIAL_USER_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == DIAL_USER_REQUEST) {
+            finish();
+        }
+    }
 }

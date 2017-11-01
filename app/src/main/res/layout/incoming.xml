@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:weightSum="5"
-              android:background="#ffffffff">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:weightSum="5"
+    android:background="#ffffffff">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+
+
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -12,17 +30,17 @@
             android:orientation="vertical"
             android:layout_weight="1"
             android:background="#fffafafa"
-            >
+            android:paddingBottom="6dp">
 
         <TextView
-                android:id="@+id/remoteUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="14dp"
-                android:text="Sample user"
-                android:textColor="@color/sinch_purple"
-                android:textSize="28sp"/>
+            android:id="@+id/remoteUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="14dp"
+            android:text="Sample user"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="28sp" />
 
         <TextView
                 android:id="@+id/callState"
@@ -30,44 +48,56 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="Incoming call"
-                android:textColor="@color/sinch_purple"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="16sp"
                 android:textAllCaps="true"
                 />
 
     </LinearLayout>
 
-    <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:src="@drawable/callbg"
-            android:padding="0dip"
-            android:layout_weight="3"
-            android:contentDescription="Call background">
-
-    </ImageView>
+    <com.skyfishjy.library.RippleBackground
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/content"
+        app:rb_color="#0099CC"
+        app:rb_radius="32dp"
+        app:rb_rippleAmount="4"
+        app:rb_duration="3000"
+        app:rb_scale="6"
+        android:layout_weight="3.3">
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/phone1"
+            android:layout_centerInParent="true"/>
+    </com.skyfishjy.library.RippleBackground>
 
     <RelativeLayout
-            android:id="@+id/bottomPanel"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/greyish"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center">
+        android:id="@+id/bottomPanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.7"
+        android:background="@color/greyish"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center">
 
-            <Button
-                    android:id="@+id/answerButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_accept"
-                    />
-            <Button
-                    android:id="@+id/declineButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_decline"
-                    android:layout_toRightOf="@+id/answerButton"/>
+        <ImageButton
+            android:id="@+id/answerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:onClick="pickUpCall"
+            android:src="@drawable/ic_answer_video_call" />
+
+        <ImageButton
+            android:id="@+id/declineButton"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_decline_video_call"
+            android:layout_toRightOf="@+id/answerButton"
+            />
 
     </RelativeLayout>
 

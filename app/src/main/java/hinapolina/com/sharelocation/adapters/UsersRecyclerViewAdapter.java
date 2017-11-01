@@ -2,6 +2,7 @@ package hinapolina.com.sharelocation.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +17,14 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import hinapolina.com.sharelocation.R;
+import hinapolina.com.sharelocation.TalkListener;
 import hinapolina.com.sharelocation.activities.message.ChatActivity;
-import hinapolina.com.sharelocation.activities.videotalk.VideoCall;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.BatteryStatus;
 import hinapolina.com.sharelocation.ui.Utils;
+
+import static com.android.volley.Request.Method.HEAD;
 
 /**
  * Created by hinaikhan on 10/16/17.
@@ -33,15 +36,16 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
     private Context context;
     private List<User> mUsers;
     private FragmentManager fragmentManager;
-    String currentUserId;
+    private TalkListener talkListener;
+    private String currentUserId;
 
-
-    public UsersRecyclerViewAdapter(Context context, List<User> mUsers) {
+    public UsersRecyclerViewAdapter(Context context, TalkListener talkListener, List<User> mUsers) {
         this.context = context;
         this.mUsers = mUsers;
+        this.talkListener = talkListener;
+
         SharedPreferences sharedPref = context.getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         currentUserId = sharedPref.getString(Utils.USER_ID, "") ;
-
     }
 
     public void addUser(User user) {
@@ -77,9 +81,7 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
         mainViewHolder.imgTalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), VideoCall.class);
-                intent.putExtra("image", user.getImageURI());
-                v.getContext().startActivity(intent);
+                talkListener.callUser(user.getName());
             }
         });
 
@@ -119,9 +121,6 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
 
 
-
-
-
     @Override
     public int getItemCount() {
         return mUsers.size();
@@ -144,8 +143,6 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
             tvUnreadMessagesCount = (TextView) itemView.findViewById(R.id.tv_unread_messages_count);
         }
     }
-
-
 
 }
 

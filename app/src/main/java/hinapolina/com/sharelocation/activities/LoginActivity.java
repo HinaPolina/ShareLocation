@@ -56,6 +56,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.activities.fingerprint.FingerPrintActivity;
 import hinapolina.com.sharelocation.common.Constant;
@@ -116,6 +117,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mDatabase = Application.getmDatabase();
         loginButton = (LoginButton) findViewById(R.id.login_button);
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(getString(R.string.log_in_google));
+                return;
+            }
+        }
         imgbtnFingerPrintLogin = (ImageButton) findViewById(R.id.fingerprint_login_button);
         googleSignIn();
         facebookSingIn();
@@ -212,12 +223,37 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         imgbtnFingerPrintLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, FingerPrintActivity.class);
-                intent.putExtra(FingerPrintActivity.ACTION, FingerPrintActivity.ACTION_VERIFY_FINGERPRINT);
-                startActivity(intent);
+//                Intent intent = new Intent(LoginActivity.this, FingerPrintActivity.class);
+//                intent.putExtra(FingerPrintActivity.ACTION, FingerPrintActivity.ACTION_VERIFY_FINGERPRINT);
+//                startActivity(intent);
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+                        alertDialog.setTitle("Fingerprint Login is now available");
+                        alertDialog.setMessage("Do you want to set up Fingerprint in your system settings?")
+                        .setPositiveButton("SETTINGS", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DataHolder.getInstance().clear();
+                                FirebaseAuth.getInstance().signOut();
+                                LoginManager.getInstance().logOut();
+                                Intent intent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("GOT IT", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.create().show();
             }
         });
     }
+
+
 
     public void showNetworkError(String title, String errorMsg){
         DialogHelper.getInstance().showDefaultErrorDialog(getBaseContext(),title, errorMsg, false, new DialogInterface.OnClickListener() {

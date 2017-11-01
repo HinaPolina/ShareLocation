@@ -24,6 +24,9 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <permission
         android:name="${packageName}.permission.C2D_MESSAGE"
@@ -56,7 +59,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/share_icon" />
+            android:resource="@drawable/ic_location_logo" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
@@ -108,7 +111,6 @@
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.SearchResult" />
         <activity android:name=".activities.message.MessagesActivity" />
-        <activity android:name=".activities.videotalk.VideoCall" />
         <activity android:name=".activities.message.ChatActivity" />
 
         <service android:name=".services.UserPushNotification">
@@ -139,7 +141,7 @@
         <activity
             android:name=".activities.UberLoginActivity"
             android:label="@string/title_activity_uber_login"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

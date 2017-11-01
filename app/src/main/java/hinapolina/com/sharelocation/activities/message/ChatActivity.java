@@ -1,6 +1,7 @@
 package hinapolina.com.sharelocation.activities.message;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -56,9 +57,6 @@ import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
 import nl.dionsegijn.konfetti.KonfettiView;
-
-
-import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
 
@@ -88,7 +86,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
     private EditText etMessage;
     private ImageButton btnSendMessage;
     private Toolbar mToolbar;
-    private LinearLayout mLinearLayoutBack;
 
 
     private static final String TAG = ChatActivity.class.getSimpleName();
@@ -102,8 +99,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
     public static final String URI_STATIC = "https://maps.googleapis.com/maps/api/staticmap?center=";
     private String PARAMETERS = "&zoom=15&size=600x300&maptype=roadmap&markers=color%3Ared%7C";
-    private String downloadUrl;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +109,16 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         if (bundle != null) {
             toUser = (User) bundle.get(TO_USER);
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(toUser.getName());
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+
 
         mDatabaseReference = Application.getmDatabase().child(tableName());
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -141,16 +146,13 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         mRecyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mRecyclerViewMessage.setAdapter(mMessageAdapter);
 
-        tvUserName.setText(toUser.getName());
+//        tvUserName.setText(toUser.getName());
 
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onClickListeners();
-        KonfettiView();
 
-    }
 
-    private void KonfettiView(){
-        final KonfettiView konfettiView = (KonfettiView) findViewById(R.id.konfettiView);
+        final KonfettiView konfettiView = (KonfettiView)findViewById(R.id.konfettiView);
         konfettiView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -160,14 +162,15 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
                         .setSpeed(1f, 5f)
                         .setFadeOutEnabled(true)
                         .setTimeToLive(2000L)
-                        .addShapes(nl.dionsegijn.konfetti.models.Shape.RECT, nl.dionsegijn.konfetti.models.Shape.CIRCLE)
+                        .addShapes(Shape.CIRCLE, Shape.CIRCLE)
                         .addSizes(new Size(12, 5f))
                         .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
                         .stream(300, 5000L);
             }
         });
-
     }
+
+
 
     private void initUI() {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -176,7 +179,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         btnSendMessage = (ImageButton) findViewById(R.id.sendButton);
         mRecyclerViewMessage = (RecyclerView) findViewById(R.id.messageRecyclerView);
         tvUserName = (TextView) findViewById(R.id.tv_profile_name);
-        mLinearLayoutBack = (LinearLayout) findViewById(R.id.back);
 
 
     }
@@ -212,6 +214,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
                     Log.d("ChatActivity", "Message: " + message.toString());
                     mMessageAdapter.addMessage(message, dataSnapshot.getKey());
                     //mMessageAdapter.notifyDataSetChanged();
+                    mRecyclerViewMessage.scrollToPosition(mMessageAdapter.getItemCount()-1);
                 }
             }
 
@@ -268,7 +271,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage(null, downloadUrl);
+                sendMessage(null, null);
             }
         });
 
@@ -280,14 +283,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
                 intentPhoto.setType("image/jpeg");
                 intentPhoto.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 startActivityForResult(Intent.createChooser(intentPhoto, "Complete action using"), RC_PHOTO_PICKER);
-            }
-        });
-
-        mLinearLayoutBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -306,9 +301,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
                     .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             // When the image has successfully uploaded, we get its download URL
-                            downloadUrl = taskSnapshot.getDownloadUrl().toString();
-
-                         //   sendMessage(null, downloadUrl);
+                            sendMessage(null, taskSnapshot.getDownloadUrl().toString());
                         }
                     });
         }

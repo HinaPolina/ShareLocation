@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -54,7 +55,12 @@ import hinapolina.com.sharelocation.network.FirebaseHelper;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
+
 import hinapolina.com.sharelocation.utils.ImageUtils;
+
 
 public class MessagesActivity extends AppCompatActivity implements UserUpdateListener, OnPlaceListener {
 
@@ -125,6 +131,23 @@ public class MessagesActivity extends AppCompatActivity implements UserUpdateLis
         final SharedPreferences sharedPreferences = getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         final String currentId =sharedPreferences.getString(Utils.USER_ID, "");
         firebaseHelper.findUserByName("", currentId);
+
+        final KonfettiView konfettiView = (KonfettiView)findViewById(R.id.konfettiView);
+        konfettiView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                konfettiView.build()
+                        .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+                        .setDirection(0.0, 359.0)
+                        .setSpeed(1f, 5f)
+                        .setFadeOutEnabled(true)
+                        .setTimeToLive(2000L)
+                        .addShapes(Shape.CIRCLE, Shape.CIRCLE)
+                        .addSizes(new Size(12, 5f))
+                        .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                        .stream(300, 5000L);
+            }
+        });
 
     }
 

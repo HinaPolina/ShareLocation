@@ -2,10 +2,12 @@ package hinapolina.com.sharelocation.activities;
 
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -75,11 +77,19 @@ public class CallScreenActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.callscreen);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setTitle("Call");
+
         mAudioPlayer = new AudioPlayer(this);
         mCallDuration = (TextView) findViewById(R.id.callDuration);
         mCallerName = (TextView) findViewById(R.id.remoteUser);
         mCallState = (TextView) findViewById(R.id.callState);
-        Button endCallButton = (Button) findViewById(R.id.hangupButton);
+        ImageButton endCallButton = (ImageButton) findViewById(R.id.hangupButton);
 
         endCallButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -89,6 +99,13 @@ public class CallScreenActivity extends BaseActivity {
         });
 
         mCallId = getIntent().getStringExtra(SinchService.CALL_ID);
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

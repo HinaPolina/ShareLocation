@@ -2,49 +2,78 @@ package hinapolina.com.sharelocation.activities;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.calling.Call;
 import com.sinch.android.rtc.calling.CallEndCause;
 import com.sinch.android.rtc.video.VideoCallListener;
+import com.skyfishjy.library.RippleBackground;
 
 import java.util.List;
 
 import hinapolina.com.sharelocation.AudioPlayer;
 import hinapolina.com.sharelocation.R;
 import hinapolina.com.sharelocation.SinchService;
+import hinapolina.com.sharelocation.model.Message;
+import hinapolina.com.sharelocation.network.FirebaseHelper;
+import hinapolina.com.sharelocation.ui.Utils;
 
 public class IncomingCallScreenActivity extends BaseActivity {
 
     static final String TAG = IncomingCallScreenActivity.class.getSimpleName();
     private String mCallId;
     private AudioPlayer mAudioPlayer;
-    public static final int MY_PERMISSIONS_RECORD_AUDIO = 1;
     private Call call;
+    private RippleBackground rippleBackground;
+    FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.incoming);
 
-        Button answer = (Button) findViewById(R.id.answerButton);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setTitle("Answer Your Call");
+
+        ImageButton answer = (ImageButton) findViewById(R.id.answerButton);
         answer.setOnClickListener(mClickListener);
-        Button decline = (Button) findViewById(R.id.declineButton);
+        ImageButton decline = (ImageButton) findViewById(R.id.declineButton);
         decline.setOnClickListener(mClickListener);
 
         mAudioPlayer = new AudioPlayer(this);
         mAudioPlayer.playRingtone();
         mCallId = getIntent().getStringExtra(SinchService.CALL_ID);
+
+        requestCameraPermission();
+
+        rippleBackground=(RippleBackground)findViewById(R.id.content);
+        rippleBackground.startRippleAnimation();
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -65,36 +94,11 @@ public class IncomingCallScreenActivity extends BaseActivity {
         mAudioPlayer.stopRingtone();
         call = getSinchServiceInterface().getCall(mCallId);
         if (call != null) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.RECORD_AUDIO)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.RECORD_AUDIO)) {
-
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-
-                } else {
-
-                    // No explanation needed, we can request the permission.
-
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.RECORD_AUDIO},
-                            MY_PERMISSIONS_RECORD_AUDIO);
-
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
-            } else {
-                answerCall();
-            }
+            requestRecordAudioPermission();
         } else {
             finish();
         }
+        rippleBackground.stopRippleAnimation();
     }
 
     private void declineClicked() {
@@ -104,6 +108,8 @@ public class IncomingCallScreenActivity extends BaseActivity {
             call.hangup();
         }
         finish();
+
+        rippleBackground.stopRippleAnimation();
     }
 
     private class SinchCallListener implements VideoCallListener {
@@ -159,6 +165,11 @@ public class IncomingCallScreenActivity extends BaseActivity {
         }
     };
 
+    @Override
+    protected void doPostRequestRecordAudioPermission() {
+        answerCall();
+    }
+
     private void answerCall() {
         call.answer();
         Intent intent = new Intent(this, CallScreenActivity.class);
@@ -166,28 +177,4 @@ public class IncomingCallScreenActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_RECORD_AUDIO: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
 }
