@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,10 +15,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,18 +38,14 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.SinchService;
-import hinapolina.com.sharelocation.activities.fingerprint.FingerPrintActivity;
 import hinapolina.com.sharelocation.activities.message.MessagesActivity;
 import hinapolina.com.sharelocation.fragments.BatteryFragment;
 import hinapolina.com.sharelocation.fragments.GoogleLocationFragment;
 import hinapolina.com.sharelocation.model.User;
-import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.services.JobScheduler;
 import hinapolina.com.sharelocation.ui.DataHolder;
 import hinapolina.com.sharelocation.ui.Utils;
 
-import static hinapolina.com.sharelocation.R.id.userName;
 import static hinapolina.com.sharelocation.ui.Utils.REQUEST_CODE;
 
 /**
@@ -171,7 +163,6 @@ public class HomeActivity extends BaseActivity
         int searchImgId = android.support.v7.appcompat.R.id.search_button;
         searchView.requestFocusFromTouch();
         searchView.setFocusable(true);
-        hideCloseButton(searchView);
         ImageView v = (ImageView) searchView.findViewById(searchImgId);
         v.setImageResource(android.R.drawable.ic_menu_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -285,12 +276,6 @@ public class HomeActivity extends BaseActivity
                         break;
                     }
 
-                    case R.id.nav_fingerprint: {
-                        Intent intent = new Intent(HomeActivity.this, FingerPrintActivity.class);
-                        intent.putExtra(FingerPrintActivity.ACTION, FingerPrintActivity.ACTION_STORE_FINGERPRINT);
-                        startActivity(intent);
-                        break;
-                    }
 
                     case R.id.nav_log_out: {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeActivity.this)

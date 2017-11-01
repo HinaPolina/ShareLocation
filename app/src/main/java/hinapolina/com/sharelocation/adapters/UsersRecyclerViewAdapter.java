@@ -2,7 +2,6 @@ package hinapolina.com.sharelocation.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -24,8 +28,6 @@ import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.ui.BatteryStatus;
 import hinapolina.com.sharelocation.ui.Utils;
 
-import static com.android.volley.Request.Method.HEAD;
-
 /**
  * Created by hinaikhan on 10/16/17.
  */
@@ -33,11 +35,25 @@ import static com.android.volley.Request.Method.HEAD;
 public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecyclerViewAdapter.MainViewHolder> {
 
     private final static String TAG = UsersRecyclerViewAdapter.class.getSimpleName();
+    private static int imageResourceIndex =0;
     private Context context;
     private List<User> mUsers;
     private FragmentManager fragmentManager;
     private TalkListener talkListener;
+    private static final int MESSAGE = 0;
+    private static final int VIDEO = 1;
+
     private String currentUserId;
+    private static int[] imageResources = new int[]{
+            R.drawable.ic_chat,
+            R.drawable.ic_video,
+
+    };
+
+    static int getImageResource() {
+        if (imageResourceIndex >= imageResources.length) imageResourceIndex = 0;
+        return imageResources[imageResourceIndex++];
+    }
 
     public UsersRecyclerViewAdapter(Context context, TalkListener talkListener, List<User> mUsers) {
         this.context = context;
@@ -65,37 +81,43 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
     @Override
     public void onBindViewHolder(MainViewHolder holder, int position) {
-
-
         final User user = mUsers.get(position);
+        holder.bmb.clearBuilders();
+        holder.bmb.setShadowRadius(10);
+        holder.bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_1);
+        holder.bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_1);
+        for (int i = 0; i < holder.bmb.getPiecePlaceEnum().pieceNumber(); i++) {
+            final SimpleCircleButton.Builder builder = new SimpleCircleButton.Builder()
+                    .normalImageRes(getImageResource())
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            switch (index){
+                                case MESSAGE:
+                                    Intent intent = new Intent(context, ChatActivity.class);
+                                    intent.putExtra(ChatActivity.TO_USER, user);
+                                    context.startActivity(intent);
+                                    break;
+                                case VIDEO:
+                                    talkListener.callUser(user.getName());
+                                    break;
+                            }
+
+                            System.err.println("item " + index);
+                        }
+                    });
+
+            holder.bmb.addBuilder(builder);
+        }
+
         if(currentUserId.equals(user.getId())){
-            holder.imgMessage.setVisibility(View.INVISIBLE);
-            holder.imgTalk.setVisibility(View.INVISIBLE);
+           holder.bmb.setVisibility(View.INVISIBLE);
         }
         BatteryStatus batteryStatus = user.getBatteryStatus();
         MainViewHolder mainViewHolder = (MainViewHolder) holder;
         mainViewHolder.tvUsersName.setText(user.getName());
         mainViewHolder.tvBatteryPercentage.setText(String.valueOf(user.getBattery()));
 
-        //for video conference
-        mainViewHolder.imgTalk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                talkListener.callUser(user.getName());
-            }
-        });
-
-        //for individual text messages
-        mainViewHolder.imgMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                //intent.putExtra(ChatActivity.TO_USER, user.getId());
-                //intent.putExtra(ChatActivity.TO_USER_TOKEN, user.getToken());
-                intent.putExtra(ChatActivity.TO_USER, user);
-                v.getContext().startActivity(intent);
-            }
-        });
 
         Picasso.with(holder.itemView.getContext()).load(user.getImageURI()) .centerCrop().resize(80, 80)
                 .transform(new GoogleLocationFragment.RoundTransformation()).into(mainViewHolder.imgUsersProfileImage);
@@ -128,18 +150,18 @@ public class UsersRecyclerViewAdapter extends RecyclerView.Adapter<UsersRecycler
 
     public class MainViewHolder extends RecyclerView.ViewHolder {
 
-        protected ImageView imgUsersProfileImage, imgBatterIcon, imgBatteryCharging, imgTalk, imgMessage;
+        protected ImageView imgUsersProfileImage, imgBatterIcon, imgBatteryCharging;
         protected TextView tvUsersName, tvBatteryPercentage, tvUnreadMessagesCount;
+        protected BoomMenuButton bmb;
 
         public MainViewHolder(View itemView) {
             super(itemView);
+            bmb = (BoomMenuButton) itemView.findViewById(R.id.bmb);
             imgUsersProfileImage = (ImageView) itemView.findViewById(R.id.users_img);
             imgBatterIcon = (ImageView) itemView.findViewById(R.id.img_battery);
             imgBatteryCharging = (ImageView) itemView.findViewById(R.id.img_battery_charging);
             tvUsersName = (TextView) itemView.findViewById(R.id.tv_users_name);
             tvBatteryPercentage = (TextView) itemView.findViewById(R.id.tv_battery_percentage);
-            imgTalk = (ImageView) itemView.findViewById(R.id.img_talk);
-            imgMessage = (ImageView) itemView.findViewById(R.id.img_message);
             tvUnreadMessagesCount = (TextView) itemView.findViewById(R.id.tv_unread_messages_count);
         }
     }

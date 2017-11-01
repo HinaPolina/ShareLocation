@@ -33,7 +33,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
     String currentId;
     FirebaseHelper firebaseHelper;
     String token;
-    String currentName;
 
 
     public SearchResultsAdapter(List<User> users, Context context, String id, FirebaseHelper f, String token, String name) {
@@ -42,7 +41,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         currentId = id;
         firebaseHelper = f;
         this.token = token;
-        currentName = name;
+
     }
 
     @Override

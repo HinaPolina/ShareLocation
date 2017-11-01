@@ -150,6 +150,14 @@ public class GroupChatAdapter  extends RecyclerView.Adapter<GroupChatAdapter.Vie
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                         Uri.parse("https://www.google.com/maps/search/?api=1&query=" + message.getLat() + "," + message.getLng()));
                 context.startActivity(intent);
+            } else {
+                if(message.getImgUrl()!=null){
+                String url = message.getImgUrl();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(url), "image/*");
+                context.startActivity(Intent.createChooser(intent, "Select App to Open Image"));
+                }
+
             }
 
         }

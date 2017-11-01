@@ -65,5 +65,9 @@
 
 
     <string name="log_in_google">Google</string>
+    <string-array name="text_ham_button" >
+        <item>send message to friend</item>
+        <item>start video with friend</item>
+    </string-array>
 </resources>
 

@@ -116,16 +116,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mDatabase = Application.getmDatabase();
         loginButton = (LoginButton) findViewById(R.id.login_button);
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-
-        for (int i = 0; i < signInButton.getChildCount(); i++) {
-            View v = signInButton.getChildAt(i);
-
-            if (v instanceof TextView) {
-                TextView tv = (TextView) v;
-                tv.setText(getString(R.string.log_in_google));
-                return;
-            }
-        }
         imgbtnFingerPrintLogin = (ImageButton) findViewById(R.id.fingerprint_login_button);
         googleSignIn();
         facebookSingIn();
@@ -135,15 +125,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void googleSignIn() {
-        for (int i = 0; i < signInButton.getChildCount(); i++) {
-            View v = signInButton.getChildAt(i);
-
-            if (v instanceof TextView) {
-                TextView tv = (TextView) v;
-                tv.setText(R.string.log_in_google);
-                break;
-            }
-        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -155,6 +136,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .build();
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setOnClickListener(this);
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(R.string.log_in_google);
+                break;
+            }
+        }
+
     }
 
     private void facebookSingIn() {

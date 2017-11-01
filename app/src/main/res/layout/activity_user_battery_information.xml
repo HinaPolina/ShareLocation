@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/margin"
     android:layout_marginTop="@dimen/margin"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
         <ImageView
@@ -52,37 +54,26 @@
             android:layout_marginLeft="@dimen/margin"
             android:text="Percentage"
             android:textSize="@dimen/text_size_12"
-            android:layout_alignBottom="@+id/img_talk"
-            android:layout_toEndOf="@+id/img_battery"
-            android:layout_marginStart="11dp" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="12dp"
+            android:layout_above="@+id/view"
+            android:layout_toEndOf="@+id/img_battery" />
 
-        <ImageView
-            android:id="@+id/img_talk"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="@dimen/margin_left_32"
-            android:src="@drawable/icon_video_calling"
-            android:layout_alignTop="@+id/img_battery"
-            android:layout_toStartOf="@+id/img_message"
-            android:layout_marginEnd="23dp" />
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_buttonEnum="simpleCircle"
+            app:bmb_inList="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
 
-        <ImageView
-            android:id="@+id/img_message"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="@dimen/margin_left_26"
-            android:src="@drawable/icon_message"
-            android:layout_alignTop="@+id/img_talk"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="15dp" />
-
-        <TextView
+             <TextView
             android:id="@+id/tv_unread_messages_count"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="26dp"
-            android:layout_toRightOf="@id/img_message"
             android:background="@drawable/bg_circle_counter"
             android:gravity="center"
             android:padding="2dp"

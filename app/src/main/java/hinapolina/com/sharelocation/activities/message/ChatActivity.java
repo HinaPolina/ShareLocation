@@ -1,7 +1,6 @@
 package hinapolina.com.sharelocation.activities.message;
 
 import android.Manifest;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -23,10 +23,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -46,8 +44,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import hinapolina.com.sharelocation.R;
-import hinapolina.com.sharelocation.activities.HomeActivity;
-import hinapolina.com.sharelocation.adapters.MessageRecyclerAdapter;
+import hinapolina.com.sharelocation.adapters.GroupChatAdapter;
 import hinapolina.com.sharelocation.fragments.SharePlacesDialog;
 import hinapolina.com.sharelocation.listener.OnPlaceListener;
 import hinapolina.com.sharelocation.model.Message;
@@ -56,6 +53,7 @@ import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
+import hinapolina.com.sharelocation.utils.ImageUtils;
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
@@ -71,7 +69,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
     public static final String TO_USER_TOKEN = "toUserToken";
 
     private RecyclerView mRecyclerViewMessage;
-    private MessageRecyclerAdapter mMessageAdapter;
+    private GroupChatAdapter mMessageAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -99,6 +97,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
     public static final String URI_STATIC = "https://maps.googleapis.com/maps/api/staticmap?center=";
     private String PARAMETERS = "&zoom=15&size=600x300&maptype=roadmap&markers=color%3Ared%7C";
+    private String downloadUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +141,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         mFirebasetorageReference = mFirebaseStorage.getReference().child("chat_photos");
 
 
-        mMessageAdapter = new MessageRecyclerAdapter(this);
+        mMessageAdapter = new GroupChatAdapter(this);
         mRecyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mRecyclerViewMessage.setAdapter(mMessageAdapter);
 
@@ -271,7 +270,7 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage(null, null);
+                sendMessage(null, downloadUrl);
             }
         });
 
@@ -291,19 +290,31 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            Uri selectedImageUri = data.getData();
+            final Uri selectedImageUri = data.getData();
             // Get a reference to store file at chat_photos/<FILENAME>
-            StorageReference photoRef = mFirebasetorageReference.child(selectedImageUri.getLastPathSegment());
-            // Upload file to Firebase Storage
-            photoRef.putFile(selectedImageUri)
-                    .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // When the image has successfully uploaded, we get its download URL
-                            sendMessage(null, taskSnapshot.getDownloadUrl().toString());
-                        }
-                    });
+            System.err.println("URI: " + selectedImageUri);
+            new AsyncTask<Void, Void, Uri>(){
+                @Override
+                protected Uri doInBackground(Void... params) {
+                    return ImageUtils.decodeFile(ChatActivity.this, selectedImageUri, 500, 500);
+                }
+
+                @Override
+                protected void onPostExecute(Uri scaledImageUri) {
+                    final StorageReference photoRef = mFirebasetorageReference.child(scaledImageUri.getLastPathSegment());
+                    // Upload file to Firebase Storage
+                    photoRef.putFile(scaledImageUri)
+                            .addOnSuccessListener(ChatActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // When the image has successfully uploaded, we get its download URL
+                                    downloadUrl = taskSnapshot.getDownloadUrl().toString();
+                                    System.err.println("Download URL: " + downloadUrl);
+                                    imgPhotoButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_vector_attach_pressed));
+                                }
+                            });
+                }
+            }.execute();
         }
     }
 
@@ -337,6 +348,8 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
 
         //clear the input box
         etMessage.setText(" ");
+        imgPhotoButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_vector_attach_image_grey));
+
 
         //Send push notification to all users
         FirebaseTopicNotificationService service = new FirebaseTopicNotificationService();
