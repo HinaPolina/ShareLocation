@@ -76,6 +76,8 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Message message = mMessages.get(position);
+
+        holder.message = message;
         holder.tvAuthorTextView.setText(message.getSender());
 
         if (!TextUtils.isEmpty(message.getMessage())) {
@@ -146,12 +148,13 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
         return mMessages != null ? mMessages.size() : 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView imgPhotoImageView, imgReceiveImgView, imgUserSendPic;
         private TextView tvMessage;
         private TextView tvAuthorTextView;
         private TextView tvMessageDateTime;
+        private Message message;
 
         public ViewHolder(View itemView) {
 
@@ -163,6 +166,16 @@ public class MessageRecyclerAdapter extends RecyclerView.Adapter<MessageRecycler
             imgReceiveImgView = (ImageView) itemView.findViewById(R.id.receive_image_view);
             imgUserSendPic = (ImageView) itemView.findViewById(R.id.receive_image_view_user);
 
+            imgReceiveImgView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(message.getLng()!=null) {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("https://www.google.com/maps/search/?api=1&query=" + message.getLat() + "," + message.getLng()));
+                context.startActivity(intent);
+            }
 
         }
 
