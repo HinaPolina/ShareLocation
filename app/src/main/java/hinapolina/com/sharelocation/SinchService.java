@@ -50,20 +50,18 @@ public class SinchService extends Service {
     }
 
     private void start(String userName) {
-        if (mSinchClient != null) {
-            mUserId = userName;
-            mSinchClient = Sinch.getSinchClientBuilder().context(getApplicationContext()).userId(userName)
-                    .applicationKey(APP_KEY)
-                    .applicationSecret(APP_SECRET)
-                    .environmentHost(ENVIRONMENT).build();
+        mUserId = userName;
+        mSinchClient = Sinch.getSinchClientBuilder().context(getApplicationContext()).userId(userName)
+                .applicationKey(APP_KEY)
+                .applicationSecret(APP_SECRET)
+                .environmentHost(ENVIRONMENT).build();
 
-            mSinchClient.setSupportCalling(true);
-            mSinchClient.startListeningOnActiveConnection();
+        mSinchClient.setSupportCalling(true);
+        mSinchClient.startListeningOnActiveConnection();
 
-            mSinchClient.addSinchClientListener(new MySinchClientListener());
-            mSinchClient.getCallClient().addCallClientListener(new SinchCallClientListener());
-            mSinchClient.start();
-        }
+        mSinchClient.addSinchClientListener(new MySinchClientListener());
+        mSinchClient.getCallClient().addCallClientListener(new SinchCallClientListener());
+        mSinchClient.start();
     }
 
     private void stop() {

@@ -33,7 +33,7 @@
             >
 
         <TextView
-            android:id="@+id/tv_remoteUser"
+            android:id="@+id/remoteUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

@@ -53,11 +53,11 @@ public class IncomingCallScreenActivity extends BaseActivity {
         toolbar.setTitle("Answer Your Call");
 
 
-        //TODO check the user name through SharedPrefex
+        /*TODO check the user name through SharedPrefex
         final SharedPreferences sharedPreferences = getSharedPreferences( Utils.MY_PREFS_NAME, Context.MODE_PRIVATE);
         final String currentId =sharedPreferences.getString(Utils.USER_ID, "");
         firebaseHelper.findUserByName("", currentId);
-        Message message = new Message();
+        Message message = new Message();*/
 
 
 
@@ -67,14 +67,14 @@ public class IncomingCallScreenActivity extends BaseActivity {
         decline.setOnClickListener(mClickListener);
 
         //TODO check the user name
-        TextView tvRemoteUser = (TextView) findViewById(R.id.tv_remoteUser);
-        tvRemoteUser.setText(message.getReceiver());
+        /*TextView tvRemoteUser = (TextView) findViewById(R.id.tv_remoteUser);
+        tvRemoteUser.setText(message.getReceiver());*/
 
         mAudioPlayer = new AudioPlayer(this);
         mAudioPlayer.playRingtone();
         mCallId = getIntent().getStringExtra(SinchService.CALL_ID);
 
-
+        requestCameraPermission();
 
     }
 
@@ -181,4 +181,5 @@ public class IncomingCallScreenActivity extends BaseActivity {
         intent.putExtra(SinchService.CALL_ID, mCallId);
         startActivity(intent);
     }
+
 }

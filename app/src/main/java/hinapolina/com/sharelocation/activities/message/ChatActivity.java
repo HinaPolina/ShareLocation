@@ -1,6 +1,7 @@
 package hinapolina.com.sharelocation.activities.message;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,6 +56,9 @@ import hinapolina.com.sharelocation.model.User;
 import hinapolina.com.sharelocation.services.FirebaseTopicNotificationService;
 import hinapolina.com.sharelocation.ui.Application;
 import hinapolina.com.sharelocation.ui.Utils;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 
 
 /**
@@ -82,7 +86,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
     private EditText etMessage;
     private ImageButton btnSendMessage;
     private Toolbar mToolbar;
-    private LinearLayout mLinearLayoutBack;
 
 
     private static final String TAG = ChatActivity.class.getSimpleName();
@@ -103,6 +106,11 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_recycler_view_adapter);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -135,12 +143,31 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         mRecyclerViewMessage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mRecyclerViewMessage.setAdapter(mMessageAdapter);
 
-        tvUserName.setText(toUser.getName());
+//        tvUserName.setText(toUser.getName());
 
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         onClickListeners();
 
+
+        final KonfettiView konfettiView = (KonfettiView)findViewById(R.id.konfettiView);
+        konfettiView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                konfettiView.build()
+                        .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+                        .setDirection(0.0, 359.0)
+                        .setSpeed(1f, 5f)
+                        .setFadeOutEnabled(true)
+                        .setTimeToLive(2000L)
+                        .addShapes(Shape.CIRCLE, Shape.CIRCLE)
+                        .addSizes(new Size(12, 5f))
+                        .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                        .stream(300, 5000L);
+            }
+        });
     }
+
+
 
     private void initUI() {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -149,7 +176,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
         btnSendMessage = (ImageButton) findViewById(R.id.sendButton);
         mRecyclerViewMessage = (RecyclerView) findViewById(R.id.messageRecyclerView);
         tvUserName = (TextView) findViewById(R.id.tv_profile_name);
-        mLinearLayoutBack = (LinearLayout) findViewById(R.id.back);
 
 
     }
@@ -254,14 +280,6 @@ public class ChatActivity extends AppCompatActivity  implements OnPlaceListener{
                 intentPhoto.setType("image/jpeg");
                 intentPhoto.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 startActivityForResult(Intent.createChooser(intentPhoto, "Complete action using"), RC_PHOTO_PICKER);
-            }
-        });
-
-        mLinearLayoutBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
-                startActivity(intent);
             }
         });
 
