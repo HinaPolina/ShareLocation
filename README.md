@@ -49,7 +49,7 @@ https://www.fluidui.com/editor/live/preview/cF84ZmFmMGE5NWM0NzQyZjkxMmVmOTQzMjc3
 Here's a walkthrough of implemented user stories:
 
 Srrint 1 : Demo
-+![alt text](https://github.com/HinaPolina/ShareLocation/blob/master/demo_sprint1.gif)
+
 
 
 2nd sprint : 
