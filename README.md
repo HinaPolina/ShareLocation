@@ -30,8 +30,8 @@ The following **required** functionality is completed:
 
 The following **optional** functionality
 
-* []	User can **share interesting places near**
-* []	User can **start video chat with friends** -- This needs more efforts and implementation 
+* [X]	User can **share interesting places near**
+* [X]	User can **start video chat with friends** -- This needs more efforts and implementation 
 * [X]	User can **get push notification when friends are near by**
 * [X]	User can **see level of battary of friends**
 * [X]	User can **order Uber from app**
