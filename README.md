@@ -40,33 +40,6 @@ The following **optional** functionality
 
 
 
-## Mockup
-https://www.fluidui.com/editor/live/preview/cF84ZmFmMGE5NWM0NzQyZjkxMmVmOTQzMjc3M2FkMDFiOQ==
-
-
-## Video Walkthrough
-
-Here's a walkthrough of implemented user stories:
-
-Srrint 1 : Demo
-
-
-
-2nd sprint : 
-
-https://imgur.com/a/GFwM3
-
-For Splash
-
-https://imgur.com/a/hFj54
-
-GIF created with [Android Studio]
-
-## Notes
-
-Describe any challenges encountered while building the app.
-
-## Open-source libraries used
 
 ## License
 
